@@ -49,10 +49,49 @@ public class MovieListServlet extends HttpServlet {
                 String movieRating = rs.getString("rating");
 
                 JsonObject jsonObject = new JsonObject();
+                JsonArray genreArray = new JsonArray();
+                JsonArray starArray = new JsonArray();
+
+                Statement genreStatement = dbcon.createStatement();
+
+                String genreQuery = "SELECT genres.name " +
+                                    "FROM genres, genres_in_movies " +
+                                    "WHERE genres.id = genres_in_movies.genreId " +
+                                        "AND genres_in_movies.movieId = '" + movieId + "'" +
+                                    "LIMIT 3";
+
+                ResultSet genreResultSet = genreStatement.executeQuery(genreQuery);
+
+                while (genreResultSet.next()) {
+                    String genreName = genreResultSet.getString("name");
+                    genreArray.add(genreName);
+                }
+
+                genreResultSet.close();
+
+                Statement starStatement = dbcon.createStatement();
+
+                String starQuery = "SELECT stars.name " +
+                        "FROM stars, stars_in_movies " +
+                        "WHERE stars.id = stars_in_movies.starId " +
+                        "AND stars_in_movies.movieId = '" + movieId + "'" +
+                        "LIMIT 3";
+
+                ResultSet starResultSet = starStatement.executeQuery(starQuery);
+
+                while (starResultSet.next()) {
+                    String starName = starResultSet.getString("name");
+                    starArray.add(starName);
+                }
+
+                starResultSet.close();
+
                 jsonObject.addProperty("movie_id", movieId);
                 jsonObject.addProperty("movie_title", movieTitle);
                 jsonObject.addProperty("movie_year", movieYear);
                 jsonObject.addProperty("movie_director", movieDirector);
+                jsonObject.add("movie_genres", genreArray);
+                jsonObject.add("movie_stars", starArray);
                 jsonObject.addProperty("movie_rating", movieRating);
 
                 jsonArray.add(jsonObject);

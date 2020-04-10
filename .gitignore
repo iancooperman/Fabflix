@@ -168,6 +168,7 @@ buildNumber.properties
 
 # Personal addition
 .idea*
+target*
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
