@@ -166,8 +166,9 @@ buildNumber.properties
 # Avoid ignoring Maven wrapper jar file (.jar files are usually ignored)
 !/.mvn/wrapper/maven-wrapper.jar
 
-# Personal addision
+# Personal addition
 .idea*
+pom.xml
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
