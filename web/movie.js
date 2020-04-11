@@ -4,7 +4,6 @@ function getUrlParam(param) {
 }
 
 function handleMovieResult(resultData) {
-    console.log(resultData);
     $("#row-1").text(resultData["movie_title"]+ " (" + resultData["movie_year"] + ")          " + resultData["movie_rating"] + "/10");
     $("#row-3").text("Director: " + resultData["movie_director"]);
 
@@ -18,7 +17,7 @@ function handleMovieResult(resultData) {
 
     let starsHTML = "Stars: "
     for (let i = 0; i < resultData["stars"].length; i++) {
-        starsHTML += "<a href='star.html?=" + resultData["stars"][i]["star_id"] + "'>" + resultData["stars"][i]["star_name"] + "</a>, ";
+        starsHTML += "<a href='star.html?id=" + resultData["stars"][i]["star_id"] + "'>" + resultData["stars"][i]["star_name"] + "</a>, ";
     }
     starsHTML = starsHTML.substring(0, starsHTML.length - 2);
 
