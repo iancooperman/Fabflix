@@ -13,7 +13,8 @@ function handleMovielistResult(resultData) {
         let rowHTML = "";
         rowHTML += "<tr>";
 
-        rowHTML += "<td>" + resultData[i]["movie_title"] + " (" + resultData[i]["movie_year"] + ")" + "</td>";
+        rowHTML += "<td><a href=\"movie.html?id=" + resultData[i]["movie_id"] + "\">" + resultData[i]["movie_title"] + " (" + resultData[i]["movie_year"] + ")" + "</a></td>";
+        console.log(rowHTML);
         rowHTML += "<td>" + resultData[i]["movie_director"] + "</td>";
 
         // genres

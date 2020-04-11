@@ -21,6 +21,7 @@ public class MovieListServlet extends HttpServlet {
     private DataSource dataSource;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
 
         PrintWriter out = response.getWriter();
