@@ -82,7 +82,6 @@ public class SingleMovieServlet extends HttpServlet {
             }
             jsonObject.add("stars", starsArray);
 
-
             // write JSON string to output
             out.write(jsonObject.toString());
             response.setStatus(200);
