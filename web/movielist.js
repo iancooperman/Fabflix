@@ -1,11 +1,4 @@
-
-
-
-
 function handleMovielistResult(movies) {
-    console.log("This is getting called, yes?");
-
-
     let movieTable = $("#movie-table");
 
     for (let i = 0; i < movies.length; i++) {
@@ -21,7 +14,6 @@ function handleMovielistResult(movies) {
         rowHTML += "<tr>";
 
         rowHTML += "<td><a href=\"movie.html?id=" + movieId + "\">" + movieTitle + " (" + movieYear + ")" + "</a></td>";
-        console.log(rowHTML);
         rowHTML += "<td>" + movieDirector + "</td>";
 
         // genres
@@ -32,7 +24,6 @@ function handleMovielistResult(movies) {
         rowHTML += "</ul></td>"
 
         // stars
-        console.log(movieStars);
         rowHTML += "<td><ul>";
         for (let j = 0; j < movieStars.length; j++) {
             rowHTML += "<li><a href='star.html?id=" + movieStars[j]["star_id"] + "'>" + movieStars[j]["star_name"] + "</a></li>"

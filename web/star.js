@@ -3,7 +3,6 @@ function getUrlParam(param) {
     return searchParams.get(param);
 }
 
-
 function handleStarResult(resultData) {
     let starName = resultData["star_name"];
     let birthYear = resultData["star_birth_year"];
@@ -23,8 +22,6 @@ function handleStarResult(resultData) {
         tableInnerHTML += "<tr><td><a href='movie.html?id=" + movieId + "'>" + movieTitle + "</a></td></tr>";
     }
     $("#filmography-table").html(tableInnerHTML);
-
-    console.log(resultData);
 }
 
 
