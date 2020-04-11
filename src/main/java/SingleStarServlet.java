@@ -67,7 +67,7 @@ public class SingleStarServlet extends HttpServlet {
                 String movieTitle = filmography.getString("title");
                 movieInfo.addProperty("movie_id", movieId);
                 movieInfo.addProperty("movie_title", movieTitle);
-                filmographyArray.add(movieTitle);
+                filmographyArray.add(movieInfo);
             }
 
             jsonObject.add("filmography", filmographyArray);

@@ -4,7 +4,8 @@ function getUrlParam(param) {
 }
 
 function handleMovieResult(resultData) {
-    $("#row-1").text(resultData["movie_title"]+ " (" + resultData["movie_year"] + ")          " + resultData["movie_rating"] + "/10");
+    document.title = resultData["movie_title"];
+    $("#row-1").text(resultData["movie_title"]+ " (" + resultData["movie_year"] + ") | " + resultData["movie_rating"] + "/10");
     $("#row-3").text("Director: " + resultData["movie_director"]);
 
     let genresHTML = ""

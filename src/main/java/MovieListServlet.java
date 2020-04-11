@@ -72,7 +72,7 @@ public class MovieListServlet extends HttpServlet {
 
                 Statement starStatement = dbcon.createStatement();
 
-                String starQuery = "SELECT stars.name " +
+                String starQuery = "SELECT stars.id, stars.name " +
                         "FROM stars, stars_in_movies " +
                         "WHERE stars.id = stars_in_movies.starId " +
                         "AND stars_in_movies.movieId = '" + movieId + "'" +
@@ -81,8 +81,13 @@ public class MovieListServlet extends HttpServlet {
                 ResultSet starResultSet = starStatement.executeQuery(starQuery);
 
                 while (starResultSet.next()) {
+                    JsonObject starInfo = new JsonObject();
+                    String starId = starResultSet.getString("id");
                     String starName = starResultSet.getString("name");
-                    starArray.add(starName);
+                    starInfo.addProperty("star_id", starId);
+                    starInfo.addProperty("star_name", starName);
+
+                    starArray.add(starInfo);
                 }
 
                 starResultSet.close();

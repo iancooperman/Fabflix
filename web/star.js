@@ -5,6 +5,25 @@ function getUrlParam(param) {
 
 
 function handleStarResult(resultData) {
+    let starName = resultData["star_name"];
+    let birthYear = resultData["star_birth_year"];
+    if (birthYear === null) {
+        birthYear = "N/A";
+    }
+    let filmography = resultData["filmography"];
+
+    document.title = starName;
+    $("#name").text(starName);
+    $("#year-of-birth").text("Born: " + birthYear);
+
+    let tableInnerHTML = "";
+    for (let i = 0; i < filmography.length; i++) {
+        let movieId = filmography[i]["movie_id"];
+        let movieTitle = filmography[i]["movie_title"];
+        tableInnerHTML += "<tr><td><a href='movie.html?id=" + movieId + "'>" + movieTitle + "</a></td></tr>";
+    }
+    $("#filmography-table").html(tableInnerHTML);
+
     console.log(resultData);
 }
 
