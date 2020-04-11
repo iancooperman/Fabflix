@@ -52,12 +52,12 @@ public class SingleStarServlet extends HttpServlet {
                                     "AND stars_in_movies.movieId = movies.id " +
                                     " AND starId = '" + starId + "'";
             Statement movieStatement = dbcon.createStatement();
-            ResultSet filmography = movieStatement.executeQuery();
+            ResultSet filmography = movieStatement.executeQuery(movieQuery);
 
             JsonArray filmographyArray = new JsonArray();
             while(filmography.next()) {
                 JsonObject movieInfo = new JsonObject();
-                String movieId = filmography.getString("movieId")
+                String movieId = filmography.getString("movieId");
                 String movieTitle = filmography.getString("title");
                 movieInfo.addProperty("movie_id", movieId);
                 movieInfo.addProperty("movie_title", movieTitle);
@@ -68,7 +68,7 @@ public class SingleStarServlet extends HttpServlet {
 
             out.write(jsonObject.toString());
             response.setStatus(200);
-            
+
             mainStatement.close();
             nameBirthYear.close();
             movieStatement.close();
@@ -76,7 +76,7 @@ public class SingleStarServlet extends HttpServlet {
 
             dbcon.close();
         }
-        except (Exception e) {
+        catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
