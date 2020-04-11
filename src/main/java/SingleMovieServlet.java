@@ -32,27 +32,67 @@ public class SingleMovieServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Query database for relevant info
-            String mainQuery = "SELECT title, year, director FROM movies WHERE id = '" + movieId + "'";
+            String mainQuery = "SELECT title, year, director, rating " +
+                                "FROM movies, ratings " +
+                                "WHERE movies.id = ratings.movieId " +
+                                    "AND id = '" + movieId + "'";
             Statement mainStatement = dbcon.createStatement();
-            ResultSet titleYearDirector = mainStatement.executeQuery(mainQuery);
+            ResultSet titleYearDirectorRating = mainStatement.executeQuery(mainQuery);
 
-            mainStatement.close();
 
-            String title = titleYearDirector.getString("title");
-            String year = titleYearDirector.getString("year");
-            String director = titleYearDirector.getString("director");
+            titleYearDirectorRating.next();
+            String title = titleYearDirectorRating.getString("title");
+            String year = titleYearDirectorRating.getString("year");
+            String director = titleYearDirectorRating.getString("director");
+            String rating = titleYearDirectorRating.getString("rating");
+
+            String genreQuery = "SELECT name " +
+                                "FROM genres, genres_in_movies " +
+                                "WHERE genres.id = genres_in_movies.genreId " +
+                                    "AND genres_in_movies.movieId = '" + movieId + "'";
+            Statement genreStatement = dbcon.createStatement();
+            ResultSet genres = genreStatement.executeQuery(genreQuery);
+
+            String starsQuery = "SELECT starId, name " +
+                                "FROM stars, stars_in_movies " +
+                                "WHERE stars.id = stars_in_movies.starId " +
+                                    "AND stars_in_movies.movieId = '" + movieId + "'";
+            Statement starsStatement = dbcon.createStatement();
+            ResultSet stars = starsStatement.executeQuery(starsQuery);
 
             JsonObject jsonObject = new JsonObject();
-            JsonArray genreArray = new JsonArray();
-            JsonArray starsArray = new JsonArray();
             jsonObject.addProperty("movie_title", title);
             jsonObject.addProperty("movie_year", year);
-            jsonObject.addProperty("movie_directory", director);
+            jsonObject.addProperty("movie_director", director);
+            jsonObject.addProperty("movie_rating", rating);
+
+            JsonArray genreArray = new JsonArray();
+            while(genres.next()) {
+                genreArray.add(genres.getString(1));
+            }
+            jsonObject.add("genres", genreArray);
+
+            JsonArray starsArray = new JsonArray();
+            while(stars.next()) {
+                // Create a new JsonObject to store star id and name
+                JsonObject starInfo = new JsonObject();
+                starInfo.addProperty("star_id", stars.getString("starId"));
+                starInfo.addProperty("star_name", stars.getString("name"));
+                starsArray.add(starInfo);
+            }
+            jsonObject.add("stars", starsArray);
 
 
+            // write JSON string to output
+            out.write(jsonObject.toString());
+            response.setStatus(200);
 
-
-            titleYearDirector.close();
+            mainStatement.close();
+            genreStatement.close();
+            genres.close();
+            starsStatement.close();
+            stars.close();
+            titleYearDirectorRating.close();
             dbcon.close();
         }
         catch (Exception e) {
