@@ -11,7 +11,7 @@ function handleMovielistResult(movies) {
     for (let i = 0; i < movies.length; i++) {
         let movieId = movies[i]["movie_id"];
         let movieTitle = movies[i]["movie_title"];
-        let movieYear = movies[i]["movie_year"];\
+        let movieYear = movies[i]["movie_year"];
         let movieDirector = movies[i]["movie_director"];
         let movieGenres = movies[i]["movie_genres"];
         let movieStars = movies[i]["movie_stars"];
@@ -32,6 +32,7 @@ function handleMovielistResult(movies) {
         rowHTML += "</ul></td>"
 
         // stars
+        console.log(movieStars);
         rowHTML += "<td><ul>";
         for (let j = 0; j < movieStars.length; j++) {
             rowHTML += "<li><a href='star.html?id=" + movieStars[j]["star_id"] + "'>" + movieStars[j]["star_name"] + "</a></li>"
