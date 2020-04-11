@@ -14,4 +14,4 @@ $.ajax({
     method: "GET",
     url: "api/star?id=" + getUrlParam("id"),
     success: (resultData) => handleStarResult(resultData)
-});/
+});

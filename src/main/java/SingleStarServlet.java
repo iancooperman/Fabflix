@@ -38,13 +38,19 @@ public class SingleStarServlet extends HttpServlet {
             Statement mainStatement = dbcon.createStatement();
             ResultSet nameBirthYear = mainStatement.executeQuery(mainQuery);
 
-            nameBirthYear.next();
-            String name = nameBirthYear.getString("name");
-            String birthYear = nameBirthYear.getString("birthYear");
-
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("star_name", name);
-            jsonObject.addProperty("star_birth_year", birthYear);
+            if (nameBirthYear.next()) {
+                String name = nameBirthYear.getString("name");
+                String birthYear = nameBirthYear.getString("birthYear");
+                jsonObject.addProperty("star_name", name);
+                jsonObject.addProperty("star_birth_year", birthYear);
+            }
+            else {
+                throw new Exception("lol wat?");
+            }
+
+
+
 
             String movieQuery = "SELECT movieId, title " +
                                 "FROM stars, stars_in_movies, movies " +
