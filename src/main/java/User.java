@@ -1,7 +1,9 @@
 package main.java;
 
 public class User {
-    public User(String email) {
+    private final String email;
 
+    public User(String email) {
+        this.email = email;
     }
 }
