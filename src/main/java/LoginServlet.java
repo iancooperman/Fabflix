@@ -37,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 
             if (passwordRS.next()) {
                 String dbPassword = passwordRS.getString("password");
-                if (password == dbPassword) {
+                if (password.equals(dbPassword)) {
                     // Login success:
 
                     // set this user into the session
