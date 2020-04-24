@@ -57,13 +57,13 @@ public class LoginServlet extends HttpServlet {
                 } else {
                     // Login fail
                     responseJsonObject.addProperty("status", "fail");
-                    responseJsonObject.addProperty("message", "incorrect password: " + password);
+                    responseJsonObject.addProperty("message", "Incorrect password. Please try again.");
                 }
             }
             else {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
-                responseJsonObject.addProperty("message", "incorrect email: " + email);
+                responseJsonObject.addProperty("message", "Incorrect email. Please try again.");
             }
 
             dbcon.close();
