@@ -53,7 +53,7 @@ public class LoginFilter implements Filter {
         allowedURIs.add("login.js");
         allowedURIs.add("api/login");
         allowedURIs.add("bootstrap.min.css");
-        allowedURIs.add("jquery-3.5.0.min.js")
+        allowedURIs.add("jquery-3.5.0.min.js");
         allowedURIs.add("fabflix.css");
     }
 
