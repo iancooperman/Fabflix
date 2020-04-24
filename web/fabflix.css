@@ -2,7 +2,8 @@
 /*    background-color: darkslategrey;*/
 /*}*/
 
-.fabflix-logo {
-    font-family: Calibri;
+#fabflix-top-logo {
+    font-family: fantasy;
     color: limegreen;
+    font-size: 3em;
 }
