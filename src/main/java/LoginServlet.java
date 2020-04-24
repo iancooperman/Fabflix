@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import javax.xml.transform.Result;
 import java.io.IOException;
@@ -32,16 +33,23 @@ public class LoginServlet extends HttpServlet {
         try {
             Connection dbcon = dataSource.getConnection();
             Statement statement = dbcon.createStatement();
-            String query = "SELECT password FROM customers WHERE email = '" + email + "';";
-            ResultSet passwordRS = statement.executeQuery(query);
+            String query = "SELECT * FROM customers WHERE email = '" + email + "';";
+            ResultSet userRS = statement.executeQuery(query);
 
-            if (passwordRS.next()) {
-                String dbPassword = passwordRS.getString("password");
+            if (userRS.next()) {
+                String dbID = userRS.getString("id");
+                String dbFirstName = userRS.getString("firstName");
+                String dbLastName = userRS.getString("lastName");
+                String dbCCId = userRS.getString("ccId");
+                String dbAddress = userRS.getString("address");
+                String dbEmail = email;
+                String dbPassword = userRS.getString("password");
                 if (password.equals(dbPassword)) {
                     // Login success:
 
                     // set this user into the session
-                    request.getSession().setAttribute("user", new User(email));
+                    HttpSession httpSession = request.getSession();
+                    httpSession.setAttribute("user", new User(dbID, dbFirstName, dbLastName, dbCCId, dbAddress, dbEmail));
 
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
@@ -60,7 +68,7 @@ public class LoginServlet extends HttpServlet {
 
             dbcon.close();
             statement.close();
-            passwordRS.close();
+            userRS.close();
         }
         catch (Exception e) {
             responseJsonObject.addProperty("status", "fail");
