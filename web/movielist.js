@@ -49,6 +49,8 @@ function populateYearOptions() {
     }
 }
 
+populateYearOptions();
+
 $.ajax({
    dataType: "json",
    method: "GET",
@@ -56,4 +58,3 @@ $.ajax({
     success: (resultData) => handleMovielistResult(resultData)
 });
 
-populateYearOptions();
