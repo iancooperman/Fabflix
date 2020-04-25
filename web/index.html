@@ -8,6 +8,7 @@
 <body class="bg-dark text-white">
   <h1 id="fabflix-top-logo" class="ml-3">Fabflix</h1>
 
+  <!--List Settings-->
   <div id="movie-list" class="container">
     <form>
       <div class="form-row">
@@ -20,7 +21,32 @@
           <select class="form-control" id="year" name="year"></select>
         </div>
       </div>
+      <div class="form-row">
+        <div class="col">
+          <label for="sortBy">Sort By</label>
+          <select class="form-control" id="sortBy" name="sortBy">
+            <option value="title">Title</option>
+            <option value="rating">Rating</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="show">Show </label>
+          <select class="form-control" id="show" name="show">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col">
+          <input type="submit" class="btn btn-info">
+        </div>
+      </div>
     </form>
+
+  <!--List-->
     <h1>Movies</h1>
     <table id="movie-table" border="1">
       <tr id="movie-table-header">
@@ -31,6 +57,11 @@
         <th>Rating</th>
       </tr>
     </table>
+  </div>
+
+  <div class="mx-auto mt-2" style="width: 200px">
+    <a id="prev-button" class="btn btn-info">Prev</a>
+    <a id="next-button" class="btn btn-info">Next</a>
   </div>
 
 <!--  Scripts-->

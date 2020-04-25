@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.MessageFormat;
 
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
 public class MovieListServlet extends HttpServlet {
@@ -31,11 +32,13 @@ public class MovieListServlet extends HttpServlet {
 
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT id, title, year, director, rating " +
-                            "FROM movies, ratings " +
-                             "WHERE movies.id = ratings.movieId " +
-                            "ORDER BY rating DESC " +
-                            "LIMIT 20;";
+            String limit = request.getParameter("show");
+
+            String query = String.format("SELECT id, title, year, director, rating " +
+                    "FROM movies, ratings " +
+                    "WHERE movies.id = ratings.movieId " +
+                    "ORDER BY rating DESC " +
+                    "LIMIT %s;", limit);
 
             // perform the query
             ResultSet rs = statement.executeQuery(query);
