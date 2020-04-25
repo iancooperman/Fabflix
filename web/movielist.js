@@ -37,6 +37,11 @@ function handleMovielistResult(movies) {
     }
 }
 
+function getUrlParam(param) {
+    let searchParams = new URLSearchParams(window.location.search)
+    return searchParams.get(param);
+}
+
 function populateYearOptions() {
     console.log("We getting here?");
     let selectTag = $("#year");
@@ -49,12 +54,20 @@ function populateYearOptions() {
     }
 }
 
+function determineParameters() {
+    getUrlParam("limit");
+}
+
+
 populateYearOptions();
+
+
+determineParameters();
 
 $.ajax({
    dataType: "json",
    method: "GET",
-   url: "api/movielist",
+   url: "api/movielist?limit=10",
     success: (resultData) => handleMovielistResult(resultData)
 });
 
