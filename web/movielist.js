@@ -37,10 +37,17 @@ function handleMovielistResult(movies) {
     }
 }
 
-function getUrlParam(param) {
+function getUrlParam(param, defaultValue) {
     let searchParams = new URLSearchParams(window.location.search)
-    return searchParams.get(param);
+    let value = searchParams.get(param);
+    if (value === null) {
+        return defaultValue;
+    }
+
+    return value;
 }
+
+
 
 function populateYearOptions() {
     console.log("We getting here?");
@@ -54,20 +61,21 @@ function populateYearOptions() {
     }
 }
 
-function determineParameters() {
-    getUrlParam("limit");
+function determineQueryParameters() {
+    let limit = getUrlParam("limit", 10);
+    console.log("Limit = " + limit);
+
+    $.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/movielist?limit=" + limit,
+        success: (resultData) => handleMovielistResult(resultData)
+    });
 }
 
 
 populateYearOptions();
+determineQueryParameters();
 
 
-determineParameters();
-
-$.ajax({
-   dataType: "json",
-   method: "GET",
-   url: "api/movielist?limit=10",
-    success: (resultData) => handleMovielistResult(resultData)
-});
 
