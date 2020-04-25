@@ -47,10 +47,7 @@ function getUrlParam(param, defaultValue) {
     return value;
 }
 
-
-
 function populateYearOptions() {
-    console.log("We getting here?");
     let selectTag = $("#year");
 
     let MIN_YEAR = 2000;
@@ -62,8 +59,10 @@ function populateYearOptions() {
 }
 
 function determineQueryParameters() {
-    let limit = getUrlParam("limit", 10);
-    console.log("Limit = " + limit);
+    let limit = getUrlParam("limit", "a");
+    $("#limit").val(limit);
+
+    console.log("limit = " + limit);
 
     $.ajax({
         dataType: "json",
@@ -76,6 +75,3 @@ function determineQueryParameters() {
 
 populateYearOptions();
 determineQueryParameters();
-
-
-

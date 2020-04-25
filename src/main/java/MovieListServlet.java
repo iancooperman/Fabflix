@@ -32,7 +32,24 @@ public class MovieListServlet extends HttpServlet {
 
             Statement statement = dbcon.createStatement();
 
-            String limit = request.getParameter("limit");
+            String limitOption = request.getParameter("limit");
+            String limit;
+            switch (limitOption) {
+                // case "a" = 10 is redundant
+                case "b":
+                    limit = "25";
+                    break;
+                case "c":
+                    limit = "50";
+                    break;
+                case "d":
+                    limit = "100";
+                    break;
+                default:
+                    limit = "10";
+                    break;
+            }
+
 
             String query = String.format("SELECT id, title, year, director, rating " +
                     "FROM movies, ratings " +
