@@ -1,16 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Fabflix</title>
-    <link rel="stylesheet" href="bootstrap.min.css">
-    <link rel="stylesheet" href="fabflix.css">
+  <title>Fabflix</title>
+  <script src="jquery-3.5.0.min.js"></script>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="fabflix.css">
 </head>
-<body>
-    <button id="logout_button">Logout</button>
-    <h1>Fabflix</h1>
+<body class="bg-dark text-white">
+  <h1 id="fabflix-top-logo" class="ml-3">Fabflix</h1>
 
-    <script src="jquery-3.5.0.min.js"></script>
-    <script src="logout.js"></script>
+  <div id="movie-list" class="container">
+    <form>
+      <div class="form-group">
+        <label for="movieTitle">Title</label>
+        <input type="text" class="form-control" id="movieTitle" name="movieTitle">
+      </div>
+      <div class="form-group">
+        <label for="year">Year</label>
+        <select class="form-control" id="year"></select>
+      </div>
+    </form>
+    <h1>Movies</h1>
+    <table id="movie-table" border="1">
+      <tr id="movie-table-header">
+        <th>Title</th>
+        <th>Director</th>
+        <th>Genres</th>
+        <th>Staring</th>
+        <th>Rating</th>
+      </tr>
+    </table>
+  </div>
+
+<!--  Scripts-->
+  <script src="movielist.js"></script>
+  <script src="logout.js"></script>
 </body>
 </html>

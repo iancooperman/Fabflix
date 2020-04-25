@@ -37,9 +37,23 @@ function handleMovielistResult(movies) {
     }
 }
 
+function populateYearOptions() {
+    console.log("We getting here?");
+    let selectTag = $("#year");
+
+    let MIN_YEAR = 2000;
+    let MAX_YEAR = 2020;
+
+    for (let i = MAX_YEAR; i >= MIN_YEAR; i--) {
+        selectTag.append("<option>" + i + "</option>");
+    }
+}
+
 $.ajax({
    dataType: "json",
    method: "GET",
    url: "api/movielist",
     success: (resultData) => handleMovielistResult(resultData)
 });
+
+populateYearOptions();
