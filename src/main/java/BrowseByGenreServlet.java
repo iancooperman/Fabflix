@@ -15,7 +15,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-@WebServlet(name = "BrowseByGenreServlet", urlPatterns = "/api/browseByGenre")
+@WebServlet(name = "BrowseByGenreServlet", urlPatterns = "/api/genres")
 public class BrowseByGenreServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
