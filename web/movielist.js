@@ -37,9 +37,63 @@ function handleMovielistResult(movies) {
     }
 }
 
-$.ajax({
-   dataType: "json",
-   method: "GET",
-   url: "api/movielist",
-    success: (resultData) => handleMovielistResult(resultData)
-});
+function getUrlParam(param, defaultValue) {
+    let searchParams = new URLSearchParams(window.location.search)
+    let value = searchParams.get(param);
+    if (value === null) {
+        return defaultValue;
+    }
+
+    return value;
+}
+
+function populateYearOptions() {
+    let selectTag = $("#year");
+
+    let MIN_YEAR = 2000;
+    let MAX_YEAR = 2020;
+
+    for (let i = MAX_YEAR; i >= MIN_YEAR; i--) {
+        selectTag.append("<option>" + i + "</option>");
+    }
+}
+
+function determineQueryParameters() {
+    let limit = getUrlParam("limit", "a");
+    let sortBy = getUrlParam("sortBy", "title");
+    let page = getUrlParam("page", 1);
+
+    // set appropriate input to correct values
+    $("#limit").val(limit);
+    $("#sortBy").val(sortBy);
+
+    console.log("limit = " + limit);
+    console.log("sortBy = " + sortBy);
+
+    $.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/movielist?limit=" + limit + "&sortBy=" + sortBy + "&page=" + page,
+        success: (resultData) => handleMovielistResult(resultData)
+    });
+}
+
+function querySubmission(formSubmitEvent) {
+    formSubmitEvent.preventDefault();
+
+    // get appropriate values
+    let limit = $("#limit").val();
+    let sortBy = $("#sortBy").val();
+    let page = getUrlParam("page", 1);
+    let url = "index.html?" + "limit=" + limit + "&sortBy=" + sortBy + "&page=" + page;
+
+    // Let the redirection commence!
+    window.location.href = url;
+}
+
+
+populateYearOptions();
+determineQueryParameters();
+
+// Bind redirection action to form submit button
+$("#queryForm").submit(querySubmission);

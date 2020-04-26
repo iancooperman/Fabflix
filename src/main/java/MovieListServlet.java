@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.MessageFormat;
 
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
 public class MovieListServlet extends HttpServlet {
@@ -31,11 +32,49 @@ public class MovieListServlet extends HttpServlet {
 
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT id, title, year, director, rating " +
-                            "FROM movies, ratings " +
-                             "WHERE movies.id = ratings.movieId " +
-                            "ORDER BY rating DESC " +
-                            "LIMIT 20;";
+            // Server-side input validation
+            String limitOption = request.getParameter("limit");
+            String limit;
+            switch (limitOption) {
+                // case "a" = 10 is redundant
+                case "b":
+                    limit = "25";
+                    break;
+                case "c":
+                    limit = "50";
+                    break;
+                case "d":
+                    limit = "100";
+                    break;
+                default:
+                    limit = "10";
+                    break;
+            }
+
+            String sortByOption = request.getParameter("sortBy");
+            String sortBy;
+            switch (sortByOption) {
+                // case "title" is redundant
+                case "rating":
+                    sortBy = "rating DESC, title ASC";
+                    break;
+                default:
+                    sortBy = "title ASC, rating DESC";
+                    break;
+            }
+
+            int page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+
+            int offset = (page - 1) * Integer.parseInt(limit);
+
+            String query = String.format("SELECT id, title, year, director, rating " +
+                    "FROM movies, ratings " +
+                    "WHERE movies.id = ratings.movieId " +
+                    "ORDER BY %s " +
+                    "LIMIT %s OFFSET %d;", sortBy, limit, offset);
 
             // perform the query
             ResultSet rs = statement.executeQuery(query);
