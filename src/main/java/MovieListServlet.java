@@ -63,12 +63,18 @@ public class MovieListServlet extends HttpServlet {
                     break;
             }
 
+            int page = Integer.parseInt(request.getParameter("page"));
+            if (page < 1) {
+                page = 1;
+            }
+
+            int offset = (page - 1) * Integer.parseInt(limit);
 
             String query = String.format("SELECT id, title, year, director, rating " +
                     "FROM movies, ratings " +
                     "WHERE movies.id = ratings.movieId " +
                     "ORDER BY %s " +
-                    "LIMIT %s;", sortBy, limit);
+                    "LIMIT %s OFFSET %d;", sortBy, limit, offset);
 
             // perform the query
             ResultSet rs = statement.executeQuery(query);
