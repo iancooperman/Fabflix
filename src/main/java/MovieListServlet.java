@@ -32,6 +32,7 @@ public class MovieListServlet extends HttpServlet {
 
             Statement statement = dbcon.createStatement();
 
+            // Server-side input validation
             String limitOption = request.getParameter("limit");
             String limit;
             switch (limitOption) {
@@ -50,12 +51,24 @@ public class MovieListServlet extends HttpServlet {
                     break;
             }
 
+            String sortByOption = request.getParameter("sortBy");
+            String sortBy;
+            switch (sortByOption) {
+                // case "title" is redundant
+                case "rating":
+                    sortBy = "rating DESC, title ASC";
+                    break;
+                default:
+                    sortBy = "title ASC, rating DESC";
+                    break;
+            }
+
 
             String query = String.format("SELECT id, title, year, director, rating " +
                     "FROM movies, ratings " +
                     "WHERE movies.id = ratings.movieId " +
-                    "ORDER BY rating DESC " +
-                    "LIMIT %s;", limit);
+                    "ORDER BY %s " +
+                    "LIMIT %s;", sortBy, limit);
 
             // perform the query
             ResultSet rs = statement.executeQuery(query);

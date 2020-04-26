@@ -60,14 +60,17 @@ function populateYearOptions() {
 
 function determineQueryParameters() {
     let limit = getUrlParam("limit", "a");
+    let sortBy = getUrlParam("sortBy", "title");
     $("#limit").val(limit);
+    $("#sortBy").val(sortBy);
 
     console.log("limit = " + limit);
+    console.log("sortBy = " + sortBy);
 
     $.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movielist?limit=" + limit,
+        url: "api/movielist?limit=" + limit + "&sortBy=" + sortBy,
         success: (resultData) => handleMovielistResult(resultData)
     });
 }
@@ -75,9 +78,12 @@ function determineQueryParameters() {
 function querySubmission(formSubmitEvent) {
     formSubmitEvent.preventDefault();
 
+    // get appropriate values
     let limit = $("#limit").val();
-    let url = "index.html?" + "limit=" + limit;
+    let sortBy = $("#sortBy").val();
+    let url = "index.html?" + "limit=" + limit + "&sortBy=" + sortBy;
 
+    // Let the redirection commence!
     window.location.href = url;
 }
 
