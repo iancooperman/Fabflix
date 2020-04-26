@@ -1,6 +1,4 @@
 function handleResult(resultData) {
-    console.log(resultData);
-
     let genreList = $("#genre_list");
 
     for (let i = 0; i < resultData.length; i++) {
@@ -14,9 +12,13 @@ function handleResult(resultData) {
 
 }
 
-$.ajax({
-    dataType: "json",
-    method: "GET",
-    url: "api/genres",
-    success: (resultData) => handleResult(resultData)
-});
+function fillGenreList() {
+    $.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/genres",
+        success: (resultData) => handleResult(resultData)
+    });
+}
+
+fillGenreList();
