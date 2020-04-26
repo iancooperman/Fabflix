@@ -1,71 +1,16 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Fabflix</title>
-  <script src="jquery-3.5.0.min.js"></script>
-  <link rel="stylesheet" href="bootstrap.min.css">
-  <link rel="stylesheet" href="fabflix.css">
+    <meta charset="UTF-8">
+    <title>Browse</title>
 </head>
-<body class="bg-dark text-white">
-  <h1 id="fabflix-top-logo" class="ml-3">Fabflix</h1>
+<body>
+    <h1>Browse</h1>
+    <h2>By Title</h2>
+    <h2>By Genre</h2>
+    <ul id="genre_list"></ul>
 
-  <!--List Settings-->
-  <div id="movie-list" class="container">
-    <form id="queryForm">
-      <div class="form-row">
-        <div class="col">
-          <label for="movieTitle">Title</label>
-          <input type="text" placeholder="Title" class="form-control" id="movieTitle" name="movieTitle">
-        </div>
-        <div class="col">
-          <label for="year">Year</label>
-          <select class="form-control" id="year" name="year"></select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col">
-          <label for="sortBy">Sort By</label>
-          <select class="form-control" id="sortBy" name="sortBy">
-            <option value="title">Title</option>
-            <option value="rating">Rating</option>
-          </select>
-        </div>
-        <div class="col">
-          <label for="limit">Show </label>
-          <select class="form-control" id="limit" name="limit">
-            <option value="a">10</option>
-            <option value="b">25</option>
-            <option value="c">50</option>
-            <option value="d">100</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col">
-          <input type="submit" id="submit-button" class="btn btn-info">
-        </div>
-      </div>
-    </form>
-
-  <!--List-->
-    <h1>Movies</h1>
-    <table id="movie-table" border="1">
-      <tr id="movie-table-header">
-        <th>Title</th>
-        <th>Director</th>
-        <th>Genres</th>
-        <th>Staring</th>
-        <th>Rating</th>
-      </tr>
-    </table>
-  </div>
-
-  <div class="mx-auto mt-2" style="width: 200px">
-    <a id="prev-button" class="btn btn-info">Prev</a>
-    <a id="next-button" class="btn btn-info">Next</a>
-  </div>
-
-<!--  Scripts-->
-  <script src="movielist.js"></script>
-  <script src="logout.js"></script>
+    <script src="../../jquery-3.5.0.min.js"></script>
+    <script src="browse.js"></script>
 </body>
 </html>

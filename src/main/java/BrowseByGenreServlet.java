@@ -15,7 +15,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-@WebServlet(name = "BrowseByGenreServlet", urlPatterns = "api/browseByGenre")
+@WebServlet(name = "BrowseByGenreServlet", urlPatterns = "/api/browseByGenre")
 public class BrowseByGenreServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
@@ -63,5 +63,8 @@ public class BrowseByGenreServlet extends HttpServlet {
             // It is my professional opinion that now is the time to panic!
             response.setStatus(500);
         }
+
+        // close the outward connection
+        out.close();
     }
 }
