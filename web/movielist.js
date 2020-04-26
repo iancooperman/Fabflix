@@ -72,6 +72,18 @@ function determineQueryParameters() {
     });
 }
 
+function querySubmission(formSubmitEvent) {
+    formSubmitEvent.preventDefault();
+
+    let limit = $("#limit").val();
+    let url = "index.html?" + "limit=" + limit;
+
+    window.location.href = url;
+}
+
 
 populateYearOptions();
 determineQueryParameters();
+
+// Bind redirection action to form submit button
+$("#queryForm").submit(querySubmission);
