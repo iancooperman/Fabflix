@@ -42,18 +42,32 @@ public class MovieListServlet extends HttpServlet {
             String sortBy = sortBySQL(sortByOption);
             String limit = limitSQL(limitOption);
             String offset = calculateOffset(pageOption, limit);
+            String titleLine = titleSQL(titleOption);
+            String yearLine = yearSQL(yearOption);
+            String directorLine = directorSQL(directorOption);
 
             // DB setup
             Connection dbcon = dataSource.getConnection();
             Statement statement = dbcon.createStatement();
 
             // Main query construction
-            String mainQuery = "SELECT movies.id, movies.title, movies.year, movies.director, ratings.rating " +
-                    "FROM movies, ratings " +
-                    "WHERE movies.id = ratings.movieId " +
-                    "ORDER BY " + sortBy + " " +
-                    "LIMIT " + limit + " " +
-                    "OFFSET " + offset;
+            StringBuffer mainQuery = new StringBuffer();
+            mainQuery.append("SELECT movies.id, movies.title, movies.year, movies.director, ratings.rating ");
+            mainQuery.append("FROM movies, ratings ");
+            mainQuery.append("WHERE movies.id = ratings.movieId ");
+            mainQuery.append(titleLine);
+            mainQuery.append(yearLine);
+            mainQuery.append(directorLine);
+
+
+
+
+
+            mainQuery.append("ORDER BY " + sortBy + " ");
+            mainQuery.append("LIMIT " + limit + " ");
+            mainQuery.append("OFFSET " + offset);
+
+            ResultSet mainResultSet = statement.executeQuery(mainQuery.toString());
 
 
 
@@ -62,7 +76,9 @@ public class MovieListServlet extends HttpServlet {
             out.write(jsonArray.toString());
             response.setStatus(200);
 
-            resultSet.close();
+            // Closing ResultSets
+            mainResultSet.close();
+
             statement.close();
             dbcon.close();
         }
@@ -75,6 +91,16 @@ public class MovieListServlet extends HttpServlet {
         }
 
         out.close();
+    }
+
+    private String directorSQL(String directorOption) {
+        // no director pattern specified
+        if (directorOption.equals("")) {
+            return "";
+        }
+        else {
+            return "AND "
+        }
     }
 
     // limit input validation
@@ -105,13 +131,41 @@ public class MovieListServlet extends HttpServlet {
     private String sortBySQL(String sortByOption) {
         switch (sortByOption) {
             case "title_asc":
-                return "title ASC, rating ASC";
+                return "title ASC, rating ASC ";
             case "title_desc":
-                return "title DESC, rating DESC";
+                return "title DESC, rating DESC ";
             case "rating_asc":
-                return "rating ASC, title ASC";
+                return "rating ASC, title ASC ";
             default:
-                return "rating DESC, title DESC";
+                return "rating DESC, title DESC ";
         }
+    }
+
+    // title input validation
+    private String titleSQL(String titleOption) {
+        // no title pattern specified
+        if (titleOption.equals("")) {
+            return "";
+        }
+
+        return "AND movies.title LIKE " + titleOption + " ";
+    }
+
+    // year input validation
+    private String yearSQL(String yearOption) {
+        // no year specified
+        if (yearOption.equals("0")) {
+            return "";
+        }
+
+        String sql = "AND movies.year = '";
+        int yearInt = Integer.parseInt(yearOption);
+        if (yearInt > 0) {
+            sql += yearInt + "' ";
+        }
+        else {
+            sql += "2020' ";
+        }
+        return sql;
     }
 }
