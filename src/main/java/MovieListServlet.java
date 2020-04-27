@@ -45,6 +45,8 @@ public class MovieListServlet extends HttpServlet {
             String titleLine = titleSQL(titleOption);
             String yearLine = yearSQL(yearOption);
             String directorLine = directorSQL(directorOption);
+            String starLine = starSQL(starOption);
+            String genreLine = genreSQL(genreOption);
 
             // DB setup
             Connection dbcon = dataSource.getConnection();
@@ -55,13 +57,13 @@ public class MovieListServlet extends HttpServlet {
             mainQuery.append("SELECT movies.id, movies.title, movies.year, movies.director, ratings.rating ");
             mainQuery.append("FROM movies, ratings ");
             mainQuery.append("WHERE movies.id = ratings.movieId ");
+
+            // search parameters
             mainQuery.append(titleLine);
             mainQuery.append(yearLine);
             mainQuery.append(directorLine);
-
-
-
-
+            mainQuery.append(starLine);
+            mainQuery.append(genreLine);
 
             mainQuery.append("ORDER BY " + sortBy + " ");
             mainQuery.append("LIMIT " + limit + " ");
@@ -93,13 +95,33 @@ public class MovieListServlet extends HttpServlet {
         out.close();
     }
 
+    private String genreSQL(String genreOption) {
+        // no star pattern specified
+        if (genreOption.equals("")) {
+            return "";
+        }
+        else {
+            return "AND EXISTS (SELECT * FROM genres_in_movies WHERE genreId = '" + genreOption + "' AND movies.id = genres_in_movies.movieId) ";
+        }
+    }
+
+    private String starSQL(String starOption) {
+        // no star pattern specified
+        if (starOption.equals("")) {
+            return "";
+        }
+        else {
+            return "AND EXISTS (SELECT * FROM stars, stars_in_movies WHERE stars.id = stars_in_movies.starId AND stars.name LIKE '" + starOption + "' AND movies.id = stars_in_movies.movieId) ";
+        }
+    }
+
     private String directorSQL(String directorOption) {
         // no director pattern specified
         if (directorOption.equals("")) {
             return "";
         }
         else {
-            return "AND "
+            return "AND movies.director LIKE '" + directorOption + "' ";
         }
     }
 
