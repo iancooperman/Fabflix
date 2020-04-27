@@ -72,6 +72,26 @@ public class MovieListServlet extends HttpServlet {
             ResultSet mainResultSet = statement.executeQuery(mainQuery.toString());
 
 
+            // Compile info
+            JsonArray jsonArray = new JsonArray();
+            while (mainResultSet.next()) {
+                String movie_id = mainResultSet.getString("movies.id");
+                String movie_title = mainResultSet.getString("movies.title");
+                String movie_year = mainResultSet.getString("movies.year");
+                String movie_director = mainResultSet.getString("movies.director");
+                String movie_rating = mainResultSet.getString("ratings.rating");
+
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("movie_id", movie_id);
+                jsonObject.addProperty("movie_title", movie_title);
+                jsonObject.addProperty("movie_year", movie_year);
+                jsonObject.addProperty("movie_director", movie_director);
+                jsonObject.addProperty("movie_rating", movie_rating);
+
+                jsonArray.add(jsonObject);
+            }
+
+
 
 
             // Bookkeeping things
