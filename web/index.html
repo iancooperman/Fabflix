@@ -1,71 +1,61 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Fabflix</title>
-  <script src="jquery-3.5.0.min.js"></script>
-  <link rel="stylesheet" href="bootstrap.min.css">
-  <link rel="stylesheet" href="fabflix.css">
+    <meta charset="UTF-8">
+    <title>Browse</title>
+    <link rel="stylesheet" href="fabflix.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
 </head>
 <body class="bg-dark text-white">
-  <h1 id="fabflix-top-logo" class="ml-3">Fabflix</h1>
+    <h1>Browse</h1>
 
-  <!--List Settings-->
-  <div id="movie-list" class="container">
-    <form id="queryForm">
-      <div class="form-row">
-        <div class="col">
-          <label for="movieTitle">Title</label>
-          <input type="text" placeholder="Title" class="form-control" id="movieTitle" name="movieTitle">
-        </div>
-        <div class="col">
-          <label for="year">Year</label>
-          <select class="form-control" id="year" name="year"></select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col">
-          <label for="sortBy">Sort By</label>
-          <select class="form-control" id="sortBy" name="sortBy">
-            <option value="title">Title</option>
-            <option value="rating">Rating</option>
-          </select>
-        </div>
-        <div class="col">
-          <label for="limit">Show </label>
-          <select class="form-control" id="limit" name="limit">
-            <option value="a">10</option>
-            <option value="b">25</option>
-            <option value="c">50</option>
-            <option value="d">100</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="col">
-          <input type="submit" id="submit-button" class="btn btn-info">
-        </div>
-      </div>
-    </form>
+<!--    Browse by title-->
+    <h3>By Title</h3>
+    <ul id="character_list" class="horizontal-list">
+        <li><a href="movielist.html?title=0%25">0</a></li>
+        <li><a href="movielist.html?title=1%25">1</a></li>
+        <li><a href="movielist.html?title=2%25">2</a></li>
+        <li><a href="movielist.html?title=3%25">3</a></li>
+        <li><a href="movielist.html?title=4%25">4</a></li>
+        <li><a href="movielist.html?title=5%25">5</a></li>
+        <li><a href="movielist.html?title=6%25">6</a></li>
+        <li><a href="movielist.html?title=7%25">7</a></li>
+        <li><a href="movielist.html?title=8%25">8</a></li>
+        <li><a href="movielist.html?title=9%25">9</a></li>
+        <li><a href="movielist.html?title=a%25">A</a></li>
+        <li><a href="movielist.html?title=b%25">B</a></li>
+        <li><a href="movielist.html?title=c%25">C</a></li>
+        <li><a href="movielist.html?title=d%25">D</a></li>
+        <li><a href="movielist.html?title=e%25">E</a></li>
+        <li><a href="movielist.html?title=f%25">F</a></li>
+        <li><a href="movielist.html?title=g%25">G</a></li>
+        <li><a href="movielist.html?title=h%25">H</a></li>
+        <li><a href="movielist.html?title=i%25">I</a></li>
+        <li><a href="movielist.html?title=j%25">J</a></li>
+        <li><a href="movielist.html?title=k%25">K</a></li>
+        <li><a href="movielist.html?title=l%25">L</a></li>
+        <li><a href="movielist.html?title=m%25">M</a></li>
+        <li><a href="movielist.html?title=n%25">N</a></li>
+        <li><a href="movielist.html?title=o%25">O</a></li>
+        <li><a href="movielist.html?title=p%25">P</a></li>
+        <li><a href="movielist.html?title=q%25">Q</a></li>
+        <li><a href="movielist.html?title=r%25">R</a></li>
+        <li><a href="movielist.html?title=s%25">S</a></li>
+        <li><a href="movielist.html?title=t%25">T</a></li>
+        <li><a href="movielist.html?title=u%25">U</a></li>
+        <li><a href="movielist.html?title=v%25">V</a></li>
+        <li><a href="movielist.html?title=w%25">W</a></li>
+        <li><a href="movielist.html?title=x%25">X</a></li>
+        <li><a href="movielist.html?title=y%25">Y</a></li>
+        <li><a href="movielist.html?title=z%25">Z</a></li>
+        <li><a href="movielist.html?title=*">*</a></li>
+    </ul>
 
-  <!--List-->
-    <h1>Movies</h1>
-    <table id="movie-table" border="1">
-      <tr id="movie-table-header">
-        <th>Title</th>
-        <th>Director</th>
-        <th>Genres</th>
-        <th>Staring</th>
-        <th>Rating</th>
-      </tr>
-    </table>
-  </div>
+<!--    Browse by genre-->
+    <h3>By Genre</h3>
+    <ul id="genre_list" class="three-column-list"></ul>
 
-  <div class="mx-auto mt-2" style="width: 200px">
-    <a id="prev-button" class="btn btn-info">Prev</a>
-    <a id="next-button" class="btn btn-info">Next</a>
-  </div>
-
-<!--  Scripts-->
-  <script src="movielist.js"></script>
-  <script src="logout.js"></script>
+    <script src="jquery-3.5.0.min.js"></script>
+    <script src="browse.js"></script>
 </body>
 </html>

@@ -19,7 +19,7 @@ function handleMovielistResult(movies) {
         // genres
         rowHTML += "<td><ul>";
         for (let j = 0; j < movieGenres.length; j++) {
-            rowHTML += "<li>" + movieGenres[j] + "</li>"
+            rowHTML += "<li><a href='movielist.html?genre=" + movieGenres[j]["genre_id"] + "'>" + movieGenres[j]["genre_name"] + "</a></li>"
         }
         rowHTML += "</ul></td>"
 
@@ -59,41 +59,34 @@ function populateYearOptions() {
 }
 
 function determineQueryParameters() {
-    let limit = getUrlParam("limit", "a");
-    let sortBy = getUrlParam("sortBy", "title");
+    let title = getUrlParam("title", "");
+    let year = getUrlParam("year", 0);
+    let director = getUrlParam("director", "");
+    let star = getUrlParam("star", "");
+    let genre = getUrlParam("genre", 0);
+    let limit = getUrlParam("limit", 10);
     let page = getUrlParam("page", 1);
+    let sortBy = getUrlParam("sortBy", "rating_desc");
 
-    // set appropriate input to correct values
-    $("#limit").val(limit);
-    $("#sortBy").val(sortBy);
-
-    console.log("limit = " + limit);
-    console.log("sortBy = " + sortBy);
-
+    // send query to backend
     $.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movielist?limit=" + limit + "&sortBy=" + sortBy + "&page=" + page,
+        url: "api/movielist",
+        data: {
+            "title": title,
+            "year": year,
+            "director": director,
+            "star": star,
+            "genre": genre,
+            "limit": limit,
+            "page": page,
+            "sortBy": sortBy
+        },
         success: (resultData) => handleMovielistResult(resultData)
     });
-}
-
-function querySubmission(formSubmitEvent) {
-    formSubmitEvent.preventDefault();
-
-    // get appropriate values
-    let limit = $("#limit").val();
-    let sortBy = $("#sortBy").val();
-    let page = getUrlParam("page", 1);
-    let url = "index.html?" + "limit=" + limit + "&sortBy=" + sortBy + "&page=" + page;
-
-    // Let the redirection commence!
-    window.location.href = url;
 }
 
 
 populateYearOptions();
 determineQueryParameters();
-
-// Bind redirection action to form submit button
-$("#queryForm").submit(querySubmission);
