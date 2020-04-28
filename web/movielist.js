@@ -69,7 +69,7 @@ function determineQueryParameters() {
     let limit = getUrlParam("limit", 10);
     let page = getUrlParam("page", 1);
     let sortBy = getUrlParam("sortBy", "rating_desc");
-    
+
 
     // set appropriate input to correct values
     $("#movieTitle").val(title);

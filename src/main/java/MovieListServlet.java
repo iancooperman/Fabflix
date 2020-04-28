@@ -38,6 +38,17 @@ public class MovieListServlet extends HttpServlet {
             String pageOption = request.getParameter("page"); // An integer > 0; default: 1
             String sortByOption = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
 
+            System.out.println("REQUEST:");
+            System.out.println("title: " + titleOption);
+            System.out.println("year: " + yearOption);
+            System.out.println("director: " + directorOption);
+            System.out.println("star: " + starOption);
+            System.out.println("genre: " + genreOption);
+            System.out.println("limit: " + limitOption);
+            System.out.println("page: " + pageOption);
+            System.out.println("sortBy: " + sortByOption);
+
+
             // input validation
             String sortBy = sortBySQL(sortByOption);
             String limit = limitSQL(limitOption);
@@ -68,6 +79,9 @@ public class MovieListServlet extends HttpServlet {
             mainQuery.append("ORDER BY " + sortBy + " ");
             mainQuery.append("LIMIT " + limit + " ");
             mainQuery.append("OFFSET " + offset);
+            mainQuery.append(";");
+
+            System.out.println(mainQuery);
 
             ResultSet mainResultSet = statement.executeQuery(mainQuery.toString());
 
@@ -118,7 +132,7 @@ public class MovieListServlet extends HttpServlet {
 
     private String genreSQL(String genreOption) {
         // no star pattern specified
-        if (genreOption.equals("")) {
+        if (genreOption.equals("0")) {
             return "";
         }
         else {
