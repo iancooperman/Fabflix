@@ -105,6 +105,7 @@ public class MovieListServlet extends HttpServlet {
             dbcon.close();
         }
         catch (Exception e) {
+            e.printStackTrace();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());

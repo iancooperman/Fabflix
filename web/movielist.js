@@ -59,21 +59,39 @@ function populateYearOptions() {
 }
 
 function determineQueryParameters() {
-    let limit = getUrlParam("limit", "a");
-    let sortBy = getUrlParam("sortBy", "title");
+    let title = getUrlParam("title", "");
+    let year = getUrlParam("year", 0);
+    let director = getUrlParam("director", "");
+    let star = getUrlParam("star", "");
+    let genre = getUrlParam("genre", 0);
+    let limit = getUrlParam("limit", 10);
     let page = getUrlParam("page", 1);
+    let sortBy = getUrlParam("sortBy", "rating_desc");
+
+
+    console.log(title);
+
+
 
     // set appropriate input to correct values
     $("#limit").val(limit);
     $("#sortBy").val(sortBy);
 
-    console.log("limit = " + limit);
-    console.log("sortBy = " + sortBy);
-
+    // send query to backend
     $.ajax({
         dataType: "json",
         method: "GET",
-        url: "api/movielist?limit=" + limit + "&sortBy=" + sortBy + "&page=" + page,
+        url: "api/movielist",
+        data: {
+            "title": title,
+            "year": year,
+            "director": director,
+            "star": star,
+            "genre": genre,
+            "limit": limit,
+            "page": page,
+            "sortBy": sortBy
+        },
         success: (resultData) => handleMovielistResult(resultData)
     });
 }
