@@ -91,6 +91,32 @@ function determineQueryParameters() {
     });
 }
 
+function setUpPageButtons() {
+    console.log("Is this working?");
+    let page = getUrlParam("page", "1");
+
+    let title = getUrlParam("title", "");
+    let year = getUrlParam("year", 0);
+    let director = getUrlParam("director", "");
+    let star = getUrlParam("star", "");
+    let genre = getUrlParam("genre", 0);
+    let limit = getUrlParam("limit", 10);
+    let sortBy = getUrlParam("sortBy", "rating_desc");
+
+    if (page === "1") {
+        $("#prev-button").remove();
+        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        $("#next-button").attr("href", nextURl);
+    }
+    else {
+        let prevURL = "movielist.html?" + $.param({"page": Number(page) - 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        $("#prev-button").attr("href", prevURL);
+        $("#next-button").attr("href", nextURl);
+    }
+}
+
 
 populateYearOptions();
 determineQueryParameters();
+setUpPageButtons();
