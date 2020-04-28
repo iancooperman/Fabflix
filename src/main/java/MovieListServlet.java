@@ -110,11 +110,12 @@ public class MovieListServlet extends HttpServlet {
 
                 // query to gather stars in proper order
                 StringBuffer starQuery = new StringBuffer();
-                starQuery.append("SELECT stars.id, stars.name, count(*)");
-                starQuery.append("FROM stars, stars_in_movies, (SELECT starId FROM stars_in_movies WHERE movieId = '" + movie_id + "') AS movie_stars");
+                starQuery.append("SELECT stars.id, stars.name, count(stars_in_movies.movieId) ");
+                starQuery.append("FROM stars, stars_in_movies, (SELECT starId FROM stars_in_movies WHERE movieId = '" + movie_id + "') AS movie_stars ");
                 starQuery.append("WHERE stars.id = stars_in_movies.starId AND stars_in_movies.starId = movie_stars.starId ");
                 starQuery.append("GROUP BY stars_in_movies.starId ");
-                starQuery.append("ORDER BY count(*) DESC;");
+                starQuery.append("ORDER BY count(*) DESC ");
+                starQuery.append("LIMIT 3");
 
 
                 ResultSet genreResultSet = genreStatement.executeQuery(genreQuery.toString());
