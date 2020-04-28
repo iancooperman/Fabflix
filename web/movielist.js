@@ -90,6 +90,3 @@ function determineQueryParameters() {
 
 populateYearOptions();
 determineQueryParameters();
-
-// Bind redirection action to form submit button
-$("#queryForm").submit(querySubmission);

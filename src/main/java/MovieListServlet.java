@@ -260,7 +260,8 @@ public class MovieListServlet extends HttpServlet {
             return "";
         }
         else if (titleOption.equals("*")) {
-            return "AND movies.title NOT LIKE '[a-z0-9]%'";
+            System.out.println("Is this getting called?");
+            return "AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ";
         }
 
         return "AND movies.title LIKE '" + titleOption + "' ";
