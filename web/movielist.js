@@ -10,7 +10,7 @@ function handleMovielistResult(movies) {
         let movieStars = movies[i]["movie_stars"];
         let movieRating = movies[i]["movie_rating"];
 
-        if (movieRating === "null") {
+        if (movieRating === null) {
             movieRating = "N/A";
         }
 
