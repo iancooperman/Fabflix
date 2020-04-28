@@ -68,12 +68,6 @@ function determineQueryParameters() {
     let page = getUrlParam("page", 1);
     let sortBy = getUrlParam("sortBy", "rating_desc");
 
-
-    // set appropriate input to correct values
-    $("#movieTitle").val(title);
-    $("#limit").val(limit);
-    $("#sortBy").val(sortBy);
-
     // send query to backend
     $.ajax({
         dataType: "json",
@@ -91,19 +85,6 @@ function determineQueryParameters() {
         },
         success: (resultData) => handleMovielistResult(resultData)
     });
-}
-
-function querySubmission(formSubmitEvent) {
-    formSubmitEvent.preventDefault();
-
-    // get appropriate values
-    let limit = $("#limit").val();
-    let sortBy = $("#sortBy").val();
-    let page = getUrlParam("page", 1);
-    let url = "index.html?" + "limit=" + limit + "&sortBy=" + sortBy + "&page=" + page;
-
-    // Let the redirection commence!
-    window.location.href = url;
 }
 
 

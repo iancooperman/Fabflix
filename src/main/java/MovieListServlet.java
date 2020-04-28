@@ -259,6 +259,9 @@ public class MovieListServlet extends HttpServlet {
         if (titleOption.equals("")) {
             return "";
         }
+        else if (titleOption.equals("*")) {
+            return "AND movies.title NOT LIKE '[a-z0-9]%'";
+        }
 
         return "AND movies.title LIKE '" + titleOption + "' ";
     }
