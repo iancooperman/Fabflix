@@ -66,8 +66,8 @@ public class MovieListServlet extends HttpServlet {
             // Main query construction
             StringBuffer mainQuery = new StringBuffer();
             mainQuery.append("SELECT movies.id, movies.title, movies.year, movies.director, ratings.rating ");
-            mainQuery.append("FROM movies, ratings ");
-            mainQuery.append("WHERE movies.id = ratings.movieId ");
+            mainQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
+            mainQuery.append("WHERE TRUE ");
 
             // search parameters
             mainQuery.append(titleLine);
