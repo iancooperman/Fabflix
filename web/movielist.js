@@ -19,16 +19,28 @@ function handleMovielistResult(movies) {
         rowHTML += "<td>" + movieDirector + "</td>";
 
         // genres
+        // rowHTML += "<td><ul>";
+        // for (let j = 0; j < movieGenres.length; j++) {
+        //     rowHTML += "<li>" + movieGenres[j] + "</li>"
+        // }
+        // rowHTML += "</ul></td>"
+
         rowHTML += "<td><ul>";
-        for (let j = 0; j < movieGenres.length; j++) {
-            rowHTML += "<li>" + movieGenres[j] + "</li>"
+        for (let j = 0; j < 3; j++) {
+            rowHTML += "Not yet";
         }
         rowHTML += "</ul></td>"
 
         // stars
+        // rowHTML += "<td><ul>";
+        // for (let j = 0; j < movieStars.length; j++) {
+        //     rowHTML += "<li><a href='star.html?id=" + movieStars[j]["star_id"] + "'>" + movieStars[j]["star_name"] + "</a></li>"
+        // }
+        // rowHTML += "</ul></td>"
+
         rowHTML += "<td><ul>";
-        for (let j = 0; j < movieStars.length; j++) {
-            rowHTML += "<li><a href='star.html?id=" + movieStars[j]["star_id"] + "'>" + movieStars[j]["star_name"] + "</a></li>"
+        for (let j = 0; j < 3; j++) {
+            rowHTML += "Not quite yet";
         }
         rowHTML += "</ul></td>"
 
