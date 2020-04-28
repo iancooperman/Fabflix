@@ -191,7 +191,7 @@ public class MovieListServlet extends HttpServlet {
             return "";
         }
 
-        return "AND movies.title LIKE " + titleOption + " ";
+        return "AND movies.title LIKE '" + titleOption + "' ";
     }
 
     // year input validation

@@ -1,4 +1,6 @@
 function handleMovielistResult(movies) {
+    console.log(movies);
+
     let movieTable = $("#movie-table");
 
     for (let i = 0; i < movies.length; i++) {
@@ -67,13 +69,10 @@ function determineQueryParameters() {
     let limit = getUrlParam("limit", 10);
     let page = getUrlParam("page", 1);
     let sortBy = getUrlParam("sortBy", "rating_desc");
-
-
-    console.log(title);
-
-
+    
 
     // set appropriate input to correct values
+    $("#movieTitle").val(title);
     $("#limit").val(limit);
     $("#sortBy").val(sortBy);
 
