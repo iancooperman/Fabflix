@@ -108,8 +108,17 @@ public class MovieListServlet extends HttpServlet {
                 genreQuery.append("ORDER BY genres.name ASC ");
                 genreQuery.append("LIMIT 3");
 
+                // query to gather stars in proper order
+                StringBuffer starQuery = new StringBuffer();
+                starQuery.append("SELECT stars.id, stars.name ");
+                starQuery.append("FROM stars, stars_in_movies, (SELECT starId, count(movieId) as numMovies FROM stars_in_movies GROUP BY starId) AS movie_count ");
+                starQuery.append("WHERE stars.id = stars_in_movies.starId AND stars.id = movie_count.starId AND stars_in_movies.movieId = '" + movie_id + "' ");
+                starQuery.append("ORDER BY movie_count.numMovies DESC, stars.name ASC ");
+                starQuery.append("LIMIT 3");
+
 
                 ResultSet genreResultSet = genreStatement.executeQuery(genreQuery.toString());
+                ResultSet starResultSet = starStatement.executeQuery(starQuery.toString());
 
                 // genre retrieval
                 JsonArray genreArray = new JsonArray();
@@ -122,6 +131,17 @@ public class MovieListServlet extends HttpServlet {
                     genreArray.add(genreObject);
                 }
 
+                // star retrieval
+                JsonArray starArray = new JsonArray();
+                while(starResultSet.next()) {
+                    String starId = starResultSet.getString("id");
+                    String starName = starResultSet.getString("name");
+                    JsonObject starObject = new JsonObject();
+                    starObject.addProperty("star_id", starId);
+                    starObject.addProperty("star_name", starName);
+                    starArray.add(starObject);
+                }
+
                 // add all properties to JsonObject
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("movie_id", movie_id);
@@ -130,12 +150,14 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("movie_director", movie_director);
                 jsonObject.addProperty("movie_rating", movie_rating);
                 jsonObject.add("movie_genres", genreArray);
+                jsonObject.add("movie_stars", starArray);
 
                 // Add the JsonObject to the movie array
                 jsonArray.add(jsonObject);
 
                 // close the per movieId ResultSets
                 genreResultSet.close();
+                starResultSet.close();
             }
 
             // Bookkeeping things
