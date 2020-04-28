@@ -101,7 +101,7 @@ public class MovieListServlet extends HttpServlet {
 
                 // query to gather genres per movieId
                 StringBuffer genreQuery = new StringBuffer();
-                genreQuery.append("SELECT genres.name ");
+                genreQuery.append("SELECT genres.id, genres.name ");
                 genreQuery.append("FROM genres, genres_in_movies ");
                 genreQuery.append("WHERE genres.id = genreId ");
                 genreQuery.append("AND movieId = '" + movie_id + "' ");
@@ -114,8 +114,12 @@ public class MovieListServlet extends HttpServlet {
                 // genre retrieval
                 JsonArray genreArray = new JsonArray();
                 while (genreResultSet.next()) {
-                    String genre = genreResultSet.getString("name");
-                    genreArray.add(genre);
+                    String genreId = genreResultSet.getString("id");
+                    String genreName = genreResultSet.getString("name");
+                    JsonObject genreObject = new JsonObject();
+                    genreObject.addProperty("genre_id", genreId);
+                    genreObject.addProperty("genre_name", genreName);
+                    genreArray.add(genreObject);
                 }
 
                 // add all properties to JsonObject

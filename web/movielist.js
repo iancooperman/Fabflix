@@ -21,7 +21,7 @@ function handleMovielistResult(movies) {
         // genres
         rowHTML += "<td><ul>";
         for (let j = 0; j < movieGenres.length; j++) {
-            rowHTML += "<li>" + movieGenres[j] + "</li>"
+            rowHTML += "<li><a href='movielist.html?genre=" + movieGenres[j]["genre_id"] + "'>" + movieGenres[j]["genre_name"] + "</a></li>"
         }
         rowHTML += "</ul></td>"
 
