@@ -19,15 +19,9 @@ function handleMovielistResult(movies) {
         rowHTML += "<td>" + movieDirector + "</td>";
 
         // genres
-        // rowHTML += "<td><ul>";
-        // for (let j = 0; j < movieGenres.length; j++) {
-        //     rowHTML += "<li>" + movieGenres[j] + "</li>"
-        // }
-        // rowHTML += "</ul></td>"
-
         rowHTML += "<td><ul>";
-        for (let j = 0; j < 3; j++) {
-            rowHTML += "Not yet";
+        for (let j = 0; j < movieGenres.length; j++) {
+            rowHTML += "<li>" + movieGenres[j] + "</li>"
         }
         rowHTML += "</ul></td>"
 
