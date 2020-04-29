@@ -45,6 +45,8 @@ function handleMovielistResult(movieData) {
 
         movieTable.append(rowHTML);
     }
+
+    setUpPageButtons();
 }
 
 function getUrlParam(param, defaultValue) {
@@ -55,17 +57,6 @@ function getUrlParam(param, defaultValue) {
     }
 
     return value;
-}
-
-function populateYearOptions() {
-    let selectTag = $("#year");
-
-    let MIN_YEAR = 2000;
-    let MAX_YEAR = 2020;
-
-    for (let i = MAX_YEAR; i >= MIN_YEAR; i--) {
-        selectTag.append("<option>" + i + "</option>");
-    }
 }
 
 function determineQueryParameters() {
@@ -110,18 +101,28 @@ function setUpPageButtons() {
 
     if (page === "1") {
         $("#prev-button").remove();
-        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
-        $("#next-button").attr("href", nextURl);
     }
     else {
         let prevURL = "movielist.html?" + $.param({"page": Number(page) - 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
-        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
         $("#prev-button").attr("href", prevURL);
+    }
+    
+
+    if (isLastPage()) {
+        $("#next-button").remove();
+    }
+    else {
+        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
         $("#next-button").attr("href", nextURl);
     }
 }
 
+function isLastPage() {
+    let pageNumber = Number(getUrlParam("page", 1));
+    let limit = Number(getUrlParam("limit", 10));
+    let results = Number(listings);
+    return ((limit * (pageNumber + 1)) > results);
+}
 
-populateYearOptions();
+
 determineQueryParameters();
-setUpPageButtons();
