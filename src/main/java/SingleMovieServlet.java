@@ -34,7 +34,7 @@ public class SingleMovieServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Query database for relevant info
-            String mainQuery = "SELECT title, year, director, rating " +
+            String mainQuery = "SELECT id, title, year, director, rating " +
                                 "FROM movies, ratings " +
                                 "WHERE movies.id = ratings.movieId " +
                                     "AND id = '" + movieId + "'";
@@ -43,6 +43,7 @@ public class SingleMovieServlet extends HttpServlet {
 
 
             titleYearDirectorRating.next();
+            String movie_id = titleYearDirectorRating.getString("id");
             String title = titleYearDirectorRating.getString("title");
             String year = titleYearDirectorRating.getString("year");
             String director = titleYearDirectorRating.getString("director");
@@ -56,12 +57,22 @@ public class SingleMovieServlet extends HttpServlet {
             Statement genreStatement = dbcon.createStatement();
             ResultSet genres = genreStatement.executeQuery(genreQuery);
 
-            String starsQuery = "SELECT starId, name " +
-                                "FROM stars, stars_in_movies " +
-                                "WHERE stars.id = stars_in_movies.starId " +
-                                    "AND stars_in_movies.movieId = '" + movieId + "'";
+//            String starsQuery = "SELECT starId, name " +
+//                                "FROM stars, stars_in_movies " +
+//                                "WHERE stars.id = stars_in_movies.starId " +
+//                                    "AND stars_in_movies.movieId = '" + movieId + "'";
+
+            // query to gather stars in proper order
+            StringBuffer starsQuery = new StringBuffer();
+            starsQuery.append("SELECT stars.id AS starId, stars.name AS name, count(stars_in_movies.movieId) ");
+            starsQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = '" + movie_id + "') AS movie_stars, stars, stars_in_movies ");
+            starsQuery.append("WHERE stars.id = stars_in_movies.starId AND stars_in_movies.starId = movie_stars.starId ");
+            starsQuery.append("GROUP BY stars_in_movies.starId ");
+            starsQuery.append("ORDER BY count(*) DESC ");
+
+
             Statement starsStatement = dbcon.createStatement();
-            ResultSet stars = starsStatement.executeQuery(starsQuery);
+            ResultSet stars = starsStatement.executeQuery(starsQuery.toString());
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("movie_title", title);
