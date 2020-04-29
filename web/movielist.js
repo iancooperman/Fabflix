@@ -106,7 +106,7 @@ function setUpPageButtons() {
         let prevURL = "movielist.html?" + $.param({"page": Number(page) - 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
         $("#prev-button").attr("href", prevURL);
     }
-    
+
 
     if (isLastPage()) {
         $("#next-button").remove();

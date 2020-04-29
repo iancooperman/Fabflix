@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.MessageFormat;
+import java.util.HashMap;
 
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
 public class MovieListServlet extends HttpServlet {
@@ -37,6 +39,19 @@ public class MovieListServlet extends HttpServlet {
             String limitOption = request.getParameter("limit"); // 10, 25, 50, or 100; default: 10
             String pageOption = request.getParameter("page"); // An integer > 0; default: 1
             String sortByOption = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
+
+            // pass parameters to session
+            HttpSession session = request.getSession();
+            HashMap<String, String> parameterMap = new HashMap<String, String>();
+            parameterMap.put("title", titleOption);
+            parameterMap.put("year", yearOption);
+            parameterMap.put("director", directorOption);
+            parameterMap.put("star", starOption);
+            parameterMap.put("genre", genreOption);
+            parameterMap.put("limit", limitOption);
+            parameterMap.put("page", pageOption);
+            parameterMap.put("sortBy", sortByOption);
+            session.setAttribute("movielistParameters", parameterMap);
 
             System.out.println("REQUEST:");
             System.out.println("title: " + titleOption);
