@@ -65,33 +65,55 @@ public class MovieListServlet extends HttpServlet {
 
             // Main query construction
             StringBuffer mainQuery = new StringBuffer();
+            StringBuffer rowCountQuery = new StringBuffer();
             mainQuery.append("SELECT movies.id, movies.title, movies.year, movies.director, ratings.rating ");
+            rowCountQuery.append("SELECT count(*)");
             mainQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
+            rowCountQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
             mainQuery.append("WHERE TRUE ");
+            rowCountQuery.append("WHERE TRUE ");
 
             // search parameters
             mainQuery.append(titleLine);
+            rowCountQuery.append(titleLine);
             mainQuery.append(yearLine);
+            rowCountQuery.append(yearLine);
             mainQuery.append(directorLine);
+            rowCountQuery.append(directorLine);
             mainQuery.append(starLine);
+            rowCountQuery.append(starLine);
             mainQuery.append(genreLine);
+            rowCountQuery.append(genreLine);
 
             mainQuery.append("ORDER BY " + sortBy + " ");
+            rowCountQuery.append("ORDER BY " + sortBy + " ");
             mainQuery.append("LIMIT " + limit + " ");
+            rowCountQuery.append("LIMIT " + limit + " ");
             mainQuery.append("OFFSET " + offset);
+            rowCountQuery.append("OFFSET " + offset);
             mainQuery.append(";");
+            rowCountQuery.append(";");
 
             System.out.println(mainQuery);
 
             // create statements
             Statement mainStatement = dbcon.createStatement();
+            Statement rowCountStatement = dbcon.createStatement();
             Statement genreStatement = dbcon.createStatement();
             Statement starStatement = dbcon.createStatement();
 
             ResultSet mainResultSet = mainStatement.executeQuery(mainQuery.toString());
+            ResultSet rowCountResultSet = rowCountStatement.executeQuery(rowCountQuery.toString());
+
+            JsonObject mainJsonObject = new JsonObject();
+            // get row count
+            if (rowCountResultSet.next()) {
+                String rowCount = rowCountResultSet.getString(1);
+                mainJsonObject.addProperty("row_count", rowCount);
+            }
 
             // Compile info
-            JsonArray jsonArray = new JsonArray();
+            JsonArray movieArray = new JsonArray();
             while (mainResultSet.next()) {
                 String movie_id = mainResultSet.getString("movies.id");
                 String movie_title = mainResultSet.getString("movies.title");
@@ -154,19 +176,22 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.add("movie_stars", starArray);
 
                 // Add the JsonObject to the movie array
-                jsonArray.add(jsonObject);
+                movieArray.add(jsonObject);
 
                 // close the per movieId ResultSets
                 genreResultSet.close();
                 starResultSet.close();
             }
+            mainJsonObject.add("movies", movieArray);
+
 
             // Bookkeeping things
-            out.write(jsonArray.toString());
+            out.write(mainJsonObject.toString());
             response.setStatus(200);
 
             // Closing ResultSets
             mainResultSet.close();
+            rowCountResultSet.close();
             genreStatement.close();
             starStatement.close();
 

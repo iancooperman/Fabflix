@@ -1,5 +1,11 @@
-function handleMovielistResult(movies) {
+let listings;
+
+function handleMovielistResult(movieData) {
     let movieTable = $("#movie-table");
+
+    listings = movieData["row_count"];
+
+    let movies = movieData["movies"];
 
     for (let i = 0; i < movies.length; i++) {
         let movieId = movies[i]["movie_id"];
@@ -92,7 +98,6 @@ function determineQueryParameters() {
 }
 
 function setUpPageButtons() {
-    console.log("Is this working?");
     let page = getUrlParam("page", "1");
 
     let title = getUrlParam("title", "");
