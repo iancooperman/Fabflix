@@ -48,10 +48,11 @@ public class SingleMovieServlet extends HttpServlet {
             String director = titleYearDirectorRating.getString("director");
             String rating = titleYearDirectorRating.getString("rating");
 
-            String genreQuery = "SELECT name " +
+            String genreQuery = "SELECT id, name " +
                                 "FROM genres, genres_in_movies " +
                                 "WHERE genres.id = genres_in_movies.genreId " +
-                                    "AND genres_in_movies.movieId = '" + movieId + "'";
+                                    "AND genres_in_movies.movieId = '" + movieId + "' " +
+                                "ORDER BY name ASC";
             Statement genreStatement = dbcon.createStatement();
             ResultSet genres = genreStatement.executeQuery(genreQuery);
 
@@ -70,7 +71,13 @@ public class SingleMovieServlet extends HttpServlet {
 
             JsonArray genreArray = new JsonArray();
             while(genres.next()) {
-                genreArray.add(genres.getString(1));
+                String id = genres.getString("id");
+                String name = genres.getString("name");
+
+                JsonObject genreObject = new JsonObject();
+                genreObject.addProperty("genre_id", id);
+                genreObject.addProperty("genre_name", name);
+                genreArray.add(genreObject);
             }
             jsonObject.add("genres", genreArray);
 

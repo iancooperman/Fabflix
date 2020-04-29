@@ -10,7 +10,10 @@ function handleMovieResult(resultData) {
 
     let genresHTML = ""
     for (let i = 0; i < resultData["genres"].length; i++) {
-        genresHTML += resultData["genres"][i] + ", ";
+        let genre_id = resultData["genres"][i]["genre_id"];
+        let genre_name = resultData["genres"][i]["genre_name"];
+
+        genresHTML += "<a href='movielist.html?genre=" + genre_id + "'>" + genre_name + "</a>, ";
     }
     genresHTML = genresHTML.substring(0, genresHTML.length - 2);
 
