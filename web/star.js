@@ -22,6 +22,12 @@ function handleStarResult(resultData) {
         tableInnerHTML += "<tr><td><a href='movie.html?id=" + movieId + "'>" + movieTitle + "</a></td></tr>";
     }
     $("#filmography-table").html(tableInnerHTML);
+
+    // set "Back to Movies" URL
+    let movielistParameters = resultData["movielist_parameters"];
+    let backURL = "movielist.html?" + $.param(movielistParameters);
+    $("#movie-list-link").attr("href", backURL);
+
 }
 
 

@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>Fabflix</title>
+  <script src="jquery-3.5.0.min.js"></script>
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <link rel="stylesheet" href="fabflix.css">
+</head>
+<body class="bg-dark text-white">
+  <h1 id="fabflix-top-logo" class="ml-3">Fabflix</h1>
+
+  <!--List Settings-->
+  <div id="movie-list" class="container">
+
+  <!--List-->
+    <h1>Movies</h1>
+    <form id="adjust-form">
+      <label for="entries-per-page">Entries per page</label>
+      <select id="entries-per-page" name="entries-per-page" class="mr-2">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      <label for="sort-by">Sort By</label>
+      <select id="sort-by">
+        <option value="title_asc_rating_asc">Title Ascending, Rating Ascending</option>
+        <option value="title_asc_rating_desc">Title Ascending, Rating Descending</option>
+        <option value="title_desc_rating_asc">Title Descending, Rating Ascending</option>
+        <option value="title_desc_rating_desc">Title Descending, Rating Descending</option>
+        <option value="rating_asc_title_asc">Rating Ascending, Title Ascending</option>
+        <option value="rating_asc_title_desc">Rating Ascending, Title Descending</option>
+        <option value="rating_desc_title_asc">Rating Descending, Title Ascending</option>
+        <option value="rating_desc_title_desc">Rating Descending, Title Descending</option>
+      </select>
+      <input type="submit" value="Reload" id="reload-button">
+    </form>
+    <table id="movie-table" border="1">
+      <tr id="movie-table-header">
+        <th>Title</th>
+        <th>Director</th>
+        <th>Genres</th>
+        <th>Staring</th>
+        <th>Rating</th>
+      </tr>
+    </table>
+  </div>
+
+  <div class="mx-auto mt-2" style="width: 200px">
+    <a id="prev-button" class="btn btn-info">Prev</a>
+    <a id="next-button" class="btn btn-info">Next</a>
+  </div>
+
+<!--  Scripts-->
+  <script src="movielist.js"></script>
+  <script src="logout.js"></script>
+</body>
+</html>
