@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import javax.xml.transform.Result;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
 
 @WebServlet(name = "SingleStarServlet", urlPatterns = "/api/star")
 public class SingleStarServlet extends HttpServlet {
@@ -56,7 +58,8 @@ public class SingleStarServlet extends HttpServlet {
                                 "FROM stars, stars_in_movies, movies " +
                                 "WHERE stars.id = stars_in_movies.starId " +
                                     "AND stars_in_movies.movieId = movies.id " +
-                                    " AND starId = '" + starId + "'";
+                                    " AND starId = '" + starId + "' " +
+                                    " ORDER BY movies.year DESC, movies.title ASC";
             Statement movieStatement = dbcon.createStatement();
             ResultSet filmography = movieStatement.executeQuery(movieQuery);
 
@@ -72,6 +75,31 @@ public class SingleStarServlet extends HttpServlet {
 
             jsonObject.add("filmography", filmographyArray);
 
+            // Retrieve MovieList parameters from session
+            HttpSession session = request.getSession();
+            HashMap<String, String> parameterMap = (HashMap<String, String>) session.getAttribute("movielistParameters");
+            String title = parameterMap.get("title");
+            String year = parameterMap.get("year");
+            String director = parameterMap.get("director");
+            String genre = parameterMap.get("genre");
+            String star = parameterMap.get("star");
+            String page = parameterMap.get("page");
+            String limit = parameterMap.get("limit");
+            String sortBy = parameterMap.get("sortBy");
+
+            JsonObject parameterObject = new JsonObject();
+            parameterObject.addProperty("title", title);
+            parameterObject.addProperty("year", year);
+            parameterObject.addProperty("director", director);
+            parameterObject.addProperty("genre", genre);
+            parameterObject.addProperty("star", star);
+            parameterObject.addProperty("page", page);
+            parameterObject.addProperty("limit", limit);
+            parameterObject.addProperty("sortBy", sortBy);
+
+            jsonObject.add("movielist_parameters", parameterObject);
+
+
             out.write(jsonObject.toString());
             response.setStatus(200);
 
@@ -83,6 +111,7 @@ public class SingleStarServlet extends HttpServlet {
             dbcon.close();
         }
         catch (Exception e) {
+            e.printStackTrace();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());

@@ -68,7 +68,7 @@ function determineQueryParameters() {
     let genre = getUrlParam("genre", 0);
     let limit = getUrlParam("limit", 10);
     let page = getUrlParam("page", 1);
-    let sortBy = getUrlParam("sortBy", "rating_desc");
+    let sortBy = getUrlParam("sortBy", "rating_desc_title_asc");
 
     // send query to backend
     $.ajax({
@@ -98,7 +98,7 @@ function setUpPageButtons() {
     let star = getUrlParam("star", "");
     let genre = getUrlParam("genre", 0);
     let limit = getUrlParam("limit", 10);
-    let sortBy = getUrlParam("sortBy", "rating_desc");
+    let sortBy = getUrlParam("sortBy", "rating_desc_title_asc");
 
     if (page === "1") {
         $("#prev-button").remove();
@@ -146,7 +146,7 @@ function reloadWithNewParams(eventObject) {
 
 function setFormValues() {
     let limit = getUrlParam("limit", 10);
-    let sortBy = getUrlParam("sortBy", "rating_desc");
+    let sortBy = getUrlParam("sortBy", "rating_desc_title_asc");
 
     $("#entries-per-page").val(limit);
     $("#sort-by").val(sortBy);
