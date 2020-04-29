@@ -23,6 +23,11 @@ function handleMovieResult(resultData) {
     starsHTML = starsHTML.substring(0, starsHTML.length - 2);
 
     $("#row-4").html(starsHTML);
+
+    // set "Back to Movies" URL
+    let movielistParameters = resultData["movielist_parameters"];
+    let backURL = "movielist.html?" + $.param(movielistParameters);
+    $("#movie-list-link").attr("href", backURL);
 }
 
 $.ajax({

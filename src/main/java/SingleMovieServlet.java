@@ -8,12 +8,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
 
 @WebServlet(name = "SingleMovieServlet", urlPatterns = "/api/movie")
 public class SingleMovieServlet extends HttpServlet {
@@ -81,6 +83,30 @@ public class SingleMovieServlet extends HttpServlet {
                 starsArray.add(starInfo);
             }
             jsonObject.add("stars", starsArray);
+
+            // Retrieve MovieList parameters from session
+            HttpSession session = request.getSession();
+            HashMap<String, String> parameterMap = (HashMap<String, String>) session.getAttribute("movielistParameters");
+            String titleParam = parameterMap.get("title");
+            String yearParam = parameterMap.get("year");
+            String directorParam = parameterMap.get("director");
+            String genreParam = parameterMap.get("genre");
+            String starParam = parameterMap.get("star");
+            String pageParam = parameterMap.get("page");
+            String limitParam = parameterMap.get("limit");
+            String sortByParam = parameterMap.get("sortBy");
+
+            JsonObject parameterObject = new JsonObject();
+            parameterObject.addProperty("title", titleParam);
+            parameterObject.addProperty("year", yearParam);
+            parameterObject.addProperty("director", directorParam);
+            parameterObject.addProperty("genre", genreParam);
+            parameterObject.addProperty("star", starParam);
+            parameterObject.addProperty("page", pageParam);
+            parameterObject.addProperty("limit", limitParam);
+            parameterObject.addProperty("sortBy", sortByParam);
+
+            jsonObject.add("movielist_parameters", parameterObject);
 
             // write JSON string to output
             out.write(jsonObject.toString());
