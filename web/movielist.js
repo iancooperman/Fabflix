@@ -4,6 +4,7 @@ function handleMovielistResult(movieData) {
     let movieTable = $("#movie-table");
 
     listings = movieData["row_count"];
+    setUpPageButtons();
 
     let movies = movieData["movies"];
 
@@ -46,7 +47,7 @@ function handleMovielistResult(movieData) {
         movieTable.append(rowHTML);
     }
 
-    setUpPageButtons();
+
 }
 
 function getUrlParam(param, defaultValue) {
