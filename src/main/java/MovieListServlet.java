@@ -282,12 +282,20 @@ public class MovieListServlet extends HttpServlet {
     // sortBy input validation
     private String sortBySQL(String sortByOption) {
         switch (sortByOption) {
-            case "title_asc":
+            case "title_asc_rating_asc":
                 return "title ASC, rating ASC ";
-            case "title_desc":
+            case "title_asc_rating_desc":
+                return "title ASC, rating DESC ";
+            case "title_desc_rating_asc":
+                return "title DESC, rating ASC ";
+            case "title_desc_rating_desc":
                 return "title DESC, rating DESC ";
-            case "rating_asc":
+            case "rating_asc_title_asc":
                 return "rating ASC, title ASC ";
+            case "rating_asc_title_desc":
+                return "rating ASC, title DESC ";
+            case "rating_desc_title_asc":
+                return "rating DESC, title ASC ";
             default:
                 return "rating DESC, title DESC ";
         }
