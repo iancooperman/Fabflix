@@ -56,7 +56,8 @@ public class SingleStarServlet extends HttpServlet {
                                 "FROM stars, stars_in_movies, movies " +
                                 "WHERE stars.id = stars_in_movies.starId " +
                                     "AND stars_in_movies.movieId = movies.id " +
-                                    " AND starId = '" + starId + "'";
+                                    " AND starId = '" + starId + "' " +
+                                    " ORDER BY movies.year DESC, movies.title ASC";
             Statement movieStatement = dbcon.createStatement();
             ResultSet filmography = movieStatement.executeQuery(movieQuery);
 
