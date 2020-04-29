@@ -124,5 +124,34 @@ function isLastPage() {
     return ((limit * (pageNumber + 1)) > results);
 }
 
+function reloadWithNewParams(eventObject) {
+    eventObject.preventDefault();
 
+    let page = getUrlParam("page", "1");
+    let title = getUrlParam("title", "");
+    let year = getUrlParam("year", 0);
+    let director = getUrlParam("director", "");
+    let star = getUrlParam("star", "");
+    let genre = getUrlParam("genre", 0);
+
+    let limit = $("#entries-per-page").val();
+    let sortBy = $("#sort-by").val();
+
+    let newURL = "movielist.html?" + $.param({"page": Number(page), "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+
+    window.location.href = newURL;
+
+}
+
+function setFormValues() {
+    let limit = getUrlParam("limit", 10);
+    let sortBy = getUrlParam("sortBy", "rating_desc");
+
+    $("#entries-per-page").val(limit);
+    $("#sort-by").val(sortBy);
+}
+
+$("#adjust-form").submit(reloadWithNewParams);
 determineQueryParameters();
+setFormValues();
+
