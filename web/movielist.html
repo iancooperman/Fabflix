@@ -13,6 +13,23 @@
 
   <!--List-->
     <h1>Movies</h1>
+    <form id="adjust-form">
+      <label for="entries-per-page">Entries per page</label>
+      <select id="entries-per-page" name="entries-per-page" class="mr-2">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      <label for="sort-by">Sort By</label>
+      <select id="sort-by">
+        <option value="title_asc">Title Ascending</option>
+        <option value="title_desc">Title Descending</option>
+        <option value="rating_asc">Rating Ascending</option>
+        <option value="rating_desc">Rating Descending</option>
+      </select>
+      <input type="submit" value="Reload" id="reload-button">
+    </form>
     <table id="movie-table" border="1">
       <tr id="movie-table-header">
         <th>Title</th>

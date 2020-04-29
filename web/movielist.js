@@ -1,5 +1,12 @@
-function handleMovielistResult(movies) {
+let listings;
+
+function handleMovielistResult(movieData) {
     let movieTable = $("#movie-table");
+
+    listings = movieData["row_count"];
+    setUpPageButtons();
+
+    let movies = movieData["movies"];
 
     for (let i = 0; i < movies.length; i++) {
         let movieId = movies[i]["movie_id"];
@@ -39,6 +46,8 @@ function handleMovielistResult(movies) {
 
         movieTable.append(rowHTML);
     }
+
+
 }
 
 function getUrlParam(param, defaultValue) {
@@ -49,17 +58,6 @@ function getUrlParam(param, defaultValue) {
     }
 
     return value;
-}
-
-function populateYearOptions() {
-    let selectTag = $("#year");
-
-    let MIN_YEAR = 2000;
-    let MAX_YEAR = 2020;
-
-    for (let i = MAX_YEAR; i >= MIN_YEAR; i--) {
-        selectTag.append("<option>" + i + "</option>");
-    }
 }
 
 function determineQueryParameters() {
@@ -91,6 +89,70 @@ function determineQueryParameters() {
     });
 }
 
+function setUpPageButtons() {
+    let page = getUrlParam("page", "1");
 
-populateYearOptions();
+    let title = getUrlParam("title", "");
+    let year = getUrlParam("year", 0);
+    let director = getUrlParam("director", "");
+    let star = getUrlParam("star", "");
+    let genre = getUrlParam("genre", 0);
+    let limit = getUrlParam("limit", 10);
+    let sortBy = getUrlParam("sortBy", "rating_desc");
+
+    if (page === "1") {
+        $("#prev-button").remove();
+    }
+    else {
+        let prevURL = "movielist.html?" + $.param({"page": Number(page) - 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        $("#prev-button").attr("href", prevURL);
+    }
+
+
+    if (isLastPage()) {
+        $("#next-button").remove();
+    }
+    else {
+        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        $("#next-button").attr("href", nextURl);
+    }
+}
+
+function isLastPage() {
+    let pageNumber = Number(getUrlParam("page", 1));
+    let limit = Number(getUrlParam("limit", 10));
+    let results = Number(listings);
+    return ((limit * (pageNumber + 1)) > results);
+}
+
+function reloadWithNewParams(eventObject) {
+    eventObject.preventDefault();
+
+    let page = getUrlParam("page", "1");
+    let title = getUrlParam("title", "");
+    let year = getUrlParam("year", 0);
+    let director = getUrlParam("director", "");
+    let star = getUrlParam("star", "");
+    let genre = getUrlParam("genre", 0);
+
+    let limit = $("#entries-per-page").val();
+    let sortBy = $("#sort-by").val();
+
+    let newURL = "movielist.html?" + $.param({"page": Number(page), "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+
+    window.location.href = newURL;
+
+}
+
+function setFormValues() {
+    let limit = getUrlParam("limit", 10);
+    let sortBy = getUrlParam("sortBy", "rating_desc");
+
+    $("#entries-per-page").val(limit);
+    $("#sort-by").val(sortBy);
+}
+
+$("#adjust-form").submit(reloadWithNewParams);
 determineQueryParameters();
+setFormValues();
+
