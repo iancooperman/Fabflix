@@ -5,7 +5,7 @@ function handleResult(resultData) {
         let genreId = resultData[i]["genreId"];
         let genreName = resultData[i]["genreName"];
 
-        let parameterObject = movielistDefaultValues;
+        let parameterObject = movielistDefaultValues();
         parameterObject["genre"] = genreId;
         let serializedParameters = $.param(parameterObject);
 
@@ -51,7 +51,7 @@ function handleSubmission(eventObject) {
     let directorPattern = createTextPattern($("#director").val());
     let starPattern = createTextPattern($("#star").val());
 
-    let parameterObject = movielistDefaultValues;
+    let parameterObject = movielistDefaultValues();
     parameterObject["title"] = titlePattern;
     parameterObject["year"] = year;
     parameterObject["director"] = directorPattern;
@@ -67,4 +67,43 @@ function handleSubmission(eventObject) {
 }
 
 fillGenreList();
+
+function createCharacterLI(character) {
+    let parameters = movielistDefaultValues();
+    parameters["title"] = character + "%";
+    let href = "movielist.html?" + $.param(parameters);
+    let html = "<li><a href='" + href + "'>" + character + "</a></li>";
+    return html;
+}
+
+function fillCharacterList() {
+    let characterList = $("#character_list");
+
+    for (let i = 48; i <= 57; i++) {
+        let character = String.fromCharCode(i);
+        let html = createCharacterLI(character);
+        characterList.append(html);
+    }
+
+    for (let i = 65; i <= 90; i++) {
+        let character = String.fromCharCode(i);
+        let html = createCharacterLI(character);
+        characterList.append(html);
+    }
+
+    let parameters = movielistDefaultValues();
+    parameters["title"] = "*";
+    let href = "movielist.html?" + $.param(parameters);
+    let html = "<li><a href='" + href + "'>" + "*" + "</a></li>";
+
+    characterList.append(html);
+
+
+
+
+
+    $("#character_list").append();
+}
+
+fillCharacterList();
 $("#search-form").submit(handleSubmission);
