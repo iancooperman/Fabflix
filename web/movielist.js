@@ -46,14 +46,26 @@ function handleMovielistResult(movieData) {
         rowHTML += "<td>" + movieRating + "/10</td>";
 
         // Price
-        rowHTML += "<td><button>$" + moviePrice + "</button></td>";
+        rowHTML += "<td><button class='btn btn-info price_button'>$" + moviePrice + "</button></td>";
 
         // end the row
         rowHTML += "</tr>";
         movieTable.append(rowHTML);
+
+        // add click listener to the newly created price button
+        $(".price_button").last().click(function() {addToCart(movieId);});
     }
+}
 
-
+function addToCart(movieId) {
+    console.log("is this registering?");
+    $.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/addToCart",
+        data: {"id": movieId},
+        success: (resultData) => alert(resultData["message"])
+    })
 }
 
 function getUrlParam(param, defaultValue) {

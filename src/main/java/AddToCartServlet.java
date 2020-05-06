@@ -30,9 +30,6 @@ public class AddToCartServlet {
         try {
             String movieId = request.getParameter("id");
 
-
-
-
             HttpSession session = request.getSession();
             ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart");
 
