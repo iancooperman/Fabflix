@@ -44,8 +44,12 @@ function handleMovielistResult(movieData) {
 
         // Rating
         rowHTML += "<td>" + movieRating + "/10</td>";
-        rowHTML += "</tr>";
 
+        // Price
+        rowHTML += "<td><button>$" + moviePrice + "</button></td>";
+
+        // end the row
+        rowHTML += "</tr>";
         movieTable.append(rowHTML);
     }
 
