@@ -72,7 +72,7 @@ function createCharacterLI(character) {
     let parameters = movielistDefaultValues();
     parameters["title"] = character + "%";
     let href = "movielist.html?" + $.param(parameters);
-    let html = "<li><a href='" + href + "'>" + character + "</a></li>";
+    let html = "<li><a href='" + href + "'>" + character + "</a> </li>";
     return html;
 }
 
