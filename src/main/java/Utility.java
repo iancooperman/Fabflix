@@ -1,5 +1,7 @@
 package main.java;
 
+import java.util.HashMap;
+
 public class Utility {
     // function for determining price of movie by year
     public static String yearToPrice(String year) {
@@ -13,6 +15,17 @@ public class Utility {
         }
         else {
             return "0.99";
+        }
+    }
+
+    // Treat the inputted hashMap like a multiset/defaultdict
+    public static void defaultHashMapAdd(HashMap<String, Integer> hashMap, String key, int defaultValue) {
+        if (!hashMap.containsKey(key)) {
+            hashMap.put(key, defaultValue);
+        }
+        else {
+            Integer oldValue = hashMap.get(key);
+            hashMap.replace(key, ++oldValue);
         }
     }
 }

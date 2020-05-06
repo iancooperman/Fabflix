@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.lang.String;
+import java.util.HashMap;
 
 @WebServlet(name = "AddToCartServlet", urlPatterns = "/api/addToCart")
 public class AddToCartServlet extends HttpServlet {
@@ -32,16 +33,16 @@ public class AddToCartServlet extends HttpServlet {
             String movieId = request.getParameter("id");
 
             HttpSession session = request.getSession();
-            ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart");
+            HashMap<String, Integer> cart = (HashMap<String, Integer>) session.getAttribute("cart");
 
             // if there is no movie list yet, create it
             // this happens in instances when no cart have been added to the cart yet
             if (cart == null) {
-                cart = new ArrayList<String>();
+                cart = new HashMap<String, Integer>();
             }
 
             // add the movie to the cart
-            cart.add(movieId);
+            Utility.defaultHashMapAdd(cart, movieId, 0);
             session.setAttribute("cart", cart);
 
             // get the title of the movie for success message

@@ -8,11 +8,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 @WebServlet(name = "ShoppingCartServlet", urlPatterns = "/api/cart")
 public class ShoppingCartServlet extends HttpServlet {
@@ -26,20 +31,52 @@ public class ShoppingCartServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
+            HttpSession session = request.getSession();
+            HashMap<String, Integer> cart = (HashMap<String, Integer>) session.getAttribute("cart");
+
             Connection dbcon = dataSource.getConnection();
             Statement statement = dbcon.createStatement();
-            String query = "";
-
-
-
-
-
 
             JsonArray movieArray = new JsonArray();
+
+            // Iterate through cart keys and values
+            Iterator it = cart.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>) it.next();
+                String movieId = pair.getKey();
+                Integer movieQuantity = pair.getValue();
+
+                // Query construction and execution
+                String query = "SELECT title, year FROM movies WHERE id =" + movieId + "'tt0094859';";
+                ResultSet resultSet = statement.executeQuery(query);
+
+                // Begin construction of movie info container
+                JsonObject movieObject = new JsonObject();
+                movieObject.addProperty("movie_id", movieId);
+
+                if (resultSet.next()) {
+                    String movieTitle = resultSet.getString("title");
+                    String movieYear = resultSet.getString("year");
+
+                    movieObject.addProperty("movie_title", movieTitle);
+                    movieObject.addProperty("movie_year", movieYear);
+
+                    // calculate price and add to movieObject
+                    String moviePrice = Utility.yearToPrice(movieYear);
+                    movieObject.addProperty("movie_price", moviePrice);
+                }
+
+                // close the ResultSet
+                resultSet.close();
+            }
+
+            // send the data off to frontend
+            
 
 
             // Closers of Objects
             dbcon.close();
+            statement.close();
         }
         catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
