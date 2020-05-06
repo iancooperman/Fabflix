@@ -51,7 +51,7 @@ public class AddToCartServlet {
             Statement titleStatement = dbcon.createStatement();
             String query = "SELECT title FROM movies WHERE id = '" + movieId + "'";
             ResultSet rs = titleStatement.executeQuery(query);
-            String movieTitle;
+            String movieTitle = null;
             if (rs.next()) {
                 movieTitle = rs.getString("title");
             }

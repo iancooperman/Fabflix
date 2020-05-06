@@ -16,6 +16,7 @@ function handleMovielistResult(movieData) {
         let movieGenres = movies[i]["movie_genres"];
         let movieStars = movies[i]["movie_stars"];
         let movieRating = movies[i]["movie_rating"];
+        let moviePrice = movies[i]["movie_price"];
 
         if (movieRating === null) {
             movieRating = "N/A";
@@ -41,6 +42,7 @@ function handleMovielistResult(movieData) {
         }
         rowHTML += "</ul></td>"
 
+        // Rating
         rowHTML += "<td>" + movieRating + "/10</td>";
         rowHTML += "</tr>";
 
