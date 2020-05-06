@@ -32,8 +32,12 @@ public class AddToCartServlet {
 
             Connection dbcon = dataSource.getConnection();
             Statement titleStatement = dbcon.createStatement();
-            String query = "SELECT title FROM movies WHERE id = '" +  + "'";
+            String query = "SELECT title FROM movies WHERE id = '" + movieId + "'";
             ResultSet rs = titleStatement.executeQuery(query);
+            String movieTitle;
+            if (rs.next()) {
+                movieTitle = rs.getString("title");
+            }
 
             HttpSession session = request.getSession();
             ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart");
