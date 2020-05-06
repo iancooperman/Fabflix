@@ -1,7 +1,7 @@
 package main.java;
 
 public class Utility {
-    // function for
+    // function for determining price of movie by year
     public static String yearToPrice(String year) {
         int yearInt = Integer.parseInt(year);
 
