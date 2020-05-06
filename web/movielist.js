@@ -57,14 +57,19 @@ function handleMovielistResult(movieData) {
     }
 }
 
+function handleCartResult(resultData) {
+    console.log(resultData);
+    alert(resultData["message"]);
+}
+
 function addToCart(movieId) {
-    console.log("is this registering?");
+
     $.ajax({
         dataType: "json",
         method: "GET",
         url: "api/addToCart",
         data: {"id": movieId},
-        success: (resultData) => alert(resultData["message"])
+        success: (resultData) => handleCartResult(resultData)
     })
 }
 

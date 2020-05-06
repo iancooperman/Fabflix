@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.lang.String;
 
 @WebServlet(name = "AddToCartServlet", urlPatterns = "/api/addToCart")
-public class AddToCartServlet {
+public class AddToCartServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
 
@@ -52,21 +53,26 @@ public class AddToCartServlet {
             if (rs.next()) {
                 movieTitle = rs.getString("title");
             }
+            dbcon.close();
+            titleStatement.close();
+            rs.close();
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("status", "success");
-            jsonObject.addProperty("message", "You have added \"" + movieTitle + "to your shopping cart.");
+            jsonObject.addProperty("message", "You have added \"" + movieTitle + "\" to your shopping cart.");
+
+            out.write(jsonObject.toString());
+            response.setStatus(200);
         }
         catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("status", "fail");
             jsonObject.addProperty("message", e.getMessage());
+
             out.write(jsonObject.toString());
-
-
             response.setStatus(500);
         }
 
-
+        out.close();
     }
 }
