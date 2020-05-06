@@ -30,14 +30,8 @@ public class AddToCartServlet {
         try {
             String movieId = request.getParameter("id");
 
-            Connection dbcon = dataSource.getConnection();
-            Statement titleStatement = dbcon.createStatement();
-            String query = "SELECT title FROM movies WHERE id = '" + movieId + "'";
-            ResultSet rs = titleStatement.executeQuery(query);
-            String movieTitle;
-            if (rs.next()) {
-                movieTitle = rs.getString("title");
-            }
+
+
 
             HttpSession session = request.getSession();
             ArrayList<String> cart = (ArrayList<String>) session.getAttribute("cart");
@@ -48,12 +42,23 @@ public class AddToCartServlet {
                 cart = new ArrayList<String>();
             }
 
+            // add the movie to the cart
             cart.add(movieId);
             session.setAttribute("cart", cart);
 
+            // get the title of the movie for success message
+            Connection dbcon = dataSource.getConnection();
+            Statement titleStatement = dbcon.createStatement();
+            String query = "SELECT title FROM movies WHERE id = '" + movieId + "'";
+            ResultSet rs = titleStatement.executeQuery(query);
+            String movieTitle;
+            if (rs.next()) {
+                movieTitle = rs.getString("title");
+            }
+
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("status", "success");
-            jsonObject.addProperty("message", "");
+            jsonObject.addProperty("message", "You have added \"" + movieTitle + "to your shopping cart.");
         }
         catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
