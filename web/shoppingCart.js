@@ -27,6 +27,9 @@ function handleResult(resultData) {
         $("#cart_table > tbody").append(innerHTML);
     }
 
+    // give quantity inputs an oninput event
+    $(".quantity").on("input", calculateSubtotal);
+
     calculateSubtotal();
 }
 
