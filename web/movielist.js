@@ -46,7 +46,7 @@ function handleMovielistResult(movieData) {
         rowHTML += "<td>" + movieRating + "/10</td>";
 
         // Price
-        rowHTML += "<td><button class='btn btn-info price_button'>$" + moviePrice + "</button></td>";
+        rowHTML += "<td><button class='btn btn-info price_button'>" + centsToDollars(moviePrice) + "</button></td>";
 
         // end the row
         rowHTML += "</tr>";

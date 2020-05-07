@@ -1,7 +1,5 @@
-
-
+let movieIds = [];
 let prices = [];
-
 
 function handleResult(resultData) {
 // iterate through the movies
@@ -12,6 +10,9 @@ function handleResult(resultData) {
         let movieYear = movie["movie_year"];
         let movieQuantity = movie["movie_quantity"];
         let moviePrice = movie["movie_price"];
+
+        // push movieIds for later retrieval
+        movieIds.push(movieId);
 
         // push the price in cents for later retrieval
         prices.push(moviePrice);
