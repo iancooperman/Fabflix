@@ -21,7 +21,7 @@ function handleResult(resultData) {
         innerHTML += "<td>$<span class='price'>" + moviePrice + "</span></td>";
         innerHTML += "</tr>";
 
-        $("#cart_table").append(innerHTML);
+        $("#cart_table > tbody").append(innerHTML);
     }
 
     calculateSubtotal();
@@ -30,13 +30,12 @@ function handleResult(resultData) {
 function calculateSubtotal() {
     let subtotal = 0;
 
-    $("#cart_table > tr.item").each(function() {
+    $("#cart_table > tbody > tr").each(function() {
         // let $this = $(this);
         let quantity = $(this).find(".quantity").val();
         let price = $(this).find(".price").html();
 
         subtotal += quantity * price;
-        console.log(subtotal);
     });
 
     $("#subtotal").text(subtotal);
