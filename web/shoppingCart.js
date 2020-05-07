@@ -22,6 +22,7 @@ function handleResult(resultData) {
         innerHTML += "<td>" + movieTitle + " (" + movieYear + ")" + "</td>";
         innerHTML += "<td><input class='quantity' type='number' min='0' value='" + movieQuantity + "'></td>";
         innerHTML += "<td><span class='price'>" + centsToDollars(moviePrice) + "</span></td>";
+        innerHTML += "<td><button class='.delete_button'>Delete</button></td>"
         innerHTML += "</tr>";
 
         $("#cart_table > tbody").append(innerHTML);
@@ -29,6 +30,13 @@ function handleResult(resultData) {
 
     // give quantity inputs an oninput event
     $(".quantity").on("input", calculateSubtotal);
+
+    // give delete buttons an onclick event
+    let i = -1;
+    $(".delete_button").each(function() {
+        i++;
+        $(this).onclick(function() {deleteMovie($(this), movieIds[i]);} );
+    })
 
     calculateSubtotal();
 }
@@ -47,6 +55,14 @@ function calculateSubtotal() {
     });
 
     $("#subtotal").text(centsToDollars(subtotal));
+}
+
+
+function deleteMovie(deleteButton, movieId) {
+    // delete movie from cart table
+    deleteButton.parents("tr").remove();
+
+    // delete movie from session
 }
 
 
