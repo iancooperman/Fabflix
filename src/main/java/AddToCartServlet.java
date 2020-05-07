@@ -42,7 +42,7 @@ public class AddToCartServlet extends HttpServlet {
             }
 
             // add the movie to the cart
-            Utility.defaultHashMapAdd(cart, movieId, 0);
+            Utility.defaultHashMapAdd(cart, movieId, 1);
             session.setAttribute("cart", cart);
 
             // get the title of the movie for success message

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@WebServlet(name = "ShoppingCartServlet", urlPatterns = "/api/cart")
+@WebServlet(name = "ShoppingCartServlet", urlPatterns = "/api/cartInfo")
 public class ShoppingCartServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
@@ -47,7 +47,7 @@ public class ShoppingCartServlet extends HttpServlet {
                 Integer movieQuantity = pair.getValue();
 
                 // Query construction and execution
-                String query = "SELECT title, year FROM movies WHERE id =" + movieId + "'tt0094859';";
+                String query = "SELECT title, year FROM movies WHERE id = '" + movieId + "';";
                 ResultSet resultSet = statement.executeQuery(query);
 
                 // Begin construction of movie info container
@@ -60,19 +60,22 @@ public class ShoppingCartServlet extends HttpServlet {
 
                     movieObject.addProperty("movie_title", movieTitle);
                     movieObject.addProperty("movie_year", movieYear);
+                    movieObject.addProperty("movie_quantity", movieQuantity);
 
                     // calculate price and add to movieObject
                     String moviePrice = Utility.yearToPrice(movieYear);
                     movieObject.addProperty("movie_price", moviePrice);
                 }
 
+                // add the movie object to the movie array
+                movieArray.add(movieObject);
+
                 // close the ResultSet
                 resultSet.close();
             }
 
             // send the data off to frontend
-            
-
+            out.write(movieArray.toString());
 
             // Closers of Objects
             dbcon.close();
