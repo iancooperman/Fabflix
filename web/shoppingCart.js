@@ -17,13 +17,28 @@ function handleResult(resultData) {
         // populate table
         let innerHTML = "<tr>";
         innerHTML += "<td>" + movieTitle + " (" + movieYear + ")" + "</td>";
-        innerHTML += "<td><input type='number' min='0' value='" + movieQuantity + "'></td>";
-        innerHTML += "<td><span class='price'></span></td>";
+        innerHTML += "<td><input class='quantity' type='number' min='0' value='" + movieQuantity + "'></td>";
+        innerHTML += "<td>$<span class='price'>" + moviePrice + "</span></td>";
         innerHTML += "</tr>";
-
 
         $("#cart_table").append(innerHTML);
     }
+
+    calculateSubtotal();
+}
+
+function calculateSubtotal() {
+    let subtotal = 0;
+
+    let table = $("#cart_table > tr").each(function() {
+        let $this = $(this);
+        let quantity = $this.find(".quantity").text();
+        let price = $this.find(".price").text();
+
+        subtotal += quantity * price;
+    });
+
+    $("#subtotal").text(subtotal);
 }
 
 
