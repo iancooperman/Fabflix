@@ -20,7 +20,7 @@ function handleResult(resultData) {
         // populate table
         let innerHTML = "<tr>";
         innerHTML += "<td>" + movieTitle + " (" + movieYear + ")" + "</td>";
-        innerHTML += "<td><input class='quantity' type='number' min='0' value='" + movieQuantity + "'></td>";
+        innerHTML += "<td><input class='quantity' type='number' min='1' value='" + movieQuantity + "'></td>";
         innerHTML += "<td><span class='price'>" + centsToDollars(moviePrice) + "</span></td>";
         innerHTML += "<td><button class='delete_button'>Delete</button></td>"
         innerHTML += "</tr>";
@@ -61,7 +61,7 @@ function calculateSubtotal() {
 
 function deleteMovie(deleteButton, nthButton) {
     // delete movie from cart table
-    console.log(deleteButton);
+    console.log(nthButton);
     deleteButton.parents("tr").remove();
 
     // remove references to row info in arrays
