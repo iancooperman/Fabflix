@@ -16,6 +16,7 @@ function handleMovielistResult(movieData) {
         let movieGenres = movies[i]["movie_genres"];
         let movieStars = movies[i]["movie_stars"];
         let movieRating = movies[i]["movie_rating"];
+        let moviePrice = movies[i]["movie_price"];
 
         if (movieRating === null) {
             movieRating = "N/A";
@@ -41,13 +42,35 @@ function handleMovielistResult(movieData) {
         }
         rowHTML += "</ul></td>"
 
+        // Rating
         rowHTML += "<td>" + movieRating + "/10</td>";
+
+        // Price
+        rowHTML += "<td><button class='btn btn-info price_button'>" + centsToDollars(moviePrice) + "</button></td>";
+
+        // end the row
         rowHTML += "</tr>";
-
         movieTable.append(rowHTML);
+
+        // add click listener to the newly created price button
+        $(".price_button").last().click(function() {addToCart(movieId);});
     }
+}
 
+function handleCartResult(resultData) {
+    console.log(resultData);
+    alert(resultData["message"]);
+}
 
+function addToCart(movieId) {
+
+    $.ajax({
+        dataType: "json",
+        method: "GET",
+        url: "api/addToCart",
+        data: {"id": movieId},
+        success: (resultData) => handleCartResult(resultData)
+    })
 }
 
 function getUrlParam(param, defaultValue) {

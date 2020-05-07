@@ -136,6 +136,9 @@ public class MovieListServlet extends HttpServlet {
                 String movie_director = mainResultSet.getString("movies.director");
                 String movie_rating = mainResultSet.getString("ratings.rating");
 
+                // Calculate the price of the movie based on the year
+                String movie_price = Utility.yearToPrice(movie_year);
+
                 // query to gather genres per movieId
                 StringBuffer genreQuery = new StringBuffer();
                 genreQuery.append("SELECT genres.id, genres.name ");
@@ -187,6 +190,7 @@ public class MovieListServlet extends HttpServlet {
                 jsonObject.addProperty("movie_year", movie_year);
                 jsonObject.addProperty("movie_director", movie_director);
                 jsonObject.addProperty("movie_rating", movie_rating);
+                jsonObject.addProperty("movie_price", movie_price);
                 jsonObject.add("movie_genres", genreArray);
                 jsonObject.add("movie_stars", starArray);
 
