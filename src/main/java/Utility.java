@@ -8,13 +8,13 @@ public class Utility {
         int yearInt = Integer.parseInt(year);
 
         if (yearInt >= 2018) {
-            return "4.99";
+            return "499";
         }
         else if (yearInt >= 2015) {
-            return "2.99";
+            return "299";
         }
         else {
-            return "0.99";
+            return "099";
         }
     }
 
