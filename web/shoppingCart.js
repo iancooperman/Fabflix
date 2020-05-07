@@ -30,12 +30,13 @@ function handleResult(resultData) {
 function calculateSubtotal() {
     let subtotal = 0;
 
-    let table = $("#cart_table > tr").each(function() {
-        let $this = $(this);
-        let quantity = $this.find(".quantity").text();
-        let price = $this.find(".price").text();
+    $("#cart_table > tr.item").each(function() {
+        // let $this = $(this);
+        let quantity = $(this).find(".quantity").val();
+        let price = $(this).find(".price").html();
 
         subtotal += quantity * price;
+        console.log(subtotal);
     });
 
     $("#subtotal").text(subtotal);
