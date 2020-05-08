@@ -28,8 +28,8 @@ public class BrowseByGenreServlet extends HttpServlet {
 
         try {
             Connection dbcon = dataSource.getConnection();
-            Statement statement = dbcon.createStatement();
             String query = "SELECT * FROM genres ORDER BY name ASC;";
+            Statement statement = dbcon.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
             JsonArray genreArray = new JsonArray();
