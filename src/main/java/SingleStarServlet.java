@@ -14,6 +14,7 @@ import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -36,9 +37,10 @@ public class SingleStarServlet extends HttpServlet {
 
             String mainQuery = "SELECT name, birthYear " +
                                 "FROM stars " +
-                                "WHERE id = '" + starId + "'";
-            Statement mainStatement = dbcon.createStatement();
-            ResultSet nameBirthYear = mainStatement.executeQuery(mainQuery);
+                                "WHERE id = ?";
+            PreparedStatement mainStatement = dbcon.prepareStatement(mainQuery);
+            mainStatement.setString(1, starId);
+            ResultSet nameBirthYear = mainStatement.executeQuery();
 
             JsonObject jsonObject = new JsonObject();
             if (nameBirthYear.next()) {
@@ -58,10 +60,11 @@ public class SingleStarServlet extends HttpServlet {
                                 "FROM stars, stars_in_movies, movies " +
                                 "WHERE stars.id = stars_in_movies.starId " +
                                     "AND stars_in_movies.movieId = movies.id " +
-                                    " AND starId = '" + starId + "' " +
+                                    " AND starId = ? " +
                                     " ORDER BY movies.year DESC, movies.title ASC";
-            Statement movieStatement = dbcon.createStatement();
-            ResultSet filmography = movieStatement.executeQuery(movieQuery);
+            PreparedStatement movieStatement = dbcon.prepareStatement(movieQuery);
+            movieStatement.setString(1, starId);
+            ResultSet filmography = movieStatement.executeQuery();
 
             JsonArray filmographyArray = new JsonArray();
             while(filmography.next()) {
