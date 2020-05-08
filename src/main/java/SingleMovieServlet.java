@@ -68,15 +68,15 @@ public class SingleMovieServlet extends HttpServlet {
             // query to gather stars in proper order
             StringBuffer starsQuery = new StringBuffer();
             starsQuery.append("SELECT stars.id AS starId, stars.name AS name, count(stars_in_movies.movieId) ");
-            starsQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = ?) AS movie_stars, stars, stars_in_movies ");
+            starsQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = ? ) AS movie_stars, stars, stars_in_movies ");
             starsQuery.append("WHERE stars.id = stars_in_movies.starId AND stars_in_movies.starId = movie_stars.starId ");
             starsQuery.append("GROUP BY stars_in_movies.starId ");
-            starsQuery.append("ORDER BY count(*) DESC ");
+            starsQuery.append("ORDER BY count(*) DESC;");
 
 
             PreparedStatement starsStatement = dbcon.prepareStatement(starsQuery.toString());
             starsStatement.setString(1, movie_id);
-            ResultSet stars = starsStatement.executeQuery(starsQuery.toString());
+            ResultSet stars = starsStatement.executeQuery();
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("movie_title", title);
