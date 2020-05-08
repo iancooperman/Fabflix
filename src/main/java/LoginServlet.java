@@ -13,6 +13,7 @@ import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -32,9 +33,11 @@ public class LoginServlet extends HttpServlet {
 
         try {
             Connection dbcon = dataSource.getConnection();
-            Statement statement = dbcon.createStatement();
-            String query = "SELECT * FROM customers WHERE email = '" + email + "';";
-            ResultSet userRS = statement.executeQuery(query);
+
+            String query = "SELECT * FROM customers WHERE email = ?;";
+            PreparedStatement statement = dbcon.prepareStatement(query);
+            statement.setString(1, email);
+            ResultSet userRS = statement.executeQuery();
 
             if (userRS.next()) {
                 String dbID = userRS.getString("id");
