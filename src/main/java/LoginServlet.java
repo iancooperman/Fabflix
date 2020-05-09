@@ -37,17 +37,18 @@ public class LoginServlet extends HttpServlet {
         try {
             Connection dbcon = dataSource.getConnection();
 
-            String query = "SELECT * FROM customers WHERE email = ?;";
-            PreparedStatement statement = dbcon.prepareStatement(query);
-            statement.setString(1, email);
-            ResultSet userRS = statement.executeQuery();
+            // compile queries
+            String customerQuery = "SELECT * FROM customers WHERE email = ?;";
+            PreparedStatement customerStatement = dbcon.prepareStatement(customerQuery);
+            String employeeQuery = "SELECT * FROM customers WHERE email = ?;";
+            PreparedStatement employeeStatement = dbcon.prepareStatement(employeeQuery);
 
+
+            customerStatement.setString(1, email);
+            ResultSet userRS = customerStatement.executeQuery();
             if (userRS.next()) {
-                String dbID = userRS.getString("id");
                 String dbFirstName = userRS.getString("firstName");
                 String dbLastName = userRS.getString("lastName");
-                String dbCCId = userRS.getString("ccId");
-                String dbAddress = userRS.getString("address");
                 String dbEmail = email;
                 String dbEncryptedPassword = userRS.getString("password");
                 if (strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
@@ -55,7 +56,7 @@ public class LoginServlet extends HttpServlet {
 
                     // set this user into the session
                     HttpSession httpSession = request.getSession();
-                    httpSession.setAttribute("user", new User(dbID, dbFirstName, dbLastName, dbCCId, dbAddress, dbEmail));
+                    httpSession.setAttribute("user", new User(dbFirstName + " " + dbLastName, dbEmail, false));
 
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
@@ -65,6 +66,10 @@ public class LoginServlet extends HttpServlet {
                     responseJsonObject.addProperty("status", "fail");
                     responseJsonObject.addProperty("message", "Incorrect password. Please try again.");
                 }
+
+                else {
+                    // check employee table
+                }
             }
             else {
                 // Login fail
@@ -73,7 +78,8 @@ public class LoginServlet extends HttpServlet {
             }
 
             dbcon.close();
-            statement.close();
+            customerStatement.close();
+            employeeStatement.close();
             userRS.close();
         }
         catch (Exception e) {
