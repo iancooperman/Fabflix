@@ -16,83 +16,57 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
+    private Connection dbcon;
+    private StrongPasswordEncryptor strongPasswordEncryptor;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // initialization
         response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        StrongPasswordEncryptor strongPasswordEncryptor = new StrongPasswordEncryptor();
+        strongPasswordEncryptor = new StrongPasswordEncryptor();
 
         JsonObject responseJsonObject = new JsonObject();
 
         try {
-            Connection dbcon = dataSource.getConnection();
+            dbcon = dataSource.getConnection();
 
-            // compile and execute queries
-            String customerQuery = "SELECT * FROM customers WHERE email = ?;";
-            PreparedStatement customerStatement = dbcon.prepareStatement(customerQuery);
-            customerStatement.setString(1, email);
-            ResultSet customerRS = customerStatement.executeQuery();
+            User customer = checkCustomersTable(email, password);
+            User employee = checkEmployeesTable(email, password);
 
-            String employeeQuery = "SELECT * FROM employees WHERE email = ?;";
-            PreparedStatement employeeStatement = dbcon.prepareStatement(employeeQuery);
-            employeeStatement.setString(1, email);
-            ResultSet employeeRS = employeeStatement.executeQuery();
+            // If a corresponding customer account is found
+            if (customer != null) {
+                HttpSession httpSession = request.getSession();
+                httpSession.setAttribute("user", customer);
 
-            if (customerRS.next()) {
-                String dbFirstName = customerRS.getString("firstName");
-                String dbLastName = customerRS.getString("lastName");
-                String dbEmail = email;
-                String dbEncryptedPassword = customerRS.getString("password");
-                if (strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
-                    // Login success:
-
-                    // set this user into the session
-                    HttpSession httpSession = request.getSession();
-                    httpSession.setAttribute("user", new User(dbEmail, dbFirstName + " " + dbLastName, false));
-
-                    responseJsonObject.addProperty("status", "success");
-                    responseJsonObject.addProperty("message", "success");
-
-                } else {
-                    // Login fail
-                    responseJsonObject.addProperty("status", "fail");
-                    responseJsonObject.addProperty("message", "Incorrect password. Please try again.");
-                }
+                responseJsonObject.addProperty("status", "success");
+                responseJsonObject.addProperty("message", "success");
             }
-            else if (employeeRS.next()) {
-                String dbFullname = employeeRS.getString("fullname");
-                String dbEmail = employeeRS.getString("email");
-                String dbEncryptedPassword = employeeRS.getString("password");
-                if(strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
-                    HttpSession httpSession = request.getSession();
-                    httpSession.setAttribute("user", new User(dbEmail, dbFullname, true));
+            else if (employee != null) {
+                HttpSession httpSession = request.getSession();
+                httpSession.setAttribute("user", employee);
 
-                    responseJsonObject.addProperty("status", "success");
-                    responseJsonObject.addProperty("message", "success");
-                }
+                responseJsonObject.addProperty("status", "success");
+                responseJsonObject.addProperty("message", "success");
             }
-
             else {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
-                responseJsonObject.addProperty("message", "Incorrect email. Please try again.");
+                responseJsonObject.addProperty("message", "Incorrect email or password. Please try again.");
             }
 
+            // Have to close DB connection here so SQLException is handled
             dbcon.close();
-            customerStatement.close();
-            employeeStatement.close();
-            customerRS.close();
-            employeeRS.close();
         }
         catch (Exception e) {
             responseJsonObject.addProperty("status", "fail");
@@ -103,5 +77,57 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.write(responseJsonObject.toString());
         out.close();
+
+    }
+
+    private User checkCustomersTable(String email, String password) throws SQLException {
+        User user = null;
+
+        String customerQuery = "SELECT * FROM customers WHERE email = ?;";
+        PreparedStatement customerStatement = dbcon.prepareStatement(customerQuery);
+        customerStatement.setString(1, email);
+        ResultSet customerRS = customerStatement.executeQuery();
+
+        // check customers table
+        if (customerRS.next()) {
+            String dbFirstName = customerRS.getString("firstName");
+            String dbLastName = customerRS.getString("lastName");
+            String dbEmail = email;
+            String dbEncryptedPassword = customerRS.getString("password");
+            // check password
+            if (strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
+                // customer login success
+                user = new User(dbEmail, dbFirstName + " " + dbLastName, false);
+            }
+        }
+
+        // finalization
+        customerStatement.close();
+        customerRS.close();
+        return user;
+    }
+
+    private User checkEmployeesTable(String email, String password) throws SQLException {
+        User user = null;
+
+        String employeeQuery = "SELECT * FROM employees WHERE email = ?;";
+        PreparedStatement employeeStatement = dbcon.prepareStatement(employeeQuery);
+        employeeStatement.setString(1, email);
+        ResultSet employeeRS = employeeStatement.executeQuery();
+
+        if (employeeRS.next()) {
+            String dbFullname = employeeRS.getString("fullname");
+            String dbEmail = employeeRS.getString("email");
+            String dbEncryptedPassword = employeeRS.getString("password");
+            if (strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
+                // employee login success
+                user = new User(dbEmail, dbFullname, true);
+            }
+        }
+
+        // finalization
+        employeeStatement.close();
+        employeeRS.close();
+        return user;
     }
 }
