@@ -146,8 +146,7 @@ public class MovieListServlet extends HttpServlet {
             // create statements
             PreparedStatement mainStatement = dbcon.prepareStatement(mainQuery.toString());
             PreparedStatement rowCountStatement = dbcon.prepareStatement(rowCountQuery.toString());
-            Statement genreStatement = dbcon.createStatement();
-            Statement starStatement = dbcon.createStatement();
+
 
 
             // add parameters to PreparedStatements
@@ -175,6 +174,29 @@ public class MovieListServlet extends HttpServlet {
                 mainJsonObject.addProperty("row_count", rowCount);
             }
 
+
+            // compile genre query
+            StringBuffer genreQuery = new StringBuffer();
+            genreQuery.append("SELECT genres.id, genres.name ");
+            genreQuery.append("FROM genres, genres_in_movies ");
+            genreQuery.append("WHERE genres.id = genreId ");
+            genreQuery.append("AND movieId = ? ");
+            genreQuery.append("ORDER BY genres.name ASC ");
+            genreQuery.append("LIMIT 3");
+            PreparedStatement genreStatement = dbcon.prepareStatement(genreQuery.toString());
+
+            // compile star query
+            StringBuffer starQuery = new StringBuffer();
+            starQuery.append("SELECT stars.id, stars.name, count(stars_in_movies.movieId) ");
+            starQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = ?) AS movie_stars, stars, stars_in_movies ");
+            starQuery.append("WHERE stars.id = stars_in_movies.starId AND stars_in_movies.starId = movie_stars.starId ");
+            starQuery.append("GROUP BY stars_in_movies.starId ");
+            starQuery.append("ORDER BY count(*) DESC ");
+            starQuery.append("LIMIT 3");
+
+            PreparedStatement starStatement = dbcon.prepareStatement(starQuery.toString());
+
+
             // Compile info
             JsonArray movieArray = new JsonArray();
             while (mainResultSet.next()) {
@@ -187,27 +209,15 @@ public class MovieListServlet extends HttpServlet {
                 // Calculate the price of the movie based on the year
                 String movie_price = Utility.yearToPrice(movie_year);
 
-                // query to gather genres per movieId
-                StringBuffer genreQuery = new StringBuffer();
-                genreQuery.append("SELECT genres.id, genres.name ");
-                genreQuery.append("FROM genres, genres_in_movies ");
-                genreQuery.append("WHERE genres.id = genreId ");
-                genreQuery.append("AND movieId = '" + movie_id + "' ");
-                genreQuery.append("ORDER BY genres.name ASC ");
-                genreQuery.append("LIMIT 3");
+                // set up genre query
+                genreStatement.setString(1, movie_id);
 
-                // query to gather stars in proper order
-                StringBuffer starQuery = new StringBuffer();
-                starQuery.append("SELECT stars.id, stars.name, count(stars_in_movies.movieId) ");
-                starQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = '" + movie_id + "') AS movie_stars, stars, stars_in_movies ");
-                starQuery.append("WHERE stars.id = stars_in_movies.starId AND stars_in_movies.starId = movie_stars.starId ");
-                starQuery.append("GROUP BY stars_in_movies.starId ");
-                starQuery.append("ORDER BY count(*) DESC ");
-                starQuery.append("LIMIT 3");
+                // set up star query
+                starStatement.setString(1, movie_id);
 
-
-                ResultSet genreResultSet = genreStatement.executeQuery(genreQuery.toString());
-                ResultSet starResultSet = starStatement.executeQuery(starQuery.toString());
+                // execute genre and star queries
+                ResultSet genreResultSet = genreStatement.executeQuery();
+                ResultSet starResultSet = starStatement.executeQuery();
 
                 // genre retrieval
                 JsonArray genreArray = new JsonArray();
