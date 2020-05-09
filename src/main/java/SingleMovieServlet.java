@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -37,9 +38,10 @@ public class SingleMovieServlet extends HttpServlet {
             String mainQuery = "SELECT id, title, year, director, rating " +
                                 "FROM movies, ratings " +
                                 "WHERE movies.id = ratings.movieId " +
-                                    "AND id = '" + movieId + "'";
-            Statement mainStatement = dbcon.createStatement();
-            ResultSet titleYearDirectorRating = mainStatement.executeQuery(mainQuery);
+                                    "AND id = ?";
+            PreparedStatement mainStatement = dbcon.prepareStatement(mainQuery);
+            mainStatement.setString(1, movieId);
+            ResultSet titleYearDirectorRating = mainStatement.executeQuery();
 
 
             titleYearDirectorRating.next();
@@ -52,10 +54,11 @@ public class SingleMovieServlet extends HttpServlet {
             String genreQuery = "SELECT id, name " +
                                 "FROM genres, genres_in_movies " +
                                 "WHERE genres.id = genres_in_movies.genreId " +
-                                    "AND genres_in_movies.movieId = '" + movieId + "' " +
+                                    "AND genres_in_movies.movieId = ? " +
                                 "ORDER BY name ASC";
-            Statement genreStatement = dbcon.createStatement();
-            ResultSet genres = genreStatement.executeQuery(genreQuery);
+            PreparedStatement genreStatement = dbcon.prepareStatement(genreQuery);
+            genreStatement.setString(1, movieId);
+            ResultSet genres = genreStatement.executeQuery();
 
 //            String starsQuery = "SELECT starId, name " +
 //                                "FROM stars, stars_in_movies " +
@@ -65,14 +68,15 @@ public class SingleMovieServlet extends HttpServlet {
             // query to gather stars in proper order
             StringBuffer starsQuery = new StringBuffer();
             starsQuery.append("SELECT stars.id AS starId, stars.name AS name, count(stars_in_movies.movieId) ");
-            starsQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = '" + movie_id + "') AS movie_stars, stars, stars_in_movies ");
+            starsQuery.append("FROM (SELECT starId FROM stars_in_movies WHERE movieId = ? ) AS movie_stars, stars, stars_in_movies ");
             starsQuery.append("WHERE stars.id = stars_in_movies.starId AND stars_in_movies.starId = movie_stars.starId ");
             starsQuery.append("GROUP BY stars_in_movies.starId ");
-            starsQuery.append("ORDER BY count(*) DESC ");
+            starsQuery.append("ORDER BY count(*) DESC;");
 
 
-            Statement starsStatement = dbcon.createStatement();
-            ResultSet stars = starsStatement.executeQuery(starsQuery.toString());
+            PreparedStatement starsStatement = dbcon.prepareStatement(starsQuery.toString());
+            starsStatement.setString(1, movie_id);
+            ResultSet stars = starsStatement.executeQuery();
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("movie_title", title);

@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -47,9 +48,10 @@ public class AddToCartServlet extends HttpServlet {
 
             // get the title of the movie for success message
             Connection dbcon = dataSource.getConnection();
-            Statement titleStatement = dbcon.createStatement();
-            String query = "SELECT title FROM movies WHERE id = '" + movieId + "'";
-            ResultSet rs = titleStatement.executeQuery(query);
+            String query = "SELECT title FROM movies WHERE id = ?";
+            PreparedStatement titleStatement = dbcon.prepareStatement(query);
+            titleStatement.setString(1, movieId);
+            ResultSet rs = titleStatement.executeQuery();
             String movieTitle = null;
             if (rs.next()) {
                 movieTitle = rs.getString("title");

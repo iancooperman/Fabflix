@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -30,12 +31,20 @@ public class ShoppingCartServlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
+
+
         try {
             HttpSession session = request.getSession();
             HashMap<String, Integer> cart = (HashMap<String, Integer>) session.getAttribute("cart");
 
+
+            // Create connection to DB
             Connection dbcon = dataSource.getConnection();
-            Statement statement = dbcon.createStatement();
+
+            // query construction
+            String query = "SELECT title, year FROM movies WHERE id = ?;";
+            PreparedStatement statement = dbcon.prepareStatement(query);
+
 
             JsonArray movieArray = new JsonArray();
 
@@ -46,9 +55,9 @@ public class ShoppingCartServlet extends HttpServlet {
                 String movieId = pair.getKey();
                 Integer movieQuantity = pair.getValue();
 
-                // Query construction and execution
-                String query = "SELECT title, year FROM movies WHERE id = '" + movieId + "';";
-                ResultSet resultSet = statement.executeQuery(query);
+                // Query execution
+                statement.setString(1, movieId);
+                ResultSet resultSet = statement.executeQuery();
 
                 // Begin construction of movie info container
                 JsonObject movieObject = new JsonObject();
@@ -70,16 +79,18 @@ public class ShoppingCartServlet extends HttpServlet {
                 // add the movie object to the movie array
                 movieArray.add(movieObject);
 
-                // close the ResultSet
+
+                // close the result set
                 resultSet.close();
             }
-
-            // send the data off to frontend
-            out.write(movieArray.toString());
 
             // Closers of Objects
             dbcon.close();
             statement.close();
+
+            // send the data off to frontend
+            out.write(movieArray.toString());
+
         }
         catch (Exception e) {
             JsonObject jsonObject = new JsonObject();
