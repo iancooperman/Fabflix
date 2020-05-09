@@ -89,58 +89,59 @@ public class MovieListServlet extends HttpServlet {
             mainQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
             mainQuery.append("WHERE TRUE ");
 
+            rowCountQuery.append("SELECT count(*)");
+            rowCountQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
+            rowCountQuery.append("WHERE TRUE ");
+
             // search parameters
             if (year != null) {
                 validParameters.add(year);
                 mainQuery.append("AND movies.year = ? ");
+                rowCountQuery.append("AND movies.year = ? ");
             }
 
             if (director != null) {
                 validParameters.add(director);
                 mainQuery.append("AND movies.director LIKE ? ");
+                rowCountQuery.append("AND movies.director LIKE ? ");
             }
 
             if (star != null) {
                 validParameters.add(star);
                 mainQuery.append("AND EXISTS (SELECT * FROM stars, stars_in_movies WHERE stars.id = stars_in_movies.starId AND stars.name LIKE ? AND movies.id = stars_in_movies.movieId) ");
+                rowCountQuery.append("AND EXISTS (SELECT * FROM stars, stars_in_movies WHERE stars.id = stars_in_movies.starId AND stars.name LIKE ? AND movies.id = stars_in_movies.movieId) ");
             }
 
             if (genre != null) {
                 validParameters.add(genre);
                 mainQuery.append("AND EXISTS (SELECT * FROM genres_in_movies WHERE genreId = ? AND movies.id = genres_in_movies.movieId) ");
+                rowCountQuery.append("AND EXISTS (SELECT * FROM genres_in_movies WHERE genreId = ? AND movies.id = genres_in_movies.movieId) ");
             }
 
             if (titleIsValid(title)) {
                 if (titleIsStar(title)) {
                     mainQuery.append("AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ");
+                    rowCountQuery.append("AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ");
                 }
                 else {
                     validParameters.add(title);
                     mainQuery.append("AND movies.title LIKE ? ");
+                    rowCountQuery.append("AND movies.title LIKE ? ");
                 }
             }
 
             // everything else
             validParameters.add(sortBy);
             mainQuery.append("ORDER BY ? ");
+            rowCountQuery.append("ORDER BY ? ");
 
-            validParameters.add(limit)
+            validParameters.add(limit);
             mainQuery.append("LIMIT ? ");
+            rowCountQuery.append("LIMIT ? ");
+
+            validParameters.add(offset);
             mainQuery.append("OFFSET ?;");
-
-            rowCountQuery.append("SELECT count(*)");
-            rowCountQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
-            rowCountQuery.append("WHERE TRUE ");
-            rowCountQuery.append(title);
-            rowCountQuery.append(year);
-            rowCountQuery.append(director);
-            rowCountQuery.append(star);
-            rowCountQuery.append(genre);
-            rowCountQuery.append("ORDER BY " + sortBy + " ");
-            rowCountQuery.append("LIMIT " + limit + " ");
-            rowCountQuery.append("OFFSET " + offset);
-            rowCountQuery.append(";");
-
+            rowCountQuery.append("OFFSET ?;");
 
             System.out.println(mainQuery);
 
@@ -150,8 +151,16 @@ public class MovieListServlet extends HttpServlet {
             Statement genreStatement = dbcon.createStatement();
             Statement starStatement = dbcon.createStatement();
 
-            ResultSet mainResultSet = mainStatement.executeQuery(mainQuery.toString());
-            ResultSet rowCountResultSet = rowCountStatement.executeQuery(rowCountQuery.toString());
+
+            // add parameters to PreparedStatements
+            for (int i = 0; i < validParameters.size(); i++) {
+                mainStatement.setString(i + 1, validParameters.get(i));
+                rowCountStatement.setString(i + 1, validParameters.get(i));
+            }
+
+
+            ResultSet mainResultSet = mainStatement.executeQuery();
+            ResultSet rowCountResultSet = rowCountStatement.executeQuery();
 
             JsonObject mainJsonObject = new JsonObject();
             // get row count
