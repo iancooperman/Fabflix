@@ -82,32 +82,34 @@ public class MovieListServlet extends HttpServlet {
             StringBuffer mainQuery = new StringBuffer();
             StringBuffer rowCountQuery = new StringBuffer();
             mainQuery.append("SELECT movies.id, movies.title, movies.year, movies.director, ratings.rating ");
-            rowCountQuery.append("SELECT count(*)");
             mainQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
-            rowCountQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
             mainQuery.append("WHERE TRUE ");
-            rowCountQuery.append("WHERE TRUE ");
 
             // search parameters
             mainQuery.append(titleLine);
-            rowCountQuery.append(titleLine);
             mainQuery.append(yearLine);
-            rowCountQuery.append(yearLine);
             mainQuery.append(directorLine);
-            rowCountQuery.append(directorLine);
             mainQuery.append(starLine);
-            rowCountQuery.append(starLine);
             mainQuery.append(genreLine);
-            rowCountQuery.append(genreLine);
 
             mainQuery.append("ORDER BY " + sortBy + " ");
-            rowCountQuery.append("ORDER BY " + sortBy + " ");
             mainQuery.append("LIMIT " + limit + " ");
-            rowCountQuery.append("LIMIT " + limit + " ");
             mainQuery.append("OFFSET " + offset);
-            rowCountQuery.append("OFFSET " + offset);
             mainQuery.append(";");
+
+            rowCountQuery.append("SELECT count(*)");
+            rowCountQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
+            rowCountQuery.append("WHERE TRUE ");
+            rowCountQuery.append(titleLine);
+            rowCountQuery.append(yearLine);
+            rowCountQuery.append(directorLine);
+            rowCountQuery.append(starLine);
+            rowCountQuery.append(genreLine);
+            rowCountQuery.append("ORDER BY " + sortBy + " ");
+            rowCountQuery.append("LIMIT " + limit + " ");
+            rowCountQuery.append("OFFSET " + offset);
             rowCountQuery.append(";");
+
 
             System.out.println(mainQuery);
 
