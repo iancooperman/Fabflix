@@ -69,6 +69,7 @@ public class LoginServlet extends HttpServlet {
             dbcon.close();
         }
         catch (Exception e) {
+            e.printStackTrace();
             responseJsonObject.addProperty("status", "fail");
             responseJsonObject.addProperty("message", e.getMessage());
         }
