@@ -1,10 +1,7 @@
 package main.java;
 
 public class User {
-    private final String id;
     private final String fullname;
-    private final String ccId;
-    private final String address;
     private final String email;
     private final boolean isEmployee;
 

@@ -37,26 +37,28 @@ public class LoginServlet extends HttpServlet {
         try {
             Connection dbcon = dataSource.getConnection();
 
-            // compile queries
+            // compile and execute queries
             String customerQuery = "SELECT * FROM customers WHERE email = ?;";
             PreparedStatement customerStatement = dbcon.prepareStatement(customerQuery);
-            String employeeQuery = "SELECT * FROM customers WHERE email = ?;";
-            PreparedStatement employeeStatement = dbcon.prepareStatement(employeeQuery);
-
-
             customerStatement.setString(1, email);
-            ResultSet userRS = customerStatement.executeQuery();
-            if (userRS.next()) {
-                String dbFirstName = userRS.getString("firstName");
-                String dbLastName = userRS.getString("lastName");
+            ResultSet customerRS = customerStatement.executeQuery();
+
+            String employeeQuery = "SELECT * FROM employees WHERE email = ?;";
+            PreparedStatement employeeStatement = dbcon.prepareStatement(employeeQuery);
+            employeeStatement.setString(1, email);
+            ResultSet employeeRS = employeeStatement.executeQuery();
+
+            if (customerRS.next()) {
+                String dbFirstName = customerRS.getString("firstName");
+                String dbLastName = customerRS.getString("lastName");
                 String dbEmail = email;
-                String dbEncryptedPassword = userRS.getString("password");
+                String dbEncryptedPassword = customerRS.getString("password");
                 if (strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
                     // Login success:
 
                     // set this user into the session
                     HttpSession httpSession = request.getSession();
-                    httpSession.setAttribute("user", new User(dbFirstName + " " + dbLastName, dbEmail, false));
+                    httpSession.setAttribute("user", new User(dbEmail, dbFirstName + " " + dbLastName, false));
 
                     responseJsonObject.addProperty("status", "success");
                     responseJsonObject.addProperty("message", "success");
@@ -66,11 +68,20 @@ public class LoginServlet extends HttpServlet {
                     responseJsonObject.addProperty("status", "fail");
                     responseJsonObject.addProperty("message", "Incorrect password. Please try again.");
                 }
+            }
+            else if (employeeRS.next()) {
+                String dbFullname = employeeRS.getString("fullname");
+                String dbEmail = employeeRS.getString("email");
+                String dbEncryptedPassword = employeeRS.getString("password");
+                if(strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
+                    HttpSession httpSession = request.getSession();
+                    httpSession.setAttribute("user", new User(dbEmail, dbFullname, true));
 
-                else {
-                    // check employee table
+                    responseJsonObject.addProperty("status", "success");
+                    responseJsonObject.addProperty("message", "success");
                 }
             }
+
             else {
                 // Login fail
                 responseJsonObject.addProperty("status", "fail");
@@ -80,7 +91,8 @@ public class LoginServlet extends HttpServlet {
             dbcon.close();
             customerStatement.close();
             employeeStatement.close();
-            userRS.close();
+            customerRS.close();
+            employeeRS.close();
         }
         catch (Exception e) {
             responseJsonObject.addProperty("status", "fail");
