@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Servlet Filter implementation class LoginFilter
  */
-@WebFilter(filterName = "EmployeeFilter", urlPatterns = "/*")
+@WebFilter(filterName = "EmployeeFilter", urlPatterns = "/_dashboard.html")
 public class EmployeeFilter implements Filter {
     private final ArrayList<String> disallowedURIs = new ArrayList<>();
 
@@ -33,7 +33,10 @@ public class EmployeeFilter implements Filter {
 
         // Redirect to main page if user is not employee
         User user = (User) httpRequest.getSession().getAttribute("user");
-        if (!user.isEmployee()) {
+        if (user == null) {
+            httpResponse.sendRedirect("/Fabflix/login.html");
+        }
+        else if (!user.isEmployee()) {
             httpResponse.sendRedirect("/Fabflix/index.html");
         } else {
             chain.doFilter(request, response);
