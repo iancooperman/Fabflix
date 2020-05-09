@@ -1,6 +1,7 @@
 package main.java;
 
 import com.google.gson.JsonObject;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +16,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
@@ -28,6 +29,8 @@ public class LoginServlet extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+
+        StrongPasswordEncryptor strongPasswordEncryptor = new StrongPasswordEncryptor();
 
         JsonObject responseJsonObject = new JsonObject();
 
@@ -46,8 +49,8 @@ public class LoginServlet extends HttpServlet {
                 String dbCCId = userRS.getString("ccId");
                 String dbAddress = userRS.getString("address");
                 String dbEmail = email;
-                String dbPassword = userRS.getString("password");
-                if (password.equals(dbPassword)) {
+                String dbEncryptedPassword = userRS.getString("password");
+                if (strongPasswordEncryptor.checkPassword(password, dbEncryptedPassword)) {
                     // Login success:
 
                     // set this user into the session
