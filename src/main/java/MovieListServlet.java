@@ -13,9 +13,10 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
@@ -31,48 +32,51 @@ public class MovieListServlet extends HttpServlet {
 
         try {
             // Retrieving parameters
-            String titleOption = request.getParameter("title"); // A LIKE pattern; "" = no title specified
-            String yearOption = request.getParameter("year"); // An integer > 0 but relatively close to 2020; 0 = no year specified
-            String directorOption = request.getParameter("director"); // A LIKE pattern; "" = no star specified
-            String starOption = request.getParameter("star"); // A LIKE pattern; "" = no star specified
-            String genreOption = request.getParameter("genre"); // An integer corresponding to the genreId
-            String limitOption = request.getParameter("limit"); // 10, 25, 50, or 100; default: 10
-            String pageOption = request.getParameter("page"); // An integer > 0; default: 1
-            String sortByOption = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
+            String title = request.getParameter("title"); // A LIKE pattern; "" = no title specified
+            String year = request.getParameter("year"); // An integer > 0 but relatively close to 2020; 0 = no year specified
+            String director = request.getParameter("director"); // A LIKE pattern; "" = no star specified
+            String star = request.getParameter("star"); // A LIKE pattern; "" = no star specified
+            String genre = request.getParameter("genre"); // An integer corresponding to the genreId
+            String limit = request.getParameter("limit"); // 10, 25, 50, or 100; default: 10
+            String page = request.getParameter("page"); // An integer > 0; default: 1
+            String sortBy = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
 
             // pass parameters to session
             HttpSession session = request.getSession();
             HashMap<String, String> parameterMap = new HashMap<String, String>();
-            parameterMap.put("title", titleOption);
-            parameterMap.put("year", yearOption);
-            parameterMap.put("director", directorOption);
-            parameterMap.put("star", starOption);
-            parameterMap.put("genre", genreOption);
-            parameterMap.put("limit", limitOption);
-            parameterMap.put("page", pageOption);
-            parameterMap.put("sortBy", sortByOption);
+            parameterMap.put("title", title);
+            parameterMap.put("year", year);
+            parameterMap.put("director", director);
+            parameterMap.put("star", star);
+            parameterMap.put("genre", genre);
+            parameterMap.put("limit", limit);
+            parameterMap.put("page", page);
+            parameterMap.put("sortBy", sortBy);
             session.setAttribute("movielistParameters", parameterMap);
 
             System.out.println("REQUEST:");
-            System.out.println("title: " + titleOption);
-            System.out.println("year: " + yearOption);
-            System.out.println("director: " + directorOption);
-            System.out.println("star: " + starOption);
-            System.out.println("genre: " + genreOption);
-            System.out.println("limit: " + limitOption);
-            System.out.println("page: " + pageOption);
-            System.out.println("sortBy: " + sortByOption);
+            System.out.println("title: " + title);
+            System.out.println("year: " + year);
+            System.out.println("director: " + director);
+            System.out.println("star: " + star);
+            System.out.println("genre: " + genre);
+            System.out.println("limit: " + limit);
+            System.out.println("page: " + page);
+            System.out.println("sortBy: " + sortBy);
 
 
             // input validation
-            String sortBy = sortBySQL(sortByOption);
-            String limit = limitSQL(limitOption);
-            String offset = calculateOffset(pageOption, limit);
-            String titleLine = titleSQL(titleOption);
-            String yearLine = yearSQL(yearOption);
-            String directorLine = directorSQL(directorOption);
-            String starLine = starSQL(starOption);
-            String genreLine = genreSQL(genreOption);
+            ArrayList<String> validParameters = new ArrayList<String>();
+
+            year = yearValidation(year);
+
+            String sortBy = sortByValidation(sortBy);
+            String limit = limitValidation(limit);
+            String offset = calculateOffset(page, limit);
+
+            String director = directorValidation(director);
+            String star = starSQL(star);
+            String genre = genreSQL(genre);
 
             // DB setup
             Connection dbcon = dataSource.getConnection();
@@ -86,25 +90,52 @@ public class MovieListServlet extends HttpServlet {
             mainQuery.append("WHERE TRUE ");
 
             // search parameters
-            mainQuery.append(titleLine);
-            mainQuery.append(yearLine);
-            mainQuery.append(directorLine);
-            mainQuery.append(starLine);
-            mainQuery.append(genreLine);
+            if (year != null) {
+                validParameters.add(year);
+                mainQuery.append("AND movies.year = ? ");
+            }
 
-            mainQuery.append("ORDER BY " + sortBy + " ");
-            mainQuery.append("LIMIT " + limit + " ");
-            mainQuery.append("OFFSET " + offset);
-            mainQuery.append(";");
+            if (director != null) {
+                validParameters.add(director);
+                mainQuery.append("AND movies.director LIKE ? ");
+            }
+
+            if (star != null) {
+                validParameters.add(star);
+                mainQuery.append("AND EXISTS (SELECT * FROM stars, stars_in_movies WHERE stars.id = stars_in_movies.starId AND stars.name LIKE ? AND movies.id = stars_in_movies.movieId) ");
+            }
+
+            if (genre != null) {
+                validParameters.add(genre);
+                mainQuery.append("AND EXISTS (SELECT * FROM genres_in_movies WHERE genreId = ? AND movies.id = genres_in_movies.movieId) ");
+            }
+
+            if (titleIsValid(title)) {
+                if (titleIsStar(title)) {
+                    mainQuery.append("AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ");
+                }
+                else {
+                    validParameters.add(title);
+                    mainQuery.append("AND movies.title LIKE ? ");
+                }
+            }
+
+            // everything else
+            validParameters.add(sortBy);
+            mainQuery.append("ORDER BY ? ");
+
+            validParameters.add(limit)
+            mainQuery.append("LIMIT ? ");
+            mainQuery.append("OFFSET ?;");
 
             rowCountQuery.append("SELECT count(*)");
             rowCountQuery.append("FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId ");
             rowCountQuery.append("WHERE TRUE ");
-            rowCountQuery.append(titleLine);
-            rowCountQuery.append(yearLine);
-            rowCountQuery.append(directorLine);
-            rowCountQuery.append(starLine);
-            rowCountQuery.append(genreLine);
+            rowCountQuery.append(title);
+            rowCountQuery.append(year);
+            rowCountQuery.append(director);
+            rowCountQuery.append(star);
+            rowCountQuery.append(genre);
             rowCountQuery.append("ORDER BY " + sortBy + " ");
             rowCountQuery.append("LIMIT " + limit + " ");
             rowCountQuery.append("OFFSET " + offset);
@@ -114,8 +145,8 @@ public class MovieListServlet extends HttpServlet {
             System.out.println(mainQuery);
 
             // create statements
-            Statement mainStatement = dbcon.createStatement();
-            Statement rowCountStatement = dbcon.createStatement();
+            PreparedStatement mainStatement = dbcon.prepareStatement(mainQuery.toString());
+            PreparedStatement rowCountStatement = dbcon.prepareStatement(rowCountQuery.toString());
             Statement genreStatement = dbcon.createStatement();
             Statement starStatement = dbcon.createStatement();
 
@@ -251,18 +282,18 @@ public class MovieListServlet extends HttpServlet {
         }
     }
 
-    private String directorSQL(String directorOption) {
+    private String directorValidation(String directorOption) {
         // no director pattern specified
         if (directorOption.equals("")) {
-            return "";
+            return null;
         }
         else {
-            return "AND movies.director LIKE '" + directorOption + "' ";
+            return directorOption;
         }
     }
 
     // limit input validation
-    private String limitSQL(String limitOption) {
+    private String limitValidation(String limitOption) {
         if (!limitOption.equals("10") && !limitOption.equals("25") && !limitOption.equals("50") && !limitOption.equals("100")) {
             return "10";
         }
@@ -286,7 +317,7 @@ public class MovieListServlet extends HttpServlet {
     }
 
     // sortBy input validation
-    private String sortBySQL(String sortByOption) {
+    private String sortByValidation(String sortByOption) {
         switch (sortByOption) {
             case "title_asc_rating_asc":
                 return "title ASC, rating ASC ";
@@ -308,34 +339,27 @@ public class MovieListServlet extends HttpServlet {
     }
 
     // title input validation
-    private String titleSQL(String titleOption) {
-        // no title pattern specified
-        if (titleOption.equals("")) {
-            return "";
-        }
-        else if (titleOption.equals("*")) {
-            System.out.println("Is this getting called?");
-            return "AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ";
-        }
+    private boolean titleIsValid(String titleOption) {
+        return (!titleOption.equals(""));
+    }
 
-        return "AND movies.title LIKE '" + titleOption + "' ";
+    private boolean titleIsStar(String titleOption) {
+        return (titleOption.equals("*"));
     }
 
     // year input validation
-    private String yearSQL(String yearOption) {
+    private String yearValidation(String yearOption) {
         // no year specified
         if (yearOption.equals("0")) {
-            return "";
+            return null;
         }
 
-        String sql = "AND movies.year = '";
         int yearInt = Integer.parseInt(yearOption);
         if (yearInt > 0) {
-            sql += yearInt + "' ";
+            return yearOption;
         }
         else {
-            sql += "2020' ";
+            return "2020";
         }
-        return sql;
     }
 }
