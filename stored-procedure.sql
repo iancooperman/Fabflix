@@ -34,7 +34,14 @@ BEGIN
 
             INSERT INTO stars_in_movies (starId, movieId) VALUES (@starId, @newMovieId);
         ELSE
-            
+            SET @maxStarId = ( SELECT max(id) FROM stars );
+            SET @maxStarIdNumber = ( SELECT SUBSTR( @maxStarId, 3 ) );
+            SET @newStarIdNumber = ( SELECT @maxStarIdNumber + 1);
+            SET @newStarId = ( SELECT CONCAT( "nm", LPAD( @newStarIdNumber, 7, 0 ) ) );
+
+            INSERT INTO stars (id, name, birthYear) VALUES (@newStarId, in_star, null);
+            INSERT INTO stars_in_movies (starId, movieId) VALUES (@newStarId, @newMovieId);
+
         END IF;
 
         SET out_message = CONCAT("\"", in_title, "\" added to database.");
