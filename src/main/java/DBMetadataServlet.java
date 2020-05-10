@@ -38,8 +38,6 @@ public class DBMetadataServlet extends HttpServlet {
             Statement tableStatement = dbcon.createStatement();
             ResultSet tableResultSet = tableStatement.executeQuery(tableQuery);
 
-            String columnQuery = " SELECT column_name, column_type FROM information_schema.columns WHERE table_name = ?;";
-            PreparedStatement columnStatement = dbcon.prepareStatement(columnQuery);
 
             JsonArray tableArray = new JsonArray();
 
@@ -50,16 +48,17 @@ public class DBMetadataServlet extends HttpServlet {
                 tableObject.addProperty("table_name", tableName);
 
 
-                columnStatement.setString(1, tableName);
-                ResultSet columnResultSet = columnStatement.executeQuery();
+                String columnQuery = "SHOW fields FROM " + tableName + "; ";
+                Statement columnStatement = dbcon.createStatement();
+                ResultSet columnResultSet = columnStatement.executeQuery(columnQuery);
 
                 JsonArray tableColumnsArray = new JsonArray();
                 // iterate through columns
                 while (columnResultSet.next()) {
                     JsonObject columnObject = new JsonObject();
 
-                    String columnName = columnResultSet.getString("column_name");
-                    String columnType = columnResultSet.getString("column_type");
+                    String columnName = columnResultSet.getString("Field");
+                    String columnType = columnResultSet.getString("Type");
 
                     columnObject.addProperty("column_name", columnName);
                     columnObject.addProperty("column_type", columnType);
@@ -72,6 +71,7 @@ public class DBMetadataServlet extends HttpServlet {
                 tableArray.add(tableObject);
 
                 // close the column result set before it's lost to garbage collection
+                columnStatement.close();
                 columnResultSet.close();
 
 
@@ -81,7 +81,6 @@ public class DBMetadataServlet extends HttpServlet {
             tableResultSet.close();
             dbcon.close();
             tableStatement.close();
-            columnStatement.close();
 
             // send off the data
             out.write(tableArray.toString());
