@@ -10,9 +10,9 @@ import java.util.ArrayList;
 /**
  * Servlet Filter implementation class LoginFilter
  */
-@WebFilter(filterName = "LoginFilter", urlPatterns = "/*")
-public class LoginFilter implements Filter {
-    private final ArrayList<String> allowedURIs = new ArrayList<>();
+@WebFilter(filterName = "EmployeeFilter", urlPatterns = "/_dashboard.html")
+public class EmployeeFilter implements Filter {
+    private final ArrayList<String> disallowedURIs = new ArrayList<>();
 
     /**
      * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
@@ -22,39 +22,38 @@ public class LoginFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        System.out.println("LoginFilter: " + httpRequest.getRequestURI());
+        System.out.println("EmployeeFilter: " + httpRequest.getRequestURI());
 
         // Check if this URL is allowed to access without logging in
-        if (this.isUrlAllowedWithoutLogin(httpRequest.getRequestURI())) {
+        if (!this.isUrlNotAllowedWithoutEmployeeStatus(httpRequest.getRequestURI())) {
             // Keep default action: pass along the filter chain
             chain.doFilter(request, response);
             return;
         }
 
-        // Redirect to login page if the "user" attribute doesn't exist in session
-        if (httpRequest.getSession().getAttribute("user") == null) {
+        // Redirect to main page if user is not employee
+        User user = (User) httpRequest.getSession().getAttribute("user");
+        if (user == null) {
             httpResponse.sendRedirect("/Fabflix/login.html");
+        }
+        else if (!user.isEmployee()) {
+            httpResponse.sendRedirect("/Fabflix/index.html");
         } else {
             chain.doFilter(request, response);
         }
     }
 
-    private boolean isUrlAllowedWithoutLogin(String requestURI) {
+    private boolean isUrlNotAllowedWithoutEmployeeStatus(String requestURI) {
         /*
          Setup your own rules here to allow accessing some resources without logging in
          Always allow your own login related requests(html, js, servlet, etc..)
          You might also want to allow some CSS files, etc..
          */
-        return allowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
+        return disallowedURIs.stream().anyMatch(requestURI.toLowerCase()::endsWith);
     }
 
     public void init(FilterConfig fConfig) {
-        allowedURIs.add("login.html");
-        allowedURIs.add("login.js");
-        allowedURIs.add("api/login");
-        allowedURIs.add("bootstrap.min.css");
-        allowedURIs.add("jquery-3.5.0.min.js");
-        allowedURIs.add("fabflix.css");
+        disallowedURIs.add("_dashboard.html");
     }
 
     public void destroy() {
