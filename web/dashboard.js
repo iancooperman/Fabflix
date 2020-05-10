@@ -3,7 +3,7 @@
 function handleMetadataResult(resultData) {
 for (let i = 0; i < resultData.length; i++) {
         let html = "";
-        html += "<table border='1'>";
+        html += "<table border='1' style='display: inline-block; margin-right: 2px; vertical-align: top'>";
 
         let tableObject = resultData[i];
         let tableName = tableObject["table_name"];
