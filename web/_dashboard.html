@@ -16,6 +16,22 @@
         <small id="add_star_message"></small>
     </form>
 
+    <h2>Add Movie</h2>
+    <form id="add_movie_form">
+        <label for="movie_title">Title</label>
+        <input type="text" name="movie_title" id="movie_title" required>
+        <label for="birth_year">Year</label>
+        <input type="number" name="movie_year" id="movie_year" min="1900" required>
+        <label for="movie_director">Director</label>
+        <input type="text" name="movie_director" id="movie_director" required>
+        <label for="movie_star">Star</label>
+        <input type="text" name="movie_star" id="movie_star" required>
+        <label for="movie_genre">Genre</label>
+        <input type="text" name="movie_genre" id="movie_genre" required>
+        <input type="submit">
+        <small id="add_movie_message"></small>
+    </form>
+
     <h2>Metadata (Tables in moviedb)</h2>
     <div id="metadata"></div>
 
