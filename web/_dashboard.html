@@ -6,6 +6,16 @@
 </head>
 <body>
     <h1>Employee Dashboard</h1>
+    <h2>Add Star</h2>
+    <form id="add_star_form">
+        <label for="star_name">Name</label>
+        <input type="text" name="star_name" id="star_name" required>
+        <label for="birth_year">Year of Birth</label>
+        <input type="number" name="birth_year" id="birth_year" min="1900">
+        <input type="submit">
+        <small id="add_star_message"></small>
+    </form>
+
     <h2>Metadata (Tables in moviedb)</h2>
     <div id="metadata"></div>
 

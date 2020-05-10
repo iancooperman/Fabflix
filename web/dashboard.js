@@ -24,14 +24,34 @@ for (let i = 0; i < resultData.length; i++) {
         // add compiled HTML to site
         $("#metadata").append(html);
     }
-
-
 }
 
+function handleAddStarResult(resultData) {
+    let message = resultData["message"];
+    $("#add_star_message").text(message);
+}
 
+function addStarSubmission(eventObject) {
+    eventObject.preventDefault();
+
+    let formParameters = $("#add_star_form").serialize();
+    console.log(formParameters);
+
+    $.ajax({
+        dataType: "json",
+        method: "get",
+        url: "api/addStar?" + formParameters,
+        success: (resultData) => handleAddStarResult(resultData)
+    });
+}
+
+// dashboard init
 $.ajax({
     dataType: "json",
     method: "GET",
     url: "api/metadata",
     success: (resultData) => handleMetadataResult(resultData)
 });
+
+// add submit listener to add star form
+$("#add_star_form").on("submit", addStarSubmission);
