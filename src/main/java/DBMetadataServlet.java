@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import javax.xml.transform.Result;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,6 +26,8 @@ public class DBMetadataServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
+
+        PrintWriter out = response.getWriter();
 
         try {
             // get a connection to the db
@@ -70,6 +73,8 @@ public class DBMetadataServlet extends HttpServlet {
 
                 // close the column result set before it's lost to garbage collection
                 columnResultSet.close();
+
+
             }
 
             // close the table result set
@@ -77,9 +82,21 @@ public class DBMetadataServlet extends HttpServlet {
             dbcon.close();
             tableStatement.close();
             columnStatement.close();
+
+            // send off the data
+            out.write(tableArray.toString());
+
+            response.setStatus(200);
         }
         catch (Exception e) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("status", "fail");
+            jsonObject.addProperty("message", e.getMessage());
+            out.write(jsonObject.toString());
 
+            response.setStatus(500);
         }
+
+        out.close();
     }
 }
