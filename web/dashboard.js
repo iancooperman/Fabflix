@@ -53,5 +53,25 @@ $.ajax({
     success: (resultData) => handleMetadataResult(resultData)
 });
 
-// add submit listener to add star form
+// add submit listener to add star form and add movie form
 $("#add_star_form").on("submit", addStarSubmission);
+
+function handleAddMovieResult(resultData) {
+    let message = resultData["message"];
+    $("#add_movie_message").text(message);
+}
+
+function addMovieSubmission(eventObject) {
+    eventObject.preventDefault();
+
+    let formParameters = $("#add_movie_form").serialize();
+    $.ajax({
+        dataType: "json",
+        method: "get",
+        url: "api/addMovie?" + formParameters,
+        success: (resultData) => handleAddMovieResult(resultData)
+    });
+
+}
+
+$("#add_movie_form").on("submit", addMovieSubmission);

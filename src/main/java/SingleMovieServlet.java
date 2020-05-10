@@ -36,9 +36,8 @@ public class SingleMovieServlet extends HttpServlet {
 
             // Query database for relevant info
             String mainQuery = "SELECT id, title, year, director, rating " +
-                                "FROM movies, ratings " +
-                                "WHERE movies.id = ratings.movieId " +
-                                    "AND id = ?";
+                                "FROM movies LEFT JOIN ratings ON movies.id = ratings.movieId " +
+                                "WHERE id = ?";
             PreparedStatement mainStatement = dbcon.prepareStatement(mainQuery);
             mainStatement.setString(1, movieId);
             ResultSet titleYearDirectorRating = mainStatement.executeQuery();
@@ -143,6 +142,7 @@ public class SingleMovieServlet extends HttpServlet {
             dbcon.close();
         }
         catch (Exception e) {
+            e.printStackTrace();
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("errorMessage", e.getMessage());
             out.write(jsonObject.toString());
