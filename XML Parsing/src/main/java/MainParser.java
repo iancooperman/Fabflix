@@ -191,7 +191,7 @@ public class MainParser {
 
 
                     // collect genres
-                    ArrayList genreNames = new ArrayList();
+                    ArrayList<String> genreNames = new ArrayList<String>();
                     NodeList catTags = filmTag.getElementsByTagName("cat");
                     for (int k = 0; k < catTags.getLength(); k++) {
                         Element catTag = (Element) catTags.item(k);
@@ -208,17 +208,66 @@ public class MainParser {
         }
     }
 
-    private void addMovieToDB(String title, String year, String director, ArrayList genreNames) {
+    private void addMovieToDB(String title, String year, String director, ArrayList<String> genreNames) {
+
+
         try {
+            // prepare movie info for insertion into DB
             String movieInsertQuery = "INSERT INTO movies (id, title, year, director) VALUES (?, ?, ?, ?)";
             PreparedStatement movieInsertStatement = dbcon.prepareStatement(movieInsertQuery);
 
-            String newId = "tt" + maxMovieId
+            // increment maxMovieId/create new movieId;
+            maxMovieId++;
+            String newMovieId = "tt" + String.format("%7s", Integer.toString(maxMovieId)).replace(' ', '0');
+
+            movieInsertStatement.setString(1, newMovieId);
+            movieInsertStatement.setString(2, title);
+            movieInsertStatement.setInt(3, Integer.parseInt(year));
+            movieInsertStatement.setString(4, director);
+
+            for (String genreName : genreNames) {
+                int genreId = getGenreId(genreName);
+                // if the genre does not exist in the DB
+                if (genreId == -1) {
+
+                }
+                else {
+                    addGenreToDB(genreName);
+                }
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getGenreId(String genreName) {
+        try {
+            String query = "SELECT * FROM genres WHERE name = ?";
+            PreparedStatement preparedStatement = dbcon.prepareStatement(query);
+            preparedStatement.setString(1, genreName);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // if there's a matching record, return the genreId;
+            if (resultSet.next()) {
+                return resultSet.getInt("genreId");
+            }
+            // otherwise, return -1 to let the calling function know there's no matching record
+            else {
+                return -1;
+            }
+        }
+        catch (SQLException sqlException) {
+            sqlException.getStackTrace();
+            return -1;
+        }
+    }
+
+    private void addGenreToDB(String genreName) {
+
 
     }
+
+
 
 }
