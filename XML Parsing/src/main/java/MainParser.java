@@ -135,22 +135,42 @@ public class MainParser {
                 for (int j = 0; j < filmTags.getLength(); j++) {
                     Element filmTag = (Element) filmTags.item(j);
 
+                    // collect title
                     Element tTag = (Element) filmTag.getElementsByTagName("t").item(0);
                     String title = tTag.getTextContent();
 //                    System.out.println(director + ": " + title);
 
+                    // collect year
+                    Element yearTag = (Element) filmTag.getElementsByTagName("year").item(0);
+                    Element releasedTag = (Element) yearTag.getElementsByTagName("released").item(0);
+                    String year;
+                    if (releasedTag != null) {
+                        year = releasedTag.getTextContent();
+                    }
+                    else {
+                        year = yearTag.getTextContent();
+                    }
+
+
+                    // if year length if greater than 4, it probably picked up the rereleased tag
+                    if (year.length() > 4) {
+                        year = year.substring(0, 4);
+                    }
+
+                    if (year.length() < 4) {
+
+                    }
+
+
+                    // collect genres
                     ArrayList genreNames = new ArrayList();
                     NodeList catTags = filmTag.getElementsByTagName("cat");
                     for (int k = 0; k < catTags.getLength(); k++) {
                         Element catTag = (Element) catTags.item(k);
                         String catcode = catTag.getTextContent().toLowerCase().trim();
 
-                        if (catcode.equals("verite")) {
-                            System.out.println(title);
-                        }
-
-                        if (!catcodeToGenreName.containsKey(catcode)) {
-                            System.out.println(catcode);
+                        if (catcodeToGenreName.containsKey(catcode)) {
+                            genreNames.add(catcodeToGenreName.get(catcode));
                         }
                     }
 
