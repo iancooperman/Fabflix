@@ -8,9 +8,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,6 +16,8 @@ public class MainParser {
     private DataSource dataSource;
     private Connection dbcon;
     private Document dom;
+
+    private int maxMovieId;
 
 
     public static void main(String[] args) {
@@ -32,6 +32,16 @@ public class MainParser {
             Class.forName("com.mysql.jdbc.Driver");
             dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", DBLoginInfo.username, DBLoginInfo.password);
             System.out.println("Connected");
+
+            // get the max movieId for easy incrementation and retrieval
+            String maxMovieIdQuery = "SELECT max(id) FROM movies";
+            Statement maxMovieIdStatement = dbcon.createStatement();
+            ResultSet maxMovieIdSet = maxMovieIdStatement.executeQuery(maxMovieIdQuery);
+
+            if (maxMovieIdSet.next()) {
+                maxMovieId = Integer.parseInt(maxMovieIdSet.getString("max(id)").substring(2));
+            }
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -199,6 +209,15 @@ public class MainParser {
     }
 
     private void addMovieToDB(String title, String year, String director, ArrayList genreNames) {
+        try {
+            String movieInsertQuery = "INSERT INTO movies (id, title, year, director) VALUES (?, ?, ?, ?)";
+            PreparedStatement movieInsertStatement = dbcon.prepareStatement(movieInsertQuery);
+
+            String newId = "tt" + maxMovieId
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
