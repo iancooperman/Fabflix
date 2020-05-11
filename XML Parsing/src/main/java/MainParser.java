@@ -17,7 +17,9 @@ import java.util.HashMap;
 public class MainParser {
     private DataSource dataSource;
     private Connection dbcon;
-    private Document dom;
+    private Document mains243;
+    private Document casts124;
+    private Document actors63;
 
     private int maxMovieId;
 
@@ -53,8 +55,8 @@ public class MainParser {
     }
 
     private void run() {
-        parseXMLFile();
-        parseDocument();
+        parseXMLFiles();
+        parseDocuments();
 
         try {
             dbcon.close();
@@ -64,13 +66,16 @@ public class MainParser {
         }
     }
 
-    private void parseXMLFile() {
+    private void parseXMLFiles() {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
 
-            dom = db.parse("stanford-movies/mains243.xml");
+            mains243 = db.parse("stanford-movies/mains243.xml");
+            casts124 = db.parse("stanford-movies/casts124.xml");
+            actors63 = db.parse("stanford-movies/actors63.xml");
+
         }
         catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -83,7 +88,7 @@ public class MainParser {
         }
     }
 
-    private void parseDocument() {
+    private void parseDocuments() {
         // set up mapping between category codes and genre names
         HashMap<String, String> catcodeToGenreName = new HashMap<String, String>();
         catcodeToGenreName.put("susp", "Thriller");
@@ -140,7 +145,7 @@ public class MainParser {
 
 
         // get the root element
-        Element docEle = (Element) dom.getElementsByTagName("movies").item(0);
+        Element docEle = (Element) mains243.getElementsByTagName("movies").item(0);
 
         // get a nodelist of <directorfilms> elements
         NodeList nl = docEle.getElementsByTagName("directorfilms");
