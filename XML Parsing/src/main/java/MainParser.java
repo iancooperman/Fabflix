@@ -1,3 +1,5 @@
+package main.java;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -54,6 +56,12 @@ public class MainParser {
         parseXMLFile();
         parseDocument();
 
+        try {
+            dbcon.close();
+        }
+        catch (SQLException e) {
+
+        }
     }
 
     private void parseXMLFile() {
