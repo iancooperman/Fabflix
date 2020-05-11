@@ -24,6 +24,7 @@ public class MainParser {
     private HashMap<String, String> stanfordIdToMovieId;
     private HashMap<String, ArrayList<String>> stanfordIdToStarList;
     private HashMap<String, String> starNameToStarId;
+    private PreparedStatement starToMovieInsertionStatement;
 
     private int maxMovieId;
 
@@ -54,6 +55,9 @@ public class MainParser {
             stanfordIdToStarList = new HashMap<String, ArrayList<String>>();
             starNameToStarId = new HashMap<String, String>();
 
+            String starToMovieInsertionQuery = "INSERT INTO stars_in_movies (starId, movieId) VALUES (?, ?)";
+            starToMovieInsertionStatement = dbcon.prepareStatement(starToMovieInsertionQuery);
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -70,6 +74,7 @@ public class MainParser {
 
         try {
             dbcon.close();
+            starToMovieInsertionStatement.close();
         }
         catch (SQLException e) {
 
@@ -88,10 +93,39 @@ public class MainParser {
             Element fTag = (Element) mTag.getElementsByTagName("f").item(0);
             String stanfordId = fTag.getTextContent();
             String movieId = stanfordIdToMovieId.get(stanfordId);
+
+            // Retrieve the starId of the current star
+            Element aTag = (Element) mTag.getElementsByTagName("a").item(0);
+            String starName = aTag.getTextContent();
+            String starId = starNameToStarId.get(starName);
+
+            if (starId == null) {
+                System.out.println("starId unregistered in actors63.xml");
+                continue;
+            }
+
+            if (movieId == null) {
+                System.out.println("movieId unregistered in mains243.xml");
+                continue;
+            }
+
+            addStarToMovieInDB(starId, movieId);
         }
 
 
 
+    }
+
+    private void addStarToMovieInDB(String starId, String movieId) {
+        try {
+            starToMovieInsertionStatement.setString(1, starId);
+            starToMovieInsertionStatement.setString(2, movieId);
+
+            starToMovieInsertionStatement.executeUpdate();
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
 
     private void parseXMLFiles() {
