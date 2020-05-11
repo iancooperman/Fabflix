@@ -229,11 +229,11 @@ public class MainParser {
                 int genreId = getGenreId(genreName);
                 // if the genre does not exist in the DB
                 if (genreId == -1) {
+                    genreId = addGenreToDB(genreName);
+                }
 
-                }
-                else {
-                    addGenreToDB(genreName);
-                }
+                linkGenreToMovie(genreId, newMovieId);
+
             }
         }
         catch (Exception e) {
@@ -250,24 +250,41 @@ public class MainParser {
 
             // if there's a matching record, return the genreId;
             if (resultSet.next()) {
-                return resultSet.getInt("genreId");
+                int genreId = resultSet.getInt("genreId");
+
+                preparedStatement.close();
+                resultSet.close();
+                return genreId;
             }
             // otherwise, return -1 to let the calling function know there's no matching record
             else {
+                preparedStatement.close();
+                resultSet.close();
+
                 return -1;
             }
         }
         catch (SQLException sqlException) {
-            sqlException.getStackTrace();
+            sqlException.printStackTrace();
             return -1;
         }
     }
 
-    private void addGenreToDB(String genreName) {
-
+    // INCOMPLETE; add genre to genres table and return the new genreId
+    private int addGenreToDB(String genreName) {
+        
 
     }
 
-
-
+    private void linkGenreToMovie(int genreId, String movieId) {
+        try {
+            String query = "INSERT INTO genres_in_movies (genreId, movieId) VALUES (?, ?)";
+            PreparedStatement preparedStatement = dbcon.prepareStatement(query);
+            preparedStatement.setInt(1, genreId);
+            preparedStatement.setString(2, movieId);
+        }
+        catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
 }
