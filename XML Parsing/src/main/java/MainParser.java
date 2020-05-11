@@ -53,33 +53,56 @@ public class MainParser {
     private void parseDocument() {
         // set up mapping between category codes and genre names
         HashMap<String, String> catcodeToGenreName = new HashMap<String, String>();
-        catcodeToGenreName.put("Susp", "Thriller");
-        catcodeToGenreName.put("CnR", "Crime");
-        catcodeToGenreName.put("Dram", "Drama");
-        catcodeToGenreName.put("West", "Western");
-        catcodeToGenreName.put("Myst", "Mystery");
-        catcodeToGenreName.put("S.F.", "Sci-Fi");
-        catcodeToGenreName.put("Advt", "Adventure");
-        catcodeToGenreName.put("Horr", "Horror");
-        catcodeToGenreName.put("Romt", "Romance");
-        catcodeToGenreName.put("Comd", "Comedy");
-        catcodeToGenreName.put("Musc", "Musical");
-        catcodeToGenreName.put("Docu", "Documentary");
-        catcodeToGenreName.put("Porn", "Pornography");
-        catcodeToGenreName.put("Noir", "Noir");
+        catcodeToGenreName.put("susp", "Thriller");
+        catcodeToGenreName.put("cnr", "Crime");
+        catcodeToGenreName.put("dram", "Drama");
+        catcodeToGenreName.put("west", "Western");
+        catcodeToGenreName.put("myst", "Mystery");
+        catcodeToGenreName.put("s.f.", "Sci-Fi");
+        catcodeToGenreName.put("advt", "Adventure");
+        catcodeToGenreName.put("horr", "Horror");
+        catcodeToGenreName.put("romt", "Romance");
+        catcodeToGenreName.put("comd", "Comedy");
+        catcodeToGenreName.put("musc", "Musical");
+        catcodeToGenreName.put("docu", "Documentary");
+        catcodeToGenreName.put("porn", "Pornography");
+        catcodeToGenreName.put("noir", "Noir");
 
-        catcodeToGenreName.put("Ctxx", "Uncategorized");
-        catcodeToGenreName.put("Actn", "Action");
-        catcodeToGenreName.put("Camp now", "Camp");
-        catcodeToGenreName.put("Disa", "Disaster");
-        catcodeToGenreName.put("Epic", "Epic");
-        catcodeToGenreName.put("ScFi", "Sci-Fi");
-        catcodeToGenreName.put("Cart", "Animation");
-        catcodeToGenreName.put("Surl", "sureal");
-        catcodeToGenreName.put("AvGa", "Avant Garde");
-        catcodeToGenreName.put("Hist", "History");
+        catcodeToGenreName.put("ctxx", "Uncategorized");
+        catcodeToGenreName.put("actn", "Action");
+        catcodeToGenreName.put("camp now", "Camp");
+        catcodeToGenreName.put("disa", "Disaster");
+        catcodeToGenreName.put("epic", "Epic");
+        catcodeToGenreName.put("scfi", "Sci-Fi");
+        catcodeToGenreName.put("cart", "Animation");
+        catcodeToGenreName.put("surl", "Surreal");
+        catcodeToGenreName.put("avga", "Avant Garde");
+        catcodeToGenreName.put("hist", "History");
 
-        catcodeToGenreName.put("Romt Comd", "Romantic Comedy");
+        catcodeToGenreName.put("romt comd", "Romantic Comedy");
+        catcodeToGenreName.put("fant", "Fantasy");
+        catcodeToGenreName.put("fant ", "Fantasy");
+        catcodeToGenreName.put("biop", "Biographical Picture");
+        catcodeToGenreName.put("scif", "Sci-Fi");
+        catcodeToGenreName.put("faml", "Family");
+        catcodeToGenreName.put("cnrb", "Crime");
+        catcodeToGenreName.put("road", "Genre");
+        catcodeToGenreName.put("docu dram", "Docudrama");
+        catcodeToGenreName.put("act", "Action");
+        catcodeToGenreName.put("anti-dram", "Drama");
+        catcodeToGenreName.put("romt dram", "Romance");
+        catcodeToGenreName.put("surr", "Surreal");
+        catcodeToGenreName.put("dram docu", "Docudrama");
+        catcodeToGenreName.put("romt. comd", "Romantic Comedy");
+        catcodeToGenreName.put("sati", "Satire");
+        catcodeToGenreName.put("axtn", "Action");
+        catcodeToGenreName.put("hor", "Horror");
+        catcodeToGenreName.put("comdx", "Comedy");
+        catcodeToGenreName.put("biopx", "Biographical Picture");
+        catcodeToGenreName.put("biopp", "Biographical Picture");
+        catcodeToGenreName.put("kinky", "Pornography");
+        catcodeToGenreName.put("sports", "Sports");
+
 
 
 
@@ -120,8 +143,15 @@ public class MainParser {
                     NodeList catTags = filmTag.getElementsByTagName("cat");
                     for (int k = 0; k < catTags.getLength(); k++) {
                         Element catTag = (Element) catTags.item(k);
-                        String genreName = catTag.getTextContent();
-                        System.out.println(genreName);
+                        String catcode = catTag.getTextContent().toLowerCase().trim();
+
+                        if (catcode.equals("verite")) {
+                            System.out.println(title);
+                        }
+
+                        if (!catcodeToGenreName.containsKey(catcode)) {
+                            System.out.println(catcode);
+                        }
                     }
 
                 }
