@@ -224,6 +224,10 @@ public class MainParser {
             movieInsertStatement.setString(2, title);
             movieInsertStatement.setInt(3, Integer.parseInt(year));
             movieInsertStatement.setString(4, director);
+            movieInsertStatement.executeUpdate();
+
+            movieInsertStatement.close();
+
 
             for (String genreName : genreNames) {
                 int genreId = getGenreId(genreName);
@@ -233,7 +237,6 @@ public class MainParser {
                 }
 
                 linkGenreToMovie(genreId, newMovieId);
-
             }
         }
         catch (Exception e) {
@@ -272,7 +275,30 @@ public class MainParser {
 
     // INCOMPLETE; add genre to genres table and return the new genreId
     private int addGenreToDB(String genreName) {
-        
+        try {
+            String query = "SELECT max(id) FROM genres";
+            Statement statement = dbcon.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+                int maxGenreId = resultSet.getInt("genreId");
+                int newGenreId = maxGenreId + 1;
+
+                String insertQuery = "INSERT INTO genres (id, name) VALUES (?, ?);";
+                PreparedStatement insertStatement = dbcon.prepareStatement(insertQuery);
+                insertStatement.setInt(1, newGenreId);
+                insertStatement.setString(2, genreName);
+                insertStatement.executeUpdate();
+
+                insertStatement.close();
+            }
+
+            statement.close();
+            resultSet.close();
+        }
+        catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
 
     }
 
@@ -282,6 +308,7 @@ public class MainParser {
             PreparedStatement preparedStatement = dbcon.prepareStatement(query);
             preparedStatement.setInt(1, genreId);
             preparedStatement.setString(2, movieId);
+            preparedStatement.executeUpdate();
         }
         catch (SQLException sqlException) {
             sqlException.printStackTrace();
