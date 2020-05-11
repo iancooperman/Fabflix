@@ -55,20 +55,30 @@ public class MainParser {
         NodeList nl = docEle.getElementsByTagName("directorfilms");
         if (nl != null && nl.getLength() > 0) {
             for (int i = 0; i < nl.getLength(); i++) {
-                Element directorfilm = (Element) nl.item(i);
+                Element directorfilmsTag = (Element) nl.item(i);
 
-                Element director = (Element) directorfilm.getElementsByTagName("director").item(0);
+                Element directorTag = (Element) directorfilmsTag.getElementsByTagName("director").item(0);
 
+                String directorName = null;
                 try {
-                    Element dirname = (Element) director.getElementsByTagName("dirname").item(0);
-                    String directorName = dirname.getTextContent();
-                    System.out.println(directorName);
+                    Element dirnameTag = (Element) directorTag.getElementsByTagName("dirname").item(0);
+                    directorName = dirnameTag.getTextContent();
+//                    System.out.println(directorName);
                 }
-                // most likely happens when <director? doesn't have a <dirname> child
+                // most likely happens when <director> doesn't have a <dirname> child
                 catch (NullPointerException e) {
-
+                    System.out.println("<director> did not have a <dirname> as a child");
                 }
 
+                Element filmsTag = (Element) directorfilmsTag.getElementsByTagName("films").item(0);
+                NodeList filmTags = filmsTag.getElementsByTagName("film");
+                for (int j = 0; j < filmTags.getLength(); j++) {
+                    Element filmTag = (Element) filmTags.item(j);
+
+                    Element tTag = (Element) filmTag.getElementsByTagName("t").item(0);
+                    String title = tTag.getTextContent();
+                    System.out.println(directorName + ": " + title);
+                }
 
             }
         }
