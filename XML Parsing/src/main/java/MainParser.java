@@ -189,6 +189,14 @@ public class MainParser {
                         continue;
                     }
 
+                    try {
+                        year = Integer.toString(Integer.parseInt(year));
+                    }
+                    catch (NumberFormatException numberFormatException) {
+                        System.out.println(year + " is not a valid year.");
+                        continue;
+                    }
+
 
                     // collect genres
                     ArrayList<String> genreNames = new ArrayList<String>();
@@ -253,7 +261,7 @@ public class MainParser {
 
             // if there's a matching record, return the genreId;
             if (resultSet.next()) {
-                int genreId = resultSet.getInt("genreId");
+                int genreId = resultSet.getInt("id");
 
                 preparedStatement.close();
                 resultSet.close();
@@ -275,14 +283,15 @@ public class MainParser {
 
     // INCOMPLETE; add genre to genres table and return the new genreId
     private int addGenreToDB(String genreName) {
+        int newGenreId = -1;
         try {
             String query = "SELECT max(id) FROM genres";
             Statement statement = dbcon.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
             if (resultSet.next()) {
-                int maxGenreId = resultSet.getInt("genreId");
-                int newGenreId = maxGenreId + 1;
+                int maxGenreId = resultSet.getInt("max(id)");
+                newGenreId = maxGenreId + 1;
 
                 String insertQuery = "INSERT INTO genres (id, name) VALUES (?, ?);";
                 PreparedStatement insertStatement = dbcon.prepareStatement(insertQuery);
@@ -291,6 +300,7 @@ public class MainParser {
                 insertStatement.executeUpdate();
 
                 insertStatement.close();
+
             }
 
             statement.close();
@@ -300,6 +310,7 @@ public class MainParser {
             sqlException.printStackTrace();
         }
 
+        return newGenreId;
     }
 
     private void linkGenreToMovie(int genreId, String movieId) {
