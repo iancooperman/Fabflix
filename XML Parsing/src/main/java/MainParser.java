@@ -65,7 +65,8 @@ public class MainParser {
     private void run() {
         parseXMLFiles();
         parseActors();
-//        parseMainAndActors();
+        parseMain();
+        parseCasts();
 
         try {
             dbcon.close();
@@ -73,6 +74,24 @@ public class MainParser {
         catch (SQLException e) {
 
         }
+    }
+
+    private void parseCasts() {
+        // get the root element of casts124.xml
+        Element castsTag = (Element) casts124.getElementsByTagName("casts").item(0);
+        NodeList mTags = castsTag.getElementsByTagName("m");
+
+        for (int i = 0; i < mTags.getLength(); i++) {
+            Element mTag = (Element) mTags.item(i);
+
+            // Retrieve the movieId of the current film
+            Element fTag = (Element) mTag.getElementsByTagName("f").item(0);
+            String stanfordId = fTag.getTextContent();
+            String movieId = stanfordIdToMovieId.get(stanfordId);
+        }
+
+
+
     }
 
     private void parseXMLFiles() {
@@ -104,7 +123,7 @@ public class MainParser {
         for (int i = 0; i < actorTags.getLength(); i++) {
             Element actorTag = (Element) actorTags.item(i);
 
-            // Retrive name of star
+            // Retrieve name of star
             Element stagenameTag = (Element) actorTag.getElementsByTagName("stagename").item(0);
             String name = stagenameTag.getTextContent();
 //            System.out.println(name);
@@ -170,7 +189,7 @@ public class MainParser {
         }
     }
 
-    private void parseMainAndCasts() {
+    private void parseMain() {
         // set up mapping between category codes and genre names
         HashMap<String, String> catcodeToGenreName = new HashMap<String, String>();
         catcodeToGenreName.put("susp", "Thriller");
@@ -255,6 +274,18 @@ public class MainParser {
                 for (int j = 0; j < filmTags.getLength(); j++) {
                     Element filmTag = (Element) filmTags.item(j);
 
+                    // collect Stanford id
+                    String stanfordId = null;
+                    try {
+                        Element fidTag = (Element) filmTag.getElementsByTagName("fid").item(0);
+                        stanfordId = fidTag.getTextContent();
+                    }
+                    catch (NullPointerException e) {
+                        System.out.println(filmTag + " does not have a <fid> tag");
+                    }
+
+
+
                     // collect title
                     Element tTag = (Element) filmTag.getElementsByTagName("t").item(0);
                     String title = tTag.getTextContent();
@@ -304,15 +335,13 @@ public class MainParser {
                         }
                     }
 
-                    addMovieToDB(title, year, director, genreNames);
+                    addMovieToDB(title, year, director, genreNames, stanfordId);
                 }
             }
         }
     }
 
-    private void addMovieToDB(String title, String year, String director, ArrayList<String> genreNames) {
-
-
+    private void addMovieToDB(String title, String year, String director, ArrayList<String> genreNames, String stanfordId) {
         try {
             // prepare movie info for insertion into DB
             String movieInsertQuery = "INSERT INTO movies (id, title, year, director) VALUES (?, ?, ?, ?)";
@@ -329,6 +358,9 @@ public class MainParser {
             movieInsertStatement.executeUpdate();
 
             movieInsertStatement.close();
+
+            // create mapping between given stanfordId and generated movieId for later use
+            stanfordIdToMovieId.put(stanfordId, newMovieId);
 
 
             for (String genreName : genreNames) {
