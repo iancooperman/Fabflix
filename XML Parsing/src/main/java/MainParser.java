@@ -3,14 +3,20 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainParser {
+    private DataSource dataSource;
+    private Connection dbcon;
     private Document dom;
 
 
@@ -22,6 +28,15 @@ public class MainParser {
     }
 
     public MainParser() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", DBLoginInfo.username, DBLoginInfo.password);
+            System.out.println("Connected");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -116,6 +131,7 @@ public class MainParser {
             for (int i = 0; i < nl.getLength(); i++) {
                 Element directorfilmsTag = (Element) nl.item(i);
 
+                // collect director
                 Element directorTag = (Element) directorfilmsTag.getElementsByTagName("director").item(0);
 
                 String director = null;
@@ -157,8 +173,10 @@ public class MainParser {
                         year = year.substring(0, 4);
                     }
 
+                    // if the year is too short to make sense, give up. Year is a required attribute for a movie
                     if (year.length() < 4) {
-
+                        System.out.println(director + "'s \"" + title + "\" from year " + year + " doesn't compute.");
+                        continue;
                     }
 
 
@@ -174,10 +192,14 @@ public class MainParser {
                         }
                     }
 
+                    addMovieToDB(title, year, director, genreNames);
                 }
-
             }
         }
+    }
+
+    private void addMovieToDB(String title, String year, String director, ArrayList genreNames) {
+
     }
 
 }

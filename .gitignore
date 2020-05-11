@@ -176,3 +176,5 @@ target*
 src/main/java/RecaptchaConstants.java
 
 stanford-movies/
+
+XML Parsing/src/main/java/DBLoginInfo.java
