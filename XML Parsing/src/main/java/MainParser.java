@@ -107,15 +107,66 @@ public class MainParser {
             // Retrive name of star
             Element stagenameTag = (Element) actorTag.getElementsByTagName("stagename").item(0);
             String name = stagenameTag.getTextContent();
-            System.out.println(name);
+//            System.out.println(name);
 
             // Retrieve birthYear of star
-            Element dobTag = (Element) actorTag.getElementsByTagName("dob").item(0);
-            String birthYearString = dobTag.getTextContent();
-            if (birthYearString)
-            int birthYear = Integer.parseInt();
-            System.out.println(birthYear);
+            Integer birthYear = null;
+            String birthYearString = null;
 
+            try {
+                Element dobTag = (Element) actorTag.getElementsByTagName("dob").item(0);
+                birthYearString = dobTag.getTextContent().trim();
+
+                if (!birthYearString.equals("")) {
+                    birthYear = Integer.parseInt(birthYearString);
+                }
+            }
+            catch (NumberFormatException nfe) {
+                System.out.println(name + " has a birth year of " + birthYearString);
+            }
+            catch (NullPointerException npe) {
+                System.out.println(name + " does not have a <dob> tag ");
+            }
+
+//            System.out.println(birthYear);
+
+            addStarToDB(name, birthYear);
+        }
+    }
+
+    private void addStarToDB(String name, Integer birthYear) {
+        try {
+            String maxStarIdQuery = "SELECT max(id) FROM stars";
+            Statement maxStarIdStatement = dbcon.createStatement();
+            ResultSet maxStarIdRS = maxStarIdStatement.executeQuery(maxStarIdQuery);
+
+            if (maxStarIdRS.next()) {
+                String maxStarId = maxStarIdRS.getString("max(id)");
+//                System.out.println(maxStarId);
+
+                int maxStarIdNumber = Integer.parseInt(maxStarId.substring(2));
+                int nextStarIdNumber = maxStarIdNumber + 1;
+                String nextStarId = "nm" + String.format("%7s", Integer.toString(nextStarIdNumber)).replace(' ', '0');
+
+                String insertionQuery = "INSERT INTO stars (id, name, birthYear) VALUES (?, ?, ?)";
+                PreparedStatement insertionStatement = dbcon.prepareStatement(insertionQuery);
+                insertionStatement.setString(1, nextStarId);
+                insertionStatement.setString(2, name);
+                insertionStatement.setObject(3, birthYear, Types.INTEGER);
+
+                insertionStatement.executeUpdate();
+
+                insertionStatement.close();
+
+                starNameToStarId.put(name, nextStarId);
+            }
+
+            maxStarIdStatement.close();
+            maxStarIdRS.close();
+
+        }
+        catch (SQLException sqle) {
+            sqle.printStackTrace();
         }
     }
 
