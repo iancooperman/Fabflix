@@ -21,6 +21,10 @@ public class MainParser {
     private Document casts124;
     private Document actors63;
 
+    private HashMap<String, String> stanfordIdToMovieId;
+    private HashMap<String, ArrayList<String>> stanfordIdToStarList;
+    private HashMap<String, String> starNameToStarId;
+
     private int maxMovieId;
 
 
@@ -46,6 +50,10 @@ public class MainParser {
                 maxMovieId = Integer.parseInt(maxMovieIdSet.getString("max(id)").substring(2));
             }
 
+            stanfordIdToMovieId = new HashMap<String, String>();
+            stanfordIdToStarList = new HashMap<String, ArrayList<String>>();
+            starNameToStarId = new HashMap<String, String>();
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +64,8 @@ public class MainParser {
 
     private void run() {
         parseXMLFiles();
-        parseDocuments();
+        parseActors();
+//        parseMainAndActors();
 
         try {
             dbcon.close();
@@ -88,7 +97,29 @@ public class MainParser {
         }
     }
 
-    private void parseDocuments() {
+    private void parseActors() {
+        // get the root element of actors63.xml
+        Element actorsTag = (Element) actors63.getElementsByTagName("actors").item(0);
+        NodeList actorTags = actorsTag.getElementsByTagName("actor");
+        for (int i = 0; i < actorTags.getLength(); i++) {
+            Element actorTag = (Element) actorTags.item(i);
+
+            // Retrive name of star
+            Element stagenameTag = (Element) actorTag.getElementsByTagName("stagename").item(0);
+            String name = stagenameTag.getTextContent();
+            System.out.println(name);
+
+            // Retrieve birthYear of star
+            Element dobTag = (Element) actorTag.getElementsByTagName("dob").item(0);
+            String birthYearString = dobTag.getTextContent();
+            if (birthYearString)
+            int birthYear = Integer.parseInt();
+            System.out.println(birthYear);
+
+        }
+    }
+
+    private void parseMainAndCasts() {
         // set up mapping between category codes and genre names
         HashMap<String, String> catcodeToGenreName = new HashMap<String, String>();
         catcodeToGenreName.put("susp", "Thriller");
