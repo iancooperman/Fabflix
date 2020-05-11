@@ -93,7 +93,6 @@ public class MainParser {
         catcodeToGenreName.put("porn", "Pornography");
         catcodeToGenreName.put("noir", "Noir");
 
-        catcodeToGenreName.put("ctxx", "Uncategorized");
         catcodeToGenreName.put("actn", "Action");
         catcodeToGenreName.put("camp now", "Camp");
         catcodeToGenreName.put("disa", "Disaster");
@@ -111,7 +110,7 @@ public class MainParser {
         catcodeToGenreName.put("scif", "Sci-Fi");
         catcodeToGenreName.put("faml", "Family");
         catcodeToGenreName.put("cnrb", "Crime");
-        catcodeToGenreName.put("road", "Genre");
+        catcodeToGenreName.put("road", "Drama");
         catcodeToGenreName.put("docu dram", "Docudrama");
         catcodeToGenreName.put("act", "Action");
         catcodeToGenreName.put("anti-dram", "Drama");
