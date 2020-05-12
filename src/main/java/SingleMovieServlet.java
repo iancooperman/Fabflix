@@ -50,6 +50,10 @@ public class SingleMovieServlet extends HttpServlet {
             String director = titleYearDirectorRating.getString("director");
             String rating = titleYearDirectorRating.getString("rating");
 
+            if (rating == null) {
+                rating = "N/A";
+            }
+
             String genreQuery = "SELECT id, name " +
                                 "FROM genres, genres_in_movies " +
                                 "WHERE genres.id = genres_in_movies.genreId " +
