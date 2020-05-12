@@ -5,6 +5,7 @@
     <title>Sign in</title>
     <link rel="stylesheet" href="bootstrap.min.css">
     <link rel="stylesheet" href="fabflix.css">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body class="bg-dark text-white">
     <h1 id="fabflix-top-logo" class="ml-3">Fabflix</h1>
@@ -18,6 +19,9 @@
             <div class="form-group">
                 <input name="password" type="password" placeholder="Password" class="form-control">
                 <small id="login_error_message" class="form-text text-danger"></small>
+            </div>
+            <div class="form-group">
+                <div class="g-recaptcha" data-sitekey="6LeQJvQUAAAAAG5XGl9Vd4cI8um66Qtf2Sen0gKL"></div>
             </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary">

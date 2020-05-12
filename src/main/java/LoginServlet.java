@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import javax.xml.transform.Result;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -67,6 +66,14 @@ public class LoginServlet extends HttpServlet {
 
             // Have to close DB connection here so SQLException is handled
             dbcon.close();
+
+
+            // verify recaptcha checked
+            String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+            System.out.println(gRecaptchaResponse);
+
+            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -80,6 +87,7 @@ public class LoginServlet extends HttpServlet {
         out.close();
 
     }
+
 
     private User checkCustomersTable(String email, String password) throws SQLException {
         User user = null;
