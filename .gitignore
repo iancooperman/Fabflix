@@ -172,3 +172,9 @@ target*
 
 # End of https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
+
+src/main/java/RecaptchaConstants.java
+
+stanford-movies/
+
+XML Parsing/src/main/java/DBLoginInfo.java

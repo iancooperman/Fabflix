@@ -5,7 +5,11 @@ function handleResult(resultData) {
         let genreId = resultData[i]["genreId"];
         let genreName = resultData[i]["genreName"];
 
-        let href = "movielist.html?genre=" + genreId;
+        let parameterObject = movielistDefaultValues();
+        parameterObject["genre"] = genreId;
+        let serializedParameters = $.param(parameterObject);
+
+        let href = "movielist.html?" + serializedParameters;
         let newHTML = "<li><a href='" + href + "'>" + genreName + "</a></li>";
         genreList.append(newHTML);
     }
@@ -44,13 +48,16 @@ function handleSubmission(eventObject) {
         year = "0";
     }
 
-
     let directorPattern = createTextPattern($("#director").val());
     let starPattern = createTextPattern($("#star").val());
 
-    let parameterObject = {"title": titlePattern, "year": year, "director": directorPattern, "star": starPattern};
-    let serializedParameters = $.param(parameterObject);
+    let parameterObject = movielistDefaultValues();
+    parameterObject["title"] = titlePattern;
+    parameterObject["year"] = year;
+    parameterObject["director"] = directorPattern;
+    parameterObject["star"] = starPattern;
 
+    let serializedParameters = $.param(parameterObject);
 
     let movielistURL = "movielist.html?" + serializedParameters;
     // let the redirection commence!
@@ -60,4 +67,43 @@ function handleSubmission(eventObject) {
 }
 
 fillGenreList();
+
+function createCharacterLI(character) {
+    let parameters = movielistDefaultValues();
+    parameters["title"] = character + "%";
+    let href = "movielist.html?" + $.param(parameters);
+    let html = "<li><a href='" + href + "'>" + character + "</a> </li>";
+    return html;
+}
+
+function fillCharacterList() {
+    let characterList = $("#character_list");
+
+    for (let i = 48; i <= 57; i++) {
+        let character = String.fromCharCode(i);
+        let html = createCharacterLI(character);
+        characterList.append(html);
+    }
+
+    for (let i = 65; i <= 90; i++) {
+        let character = String.fromCharCode(i);
+        let html = createCharacterLI(character);
+        characterList.append(html);
+    }
+
+    let parameters = movielistDefaultValues();
+    parameters["title"] = "*";
+    let href = "movielist.html?" + $.param(parameters);
+    let html = "<li><a href='" + href + "'>" + "*" + "</a></li>";
+
+    characterList.append(html);
+
+
+
+
+
+    $("#character_list").append();
+}
+
+fillCharacterList();
 $("#search-form").submit(handleSubmission);

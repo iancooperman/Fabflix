@@ -12,9 +12,11 @@
     background-color: rgb(90%, 90%, 90%);
 }
 
-.horizontal-list > li{
-    display: inline-block;
+.horizontal-list > li {
     zoom: 1;
+    display: inline-block;
+    padding-right: 5px;
+
 }
 
 .three-column-list {
