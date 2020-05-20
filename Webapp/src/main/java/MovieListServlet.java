@@ -17,6 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 @WebServlet(name = "MovieListServlet", urlPatterns = "/api/movielist")
@@ -120,7 +121,23 @@ public class MovieListServlet extends HttpServlet {
                 rowCountQuery.append("AND EXISTS (SELECT * FROM genres_in_movies WHERE genreId = ? AND movies.id = genres_in_movies.movieId) ");
             }
 
-            if (titleIsValid(title)) {
+            if (qIsValid(q)) {
+                String[] words = q.split(" ");
+
+                // create inner string for AGAINST
+                for (int i = 0; i < words.length; i++) {
+                    words[i] = words[i] + "*";
+                }
+                String againstParameters = String.join(" ", words);
+                stringParameters.add(againstParameters);
+
+                String sql = "AND MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) ";
+
+
+
+                mainQuery.append(sql);
+            }
+            else if (titleIsValid(title)) {
                 if (titleIsStar(title)) {
                     mainQuery.append("AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ");
                     rowCountQuery.append("AND movies.title NOT REGEXP '^[a-zA-Z0-9].*$' ");
@@ -287,6 +304,10 @@ public class MovieListServlet extends HttpServlet {
         }
 
         out.close();
+    }
+
+    private boolean qIsValid(String q) {
+        return (!q.equals(""));
     }
 
     private String genreSQL(String genreOption) {
