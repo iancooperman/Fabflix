@@ -32,6 +32,7 @@ public class MovieListServlet extends HttpServlet {
 
         try {
             // Retrieving parameters
+            String q = request.getParameter("q");
             String title = request.getParameter("title"); // A LIKE pattern; "" = no title specified
             String year = request.getParameter("year"); // An integer > 0 but relatively close to 2020; 0 = no year specified
             String director = request.getParameter("director"); // A LIKE pattern; "" = no star specified
@@ -44,6 +45,7 @@ public class MovieListServlet extends HttpServlet {
             // pass parameters to session
             HttpSession session = request.getSession();
             HashMap<String, String> parameterMap = new HashMap<String, String>();
+            parameterMap.put("q", q);
             parameterMap.put("title", title);
             parameterMap.put("year", year);
             parameterMap.put("director", director);
