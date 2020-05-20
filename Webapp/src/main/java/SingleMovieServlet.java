@@ -112,6 +112,7 @@ public class SingleMovieServlet extends HttpServlet {
             // Retrieve MovieList parameters from session
             HttpSession session = request.getSession();
             HashMap<String, String> parameterMap = (HashMap<String, String>) session.getAttribute("movielistParameters");
+            String qParam = (String) parameterMap.get("q");
             String titleParam = parameterMap.get("title");
             String yearParam = parameterMap.get("year");
             String directorParam = parameterMap.get("director");
@@ -122,6 +123,7 @@ public class SingleMovieServlet extends HttpServlet {
             String sortByParam = parameterMap.get("sortBy");
 
             JsonObject parameterObject = new JsonObject();
+            parameterObject.addProperty("q", qParam);
             parameterObject.addProperty("title", titleParam);
             parameterObject.addProperty("year", yearParam);
             parameterObject.addProperty("director", directorParam);
