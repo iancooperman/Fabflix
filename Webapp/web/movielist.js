@@ -84,6 +84,7 @@ function getUrlParam(param, defaultValue) {
 }
 
 function determineQueryParameters() {
+    let q = getUrlParam('q', "");
     let title = getUrlParam("title", "");
     let year = getUrlParam("year", 0);
     let director = getUrlParam("director", "");
@@ -99,6 +100,7 @@ function determineQueryParameters() {
         method: "GET",
         url: "api/movielist",
         data: {
+            "q": q,
             "title": title,
             "year": year,
             "director": director,
@@ -115,6 +117,7 @@ function determineQueryParameters() {
 function setUpPageButtons() {
     let page = getUrlParam("page", "1");
 
+    let q = getUrlParam("q", "");
     let title = getUrlParam("title", "");
     let year = getUrlParam("year", 0);
     let director = getUrlParam("director", "");
@@ -127,7 +130,7 @@ function setUpPageButtons() {
         $("#prev-button").remove();
     }
     else {
-        let prevURL = "movielist.html?" + $.param({"page": Number(page) - 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        let prevURL = "movielist.html?" + $.param({"q": q, "page": Number(page) - 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
         $("#prev-button").attr("href", prevURL);
     }
 
@@ -136,7 +139,7 @@ function setUpPageButtons() {
         $("#next-button").remove();
     }
     else {
-        let nextURl = "movielist.html?" + $.param({"page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+        let nextURl = "movielist.html?" + $.param({"q": q, "page": Number(page) + 1, "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
         $("#next-button").attr("href", nextURl);
     }
 }
@@ -151,6 +154,7 @@ function isLastPage() {
 function reloadWithNewParams(eventObject) {
     eventObject.preventDefault();
 
+    let q = getUrlParam("q", "");
     let page = getUrlParam("page", "1");
     let title = getUrlParam("title", "");
     let year = getUrlParam("year", 0);
@@ -161,7 +165,7 @@ function reloadWithNewParams(eventObject) {
     let limit = $("#entries-per-page").val();
     let sortBy = $("#sort-by").val();
 
-    let newURL = "movielist.html?" + $.param({"page": Number(page), "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
+    let newURL = "movielist.html?" + $.param({"q": q, "page": Number(page), "title": title, "year": year, "director": director, "star": star, "genre": genre, "limit": limit, "sortBy": sortBy});
 
     window.location.href = newURL;
 

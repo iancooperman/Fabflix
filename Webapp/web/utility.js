@@ -1,5 +1,6 @@
 function movielistDefaultValues() {
     return {
+        "q": "",
         "title": "",
         "year": 0,
         "director": "",
