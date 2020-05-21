@@ -129,13 +129,11 @@ public class MovieListServlet extends HttpServlet {
                     words[i] = words[i] + "*";
                 }
                 String againstParameters = String.join(" ", words);
+                System.out.println(againstParameters);
                 stringParameters.add(againstParameters);
-
                 String sql = "AND MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) ";
-
-
-
                 mainQuery.append(sql);
+                rowCountQuery.append(sql);
             }
             else if (titleIsValid(title)) {
                 if (titleIsStar(title)) {
@@ -173,6 +171,8 @@ public class MovieListServlet extends HttpServlet {
             for (; i < stringParameters.size(); i++) {
                 mainStatement.setString(i + 1, stringParameters.get(i));
                 rowCountStatement.setString(i + 1, stringParameters.get(i));
+
+                System.out.println(stringParameters.get(i));
             }
             mainStatement.setInt(i + 1, Integer.parseInt(limit));
             rowCountStatement.setInt(i + 1, Integer.parseInt(limit));
