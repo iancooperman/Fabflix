@@ -4,14 +4,13 @@ function handleLookupAjaxSuccess(data, query, done) {
     console.log("lookup ajax successful");
 
     let json = JSON.parse(data);
-    console.log(json);
 
     let suggestions = [];
 
     for (let i = 0; i < json.length; i++) {
-        let movieId = data[i]["movie_id"];
-        let movieTitle = data[i]["movie_title"];
-        let movieYear = data[i]["movie_year"];
+        let movieId = json[i]["movie_id"];
+        let movieTitle = json[i]["movie_title"];
+        let movieYear = json[i]["movie_year"];
 
         let newTitle = formatMovieTitleAndYear(movieTitle, movieYear);
         suggestions.push({"value": newTitle, "data": movieId});
