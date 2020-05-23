@@ -77,12 +77,18 @@ function handleLookup(query, done) {
     })
 }
 
+function handleSelectSuggestion(suggestion) {
+    let movieId = suggestion.data;
+    let url = "movie.html?id=" + movieId;
+    window.location.href = url;
+}
+
 $("#main_search_bar_input").autocomplete({
     lookup: function (query, done) {
         handleLookup(query, done);
     },
     onSelect: function(suggestion) {
-        alert(suggestion.data);
+        handleSelectSuggestion(suggestion);
     },
     minChars: 3,
     deferRequestBy: 300,
