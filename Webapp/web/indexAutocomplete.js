@@ -1,4 +1,12 @@
-let cachedResults = window.localStorage.getItem("cachedMovieResults");
+
+
+let cachedMovieResults;
+if (!window.localStorage.getItem("cachedMovieResults")) {
+    cachedMovieResults = {};
+}
+else {
+    cachedMovieResults = JSON.parse(window.localStorage.getItem("cachedMovieResults"));
+}
 
 function handleLookupAjaxSuccess(data, query, done) {
     console.log("lookup ajax successful");
@@ -18,7 +26,8 @@ function handleLookupAjaxSuccess(data, query, done) {
     }
 
     // TODO: if you want to cache the result into a global variable you can do it here
-    cachedResults[query] = suggestions;
+    cachedMovieResults[query] = suggestions;
+    window.localStorage.setItem("cachedMovieResults", JSON.stringify(cachedMovieResults));
 
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
@@ -38,7 +47,7 @@ function handleLookup(query, done) {
     console.log("sending AJAX request to backend Java Servlet")
 
     // TODO: if you want to check past query results first, you can do it here
-    let previousResult = cachedResults[query];
+    let previousResult = cachedMovieResults[query];
     console.log("Previous result:"  + previousResult);
 
     // if there are cached results, return them
@@ -74,5 +83,6 @@ $("#main_search_bar_input").autocomplete({
         alert(suggestion.data);
     },
     minChars: 3,
-    deferRequestBy: 300
+    deferRequestBy: 300,
+    preserveInput: true
 });
