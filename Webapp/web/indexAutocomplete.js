@@ -5,7 +5,7 @@ function handleLookupAjaxSuccess(data, query, doneCallback) {
 
     // parse the string into JSON
     let jsonData = JSON.parse(data);
-    console.log(jsonData)
+    console.log(jsonData);
 
     // TODO: if you want to cache the result into a global variable you can do it here
 

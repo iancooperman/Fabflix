@@ -3,6 +3,7 @@ package main.java;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import javax.annotation.Resource;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
