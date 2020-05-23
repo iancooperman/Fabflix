@@ -29,7 +29,9 @@ public class AutocompleteServlet extends HttpServlet {
 
             // Retrieve search query
             String q = request.getParameter("q");
-            String[] words = q.split(" ");
+            System.out.println(q);
+
+            String[] words = q.split("\\W");
 
             String sql = "SELECT id, title, year FROM movies WHERE MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) LIMIT 10;";
             PreparedStatement statement = dbcon.prepareStatement(sql);

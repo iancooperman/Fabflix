@@ -6,6 +6,7 @@ function handleLookupAjaxSuccess(data, query, done) {
     let json = JSON.parse(data);
 
     let suggestions = [];
+    console.log(json);
 
     for (let i = 0; i < json.length; i++) {
         let movieId = json[i]["movie_id"];
@@ -62,5 +63,7 @@ $("#main_search_bar_input").autocomplete({
     },
     onSelect: function(suggestion) {
         alert(suggestion.data);
-    }
-})
+    },
+    minChars: 3,
+    deferRequestBy: 300
+});
