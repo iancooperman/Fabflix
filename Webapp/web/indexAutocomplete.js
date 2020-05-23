@@ -1,18 +1,25 @@
 let cachedResults = {};
 
-function handleLookupAjaxSuccess(data, query, doneCallback) {
+function handleLookupAjaxSuccess(data, query, done) {
     console.log("lookup ajax successful")
 
-    // parse the string into JSON
-    let jsonData = JSON.parse(data);
-    console.log(jsonData);
+    let suggestions = [];
+
+    for (let i = 0; i < data.length; i++) {
+        let movieId = data[i]["movie_id"]
+        let movieTitle = data[i]["movie_title"];
+        let movieYear = data[i]["movie_year"];
+
+        let newTitle = formatMovieTitleAndYear(movieTitle, movieYear);
+        suggestions.push({"value": newTitle, "data": movieId});
+    }
 
     // TODO: if you want to cache the result into a global variable you can do it here
 
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
     //   the "Response Format" section in documentation
-    doneCallback( { suggestions: jsonData } );
+    done({"suggestions": suggestions});
 }
 
 /*
@@ -42,7 +49,7 @@ function handleLookup(query, done) {
         },
         "error": function(errorData) {
             console.log("lookup ajax error")
-            console.log(errorData)
+            console.log(errorData);
         }
     })
 }

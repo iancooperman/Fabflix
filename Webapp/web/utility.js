@@ -18,3 +18,7 @@ function centsToDollars(cents) {
     dollars = dollars.toLocaleString("en-US", {style: "currency", currency: "USD"});
     return dollars;
 }
+
+function formatMovieTitleAndYear(title, year) {
+    return title + " (" + year + ")";
+}

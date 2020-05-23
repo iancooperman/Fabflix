@@ -31,7 +31,8 @@ public class AutocompleteServlet extends HttpServlet {
             String q = request.getParameter("q");
             String[] words = q.split(" ");
 
-            String sql = "SELECT id, title, year FROM movies ";
+            String sql = "SELECT id, title, year FROM movies WHERE MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) LIMIT 10";
+            PreparedStatement statement = dbcon.prepareStatement(sql);
 
             // create inner string for AGAINST
             for (int i = 0; i < words.length; i++) {
@@ -39,9 +40,8 @@ public class AutocompleteServlet extends HttpServlet {
             }
             String againstParameters = String.join(" ", words);
             System.out.println(againstParameters);
-            sql += "WHERE MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) ";
 
-            PreparedStatement statement = dbcon.prepareStatement(sql);
+
             statement.setString(1, againstParameters);
             ResultSet resultSet = statement.executeQuery();
 
@@ -59,6 +59,8 @@ public class AutocompleteServlet extends HttpServlet {
                 movieObject.addProperty("movie_year", movieYear);
                 jsonArray.add(movieObject);
             }
+
+            out.write(jsonArray.toString());
 
             response.setStatus(200);
             // close objects
