@@ -1,4 +1,4 @@
-let cachedResults = {};
+let cachedResults = window.localStorage.getItem("cachedMovieResults");
 
 function handleLookupAjaxSuccess(data, query, done) {
     console.log("lookup ajax successful");
@@ -18,6 +18,7 @@ function handleLookupAjaxSuccess(data, query, done) {
     }
 
     // TODO: if you want to cache the result into a global variable you can do it here
+    cachedResults[query] = suggestions;
 
     // call the callback function provided by the autocomplete library
     // add "{suggestions: jsonData}" to satisfy the library response format according to
@@ -37,6 +38,14 @@ function handleLookup(query, done) {
     console.log("sending AJAX request to backend Java Servlet")
 
     // TODO: if you want to check past query results first, you can do it here
+    let previousResult = cachedResults[query];
+    console.log("Previous result:"  + previousResult);
+
+    // if there are cached results, return them
+    if (previousResult !== undefined) {
+        done({suggestions: previousResult});
+        return;
+    }
 
     // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
     // with the query data
