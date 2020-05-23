@@ -24,6 +24,8 @@ function handleLookupAjaxSuccess(data, query, done) {
         suggestions.push({"value": newTitle, "data": movieId});
     }
 
+    console.log("Results: " + JSON.stringify(suggestions));
+
     // TODO: if you want to cache the result into a global variable you can do it here
     cachedMovieResults[query] = suggestions;
     window.localStorage.setItem("cachedMovieResults", JSON.stringify(cachedMovieResults));
@@ -44,14 +46,13 @@ function handleLookupAjaxSuccess(data, query, done) {
 function handleLookup(query, done) {
     console.log("Autocomplete initiated.")
 
-
     // TODO: if you want to check past query results first, you can do it here
     let previousResult = cachedMovieResults[query];
 
     // if there are cached results, return them
     if (previousResult !== undefined) {
         console.log("Using cached results.");
-        console.log("Previous result: " + JSON.stringify(previousResult));
+        console.log("Cached results: " + JSON.stringify(previousResult));
         done({suggestions: previousResult});
         return;
     }
