@@ -1,12 +1,15 @@
 let cachedResults = {};
 
 function handleLookupAjaxSuccess(data, query, done) {
-    console.log("lookup ajax successful")
+    console.log("lookup ajax successful");
+
+    let json = JSON.parse(data);
+    console.log(json);
 
     let suggestions = [];
 
-    for (let i = 0; i < data.length; i++) {
-        let movieId = data[i]["movie_id"]
+    for (let i = 0; i < json.length; i++) {
+        let movieId = data[i]["movie_id"];
         let movieTitle = data[i]["movie_title"];
         let movieYear = data[i]["movie_year"];
 

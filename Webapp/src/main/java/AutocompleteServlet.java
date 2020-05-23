@@ -31,7 +31,7 @@ public class AutocompleteServlet extends HttpServlet {
             String q = request.getParameter("q");
             String[] words = q.split(" ");
 
-            String sql = "SELECT id, title, year FROM movies WHERE MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) LIMIT 10";
+            String sql = "SELECT id, title, year FROM movies WHERE MATCH(movies.title) AGAINST(? IN BOOLEAN MODE) LIMIT 10;";
             PreparedStatement statement = dbcon.prepareStatement(sql);
 
             // create inner string for AGAINST
