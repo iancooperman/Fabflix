@@ -34,6 +34,7 @@ public class MovieListServlet extends HttpServlet {
         try {
             // Retrieving parameters
             String q = request.getParameter("q");
+
             String title = request.getParameter("title"); // A LIKE pattern; "" = no title specified
             String year = request.getParameter("year"); // An integer > 0 but relatively close to 2020; 0 = no year specified
             String director = request.getParameter("director"); // A LIKE pattern; "" = no star specified
@@ -122,7 +123,7 @@ public class MovieListServlet extends HttpServlet {
             }
 
             if (qIsValid(q)) {
-                String[] words = q.split(" ");
+                String[] words = q.split("\\W");
 
                 // create inner string for AGAINST
                 for (int i = 0; i < words.length; i++) {
