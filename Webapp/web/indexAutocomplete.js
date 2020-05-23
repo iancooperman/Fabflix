@@ -9,12 +9,11 @@ else {
 }
 
 function handleLookupAjaxSuccess(data, query, done) {
-    console.log("lookup ajax successful");
+    console.log("AJAX lookup successful");
 
     let json = JSON.parse(data);
 
     let suggestions = [];
-    console.log(json);
 
     for (let i = 0; i < json.length; i++) {
         let movieId = json[i]["movie_id"];
@@ -43,21 +42,23 @@ function handleLookupAjaxSuccess(data, query, done) {
  *   suggestion list from AJAX, you need to call this function to let the library know.
  */
 function handleLookup(query, done) {
-    console.log("autocomplete initiated")
-    console.log("sending AJAX request to backend Java Servlet")
+    console.log("Autocomplete initiated.")
+
 
     // TODO: if you want to check past query results first, you can do it here
     let previousResult = cachedMovieResults[query];
-    console.log("Previous result:"  + previousResult);
 
     // if there are cached results, return them
     if (previousResult !== undefined) {
+        console.log("Using cached results.");
+        console.log("Previous result: " + JSON.stringify(previousResult));
         done({suggestions: previousResult});
         return;
     }
 
     // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
     // with the query data
+    console.log("Sending AJAX request to backend Java Servlet.")
     $.ajax({
         "method": "GET",
         // generate the request url from the query.
