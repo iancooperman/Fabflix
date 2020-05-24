@@ -81,6 +81,7 @@ public class SingleStarServlet extends HttpServlet {
             // Retrieve MovieList parameters from session
             HttpSession session = request.getSession();
             HashMap<String, String> parameterMap = (HashMap<String, String>) session.getAttribute("movielistParameters");
+            String q = parameterMap.get("q");
             String title = parameterMap.get("title");
             String year = parameterMap.get("year");
             String director = parameterMap.get("director");
@@ -91,6 +92,7 @@ public class SingleStarServlet extends HttpServlet {
             String sortBy = parameterMap.get("sortBy");
 
             JsonObject parameterObject = new JsonObject();
+            parameterObject.addProperty("q", q);
             parameterObject.addProperty("title", title);
             parameterObject.addProperty("year", year);
             parameterObject.addProperty("director", director);

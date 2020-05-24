@@ -1,5 +1,6 @@
 function movielistDefaultValues() {
     return {
+        "q": "",
         "title": "",
         "year": 0,
         "director": "",
@@ -16,4 +17,8 @@ function centsToDollars(cents) {
     let dollars = cents / 100;
     dollars = dollars.toLocaleString("en-US", {style: "currency", currency: "USD"});
     return dollars;
+}
+
+function formatMovieTitleAndYear(title, year) {
+    return title + " (" + year + ")";
 }

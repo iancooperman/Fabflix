@@ -5,8 +5,37 @@
     <title>Browse</title>
     <link rel="stylesheet" href="fabflix.css">
     <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="jquery-autocomplete-styles.css">
 </head>
 <body class="bg-dark text-white">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a id="fabflix-top-logo" class="navbar-brand" href="#">Fabflix</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav justify-content-left">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Browse <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Advanced Search</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav w-100 justify-content-center">
+            <li>
+                <form id="main_search_bar" class="form-inline">
+                    <input id="main_search_bar_input" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <input class="btn btn-outline-success my-2 my-sm-0" type="submit"></input>
+                </form>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+
+
     <h1>Browse</h1>
 
 <!--    Browse by title-->
@@ -38,7 +67,11 @@
     </div>
 
     <script src="jquery-3.5.0.min.js"></script>
+    <script src="jquery.autocomplete.min.js"></script>
+    <script src="bootstrap.min.js"></script>
     <script src="utility.js"></script>
+    <script src="fullTextSearch.js"></script>
+    <script src="indexAutocomplete.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
