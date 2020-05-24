@@ -24,13 +24,23 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogin);
         message = findViewById(R.id.textViewMessage);
 
+        // url for accessing login api
+        url = "https://10.0.0.2:8443/Fabflix/api/login";
 
+        // set on click listener for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String user = username.getText().toString();
-                message.setText(user);
+                login();
             }
         });
+    }
+
+    private void login() {
+        message.setText("Attempting to login. Please wait.");
+
+        // Use the same network queue across our application
+        final RequestQueue queue = NetworkManager.sharedManager(this).queue;
+
     }
 }
