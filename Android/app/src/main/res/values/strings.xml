@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Fabflix</string>
+    <color name="fabflix_green">#32CD32</color>
 </resources>
