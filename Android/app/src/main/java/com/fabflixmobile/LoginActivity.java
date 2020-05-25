@@ -2,6 +2,7 @@ package com.fabflixmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -70,10 +71,6 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
-
-
             }
         },
             new Response.ErrorListener() {
@@ -100,6 +97,9 @@ public class LoginActivity extends AppCompatActivity {
     private void loginSuccessful() {
         Log.d("login", "Success");
         message.setText("Success.");
+
+        Intent searchPage = new Intent(LoginActivity.this, SearchActivity.class);
+        startActivity(searchPage);
     }
 
     private void loginFailure(JSONObject responseJsonObject) throws JSONException {
