@@ -110,28 +110,35 @@ public class SingleMovieServlet extends HttpServlet {
             jsonObject.add("stars", starsArray);
 
             // Retrieve MovieList parameters from session
-            HttpSession session = request.getSession();
-            HashMap<String, String> parameterMap = (HashMap<String, String>) session.getAttribute("movielistParameters");
-            String qParam = (String) parameterMap.get("q");
-            String titleParam = parameterMap.get("title");
-            String yearParam = parameterMap.get("year");
-            String directorParam = parameterMap.get("director");
-            String genreParam = parameterMap.get("genre");
-            String starParam = parameterMap.get("star");
-            String pageParam = parameterMap.get("page");
-            String limitParam = parameterMap.get("limit");
-            String sortByParam = parameterMap.get("sortBy");
-
             JsonObject parameterObject = new JsonObject();
-            parameterObject.addProperty("q", qParam);
-            parameterObject.addProperty("title", titleParam);
-            parameterObject.addProperty("year", yearParam);
-            parameterObject.addProperty("director", directorParam);
-            parameterObject.addProperty("genre", genreParam);
-            parameterObject.addProperty("star", starParam);
-            parameterObject.addProperty("page", pageParam);
-            parameterObject.addProperty("limit", limitParam);
-            parameterObject.addProperty("sortBy", sortByParam);
+
+            try {
+                HttpSession session = request.getSession();
+                HashMap<String, String> parameterMap = (HashMap<String, String>) session.getAttribute("movielistParameters");
+                String qParam = (String) parameterMap.get("q");
+                String titleParam = parameterMap.get("title");
+                String yearParam = parameterMap.get("year");
+                String directorParam = parameterMap.get("director");
+                String genreParam = parameterMap.get("genre");
+                String starParam = parameterMap.get("star");
+                String pageParam = parameterMap.get("page");
+                String limitParam = parameterMap.get("limit");
+                String sortByParam = parameterMap.get("sortBy");
+
+
+                parameterObject.addProperty("q", qParam);
+                parameterObject.addProperty("title", titleParam);
+                parameterObject.addProperty("year", yearParam);
+                parameterObject.addProperty("director", directorParam);
+                parameterObject.addProperty("genre", genreParam);
+                parameterObject.addProperty("star", starParam);
+                parameterObject.addProperty("page", pageParam);
+                parameterObject.addProperty("limit", limitParam);
+                parameterObject.addProperty("sortBy", sortByParam);
+            }
+            catch (NullPointerException e) {
+
+            }
 
             jsonObject.add("movielist_parameters", parameterObject);
 
