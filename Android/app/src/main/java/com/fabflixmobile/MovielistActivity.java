@@ -69,10 +69,10 @@ public class MovielistActivity extends AppCompatActivity {
 
                         Movie movie = new Movie(movieTitle, movieYear, movieDirector);
                         for (int j = 0; j < movieActors.length() ; j++) {
-                            movie.addActor(movieActors.getString(j));
+                            movie.addActor(movieActors.getJSONObject(j).getString("star_name"));
                         }
                         for (int j = 0; j < movieGenres.length() ; j++) {
-                            movie.addGenre(movieGenres.getString(j));
+                            movie.addGenre(movieGenres.getJSONObject(j).getString("genre_name"));
                         }
 
                         movieList.add(movie);
