@@ -29,7 +29,7 @@ public class MovielistActivity extends AppCompatActivity {
         Bundle originBundle = getIntent().getExtras();
         String q = originBundle.getString("q");
 
-        url = Utility.url + "/api/movielist?q=" + q;
+        url = Utility.url + "/api/movielist?q=" + q  + "&title=&year=0&director=&star=&genre=0&limit=10&page=1&sortBy=rating_desc_title_asc";
 
         retrieveMovieList();
     }
