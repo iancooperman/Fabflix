@@ -2,29 +2,46 @@ package com.fabflixmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class MovielistActivity extends AppCompatActivity {
+    private ListView listview;
+
     private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movielist);
+
+        // set up widgets
+        listview = (ListView) findViewById(R.id.listview);
+
+        ArrayList<String> movieArrayList = new ArrayList<>();
+        movieArrayList.add("android");
+        movieArrayList.add("is");
+        movieArrayList.add("great");
+        movieArrayList.add("sometimes");
+
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, movieArrayList);
+        listview.setAdapter(adapter);
+
 
         Bundle originBundle = getIntent().getExtras();
         String q = originBundle.getString("q");
