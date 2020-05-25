@@ -13,6 +13,8 @@ public class Movie {
         this.title = title;
         this.year = year;
         this.director = director;
+        this.actors = new ArrayList<String>();
+        this.genres = new ArrayList<String>();
     }
 
     public void addActor(String actor) {
