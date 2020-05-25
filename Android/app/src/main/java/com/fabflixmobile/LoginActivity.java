@@ -15,6 +15,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,8 +59,21 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 //TODO should parse the json response to redirect to appropriate functions.
-                Log.d("login.success", response);
-                message.setText("Success");
+                try {
+                    JSONObject responseJsonObject = new JSONObject(response);
+                    if (responseJsonObject.get("status").equals("success")) {
+                        loginSuccessful();
+                    }
+                    else {
+                        loginFailure(responseJsonObject);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+
+
             }
         },
             new Response.ErrorListener() {
@@ -79,5 +95,15 @@ public class LoginActivity extends AppCompatActivity {
         };
 
         queue.add(loginRequest);
+    }
+
+    private void loginSuccessful() {
+        Log.d("login", "Success");
+        message.setText("Success.");
+    }
+
+    private void loginFailure(JSONObject responseJsonObject) throws JSONException {
+        Log.d("login", "Failure");
+        message.setText((String) responseJsonObject.get("message"));
     }
 }

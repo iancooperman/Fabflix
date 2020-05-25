@@ -30,7 +30,12 @@ public class LoginServlet extends HttpServlet {
         response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
 
-        System.out.println("Request made.");
+
+        // check if this request is coming from an Android device
+        String requestHeader = request.getHeader("User-Agent");
+        boolean isAndroid = requestHeader.toLowerCase().contains("android");
+
+        System.out.println("Request header: " + requestHeader);
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
@@ -70,13 +75,14 @@ public class LoginServlet extends HttpServlet {
             // Have to close DB connection here so SQLException is handled
             dbcon.close();
 
+            // only verify recaptcha if the request is coming from the website
+            if (!isAndroid) {
+                // verify recaptcha checked
+                String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+                System.out.println(gRecaptchaResponse);
 
-            // verify recaptcha checked
-            String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-            System.out.println(gRecaptchaResponse);
-
-            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
-
+                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
