@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100">
+
+    <TextView
+        android:id="@+id/textViewTitleYear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:text="Title (Year)"
+        android:textAlignment="viewStart"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/textViewGenres"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Genre, Genre, Genre" />
+
+    <TextView
+        android:id="@+id/textViewDirector"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Director" />
+
+    <TextView
+        android:id="@+id/textViewActors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Actor, Actor, Actor" />
+</LinearLayout>
