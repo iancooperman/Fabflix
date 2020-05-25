@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 public class MovielistActivity extends AppCompatActivity {
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,5 +17,7 @@ public class MovielistActivity extends AppCompatActivity {
         Bundle originBundle = getIntent().getExtras();
         String q = originBundle.getString("q");
         Toast.makeText(getApplicationContext(), q, Toast.LENGTH_SHORT).show();
+
+        url = Utility.url + "/api/movielist";
     }
 }

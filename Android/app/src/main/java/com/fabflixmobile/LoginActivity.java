@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         message = findViewById(R.id.textViewMessage);
 
         // url for accessing login api
-        url = "https://10.0.2.2:8443/Fabflix/api/login";
+        url = Utility.url + "/api/login" ;
 
         // set on click listener for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {
