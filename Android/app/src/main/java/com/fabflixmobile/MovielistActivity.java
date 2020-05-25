@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class MovielistActivity extends AppCompatActivity {
     private ListView listview;
+    private ArrayList<Movie> movieList;
 
     private String url;
 
@@ -31,20 +32,7 @@ public class MovielistActivity extends AppCompatActivity {
 
         // set up widgets
         listview = (ListView) findViewById(R.id.listview);
-        Movie movie1 = new Movie("Arrival", "2016", "Who cares?");
-        movie1.addActor("Marlon Brando");
-        movie1.addActor("Some Guy");
-        movie1.addGenre("Sci-Fi");
-        movie1.addGenre("Horror");
-        Movie movie2 = new Movie("Toy Story", "1990s", "Who cares?");
-        movie2.addActor("Marlon Brando");
-        movie2.addActor("Some Guy");
-        movie2.addGenre("Sci-Fi");
-        movie2.addGenre("Horror");
-
-        ArrayList<Movie> movieList = new ArrayList<Movie>();
-        movieList.add(movie1);
-        movieList.add(movie2);
+        movieList = new ArrayList<Movie>();
 
         MovieListAdapter adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
         listview.setAdapter(adapter);
@@ -70,9 +58,24 @@ public class MovielistActivity extends AppCompatActivity {
                     jsonObject = new JSONObject(response);
 
                     JSONArray movies = jsonObject.getJSONArray("movies");
-                    if (movies.length() >= 1) {
-                        String movieTitle = movies.getJSONObject(0).getString("movie_title");
-                        Toast.makeText(getApplicationContext(), movieTitle, Toast.LENGTH_LONG).show();
+                    for (int i = 0; i < movies.length(); i++) {
+                        // retrieve information for creating Movie object
+                        JSONObject movieJSONObject = movies.getJSONObject(i);
+                        String movieTitle = movieJSONObject.getString("movie_title");
+                        String movieYear = movieJSONObject.getString("movie_year");
+                        String movieDirector = movieJSONObject.getString("movie_director");
+                        JSONArray movieActors = movieJSONObject.getJSONArray("movie_stars");
+                        JSONArray movieGenres = movieJSONObject.getJSONArray("movie_genres");
+
+                        Movie movie = new Movie(movieTitle, movieYear, movieDirector);
+                        for (int j = 0; j < movieActors.length() ; j++) {
+                            movie.addActor(movieActors.getString(j));
+                        }
+                        for (int j = 0; j < movieGenres.length() ; j++) {
+                            movie.addGenre(movieGenres.getString(j));
+                        }
+
+                        movieList.add(movie);
                     }
 
                 } catch (JSONException e) {
