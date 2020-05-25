@@ -41,13 +41,13 @@ public class MovielistActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Log.d("Movielist.success", "Success?");
                 // TODO should parse the json response to redirect to appropriate functions.
-                JSONArray jsonArray = null;
+                JSONObject jsonObject = null;
                 try {
-                    jsonArray = new JSONArray(response);
+                    jsonObject = new JSONObject(response);
 
-                    if (jsonArray.length() > 0) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        String movieTitle = jsonObject.getString("movie_title");
+                    JSONArray movies = jsonObject.getJSONArray("movies");
+                    if (movies.length() >= 1) {
+                        String movieTitle = movies.getJSONObject(0).getString("movie_title");
                         Toast.makeText(getApplicationContext(), movieTitle, Toast.LENGTH_LONG).show();
                     }
 
