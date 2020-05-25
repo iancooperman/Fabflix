@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
-    private EditText username;
+    private EditText email;
     private EditText password;
     private Button loginButton;
     private TextView message;
@@ -30,13 +29,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        username = findViewById(R.id.editTextUsername);
+        email = findViewById(R.id.editTextUsername);
         password = findViewById(R.id.editTextPassword);
         loginButton = findViewById(R.id.buttonLogin);
         message = findViewById(R.id.textViewMessage);
 
         // url for accessing login api
-        url = "https://10.0.0.2:8443/Fabflix/";
+        url = "https://10.0.2.2:8443/Fabflix/api/login";
 
         // set on click listener for the login button
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -53,30 +52,32 @@ public class LoginActivity extends AppCompatActivity {
         // Use the same network queue across our application
         final RequestQueue queue = NetworkManager.sharedManager(this).queue;
         // request type is POST
-        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url + "api/login", new Response.Listener<String>() {
+        final StringRequest loginRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 //TODO should parse the json response to redirect to appropriate functions.
                 Log.d("login.success", response);
+                message.setText("Success");
             }
         },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("login.error", error.toString());
-                    }
-                })
-        {
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("login.error", error.toString());
+                    message.setText("Error");
+                }
+            }) {
             @Override
             protected Map<String, String> getParams() {
                 // Post request form data
                 final Map<String, String> params = new HashMap<>();
-                params.put("username", username.getText().toString());
-                params.put("passowrd", password.getText().toString());
+                params.put("email", email.getText().toString());
+                params.put("password", password.getText().toString());
 
                 return params;
             }
         };
 
+        queue.add(loginRequest);
     }
 }

@@ -30,8 +30,11 @@ public class LoginServlet extends HttpServlet {
         response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
 
+        System.out.println("Request made.");
+
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+
 
         strongPasswordEncryptor = new StrongPasswordEncryptor();
 
