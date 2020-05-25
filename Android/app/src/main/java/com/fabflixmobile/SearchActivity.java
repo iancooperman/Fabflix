@@ -26,11 +26,8 @@ public class SearchActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String searchQuery = searchBox.getQuery().toString();
 
-                Bundle bundle = new Bundle();
-                bundle.putString("q", searchQuery);
-
                 Intent intent = new Intent(SearchActivity.this, MovielistActivity.class);
-                intent.putExtras(bundle);
+                intent.putExtra("q", searchQuery);
 
                 startActivity(intent);
             }

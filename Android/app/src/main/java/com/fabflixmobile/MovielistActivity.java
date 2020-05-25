@@ -13,8 +13,7 @@ public class MovielistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movielist);
 
-        Intent originIntent = getIntent();
-        Bundle originBundle = originIntent.getExtras();
+        Bundle originBundle = getIntent().getExtras();
         String q = originBundle.getString("q");
         Toast.makeText(getApplicationContext(), q, Toast.LENGTH_SHORT).show();
     }
