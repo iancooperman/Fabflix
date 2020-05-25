@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,21 +31,29 @@ public class MovielistActivity extends AppCompatActivity {
 
         // set up widgets
         listview = (ListView) findViewById(R.id.listview);
+        Movie movie1 = new Movie("Arrival", "2016", "Who cares?");
+        movie1.addActor("Marlon Brando");
+        movie1.addActor("Some Guy");
+        movie1.addGenre("Sci-Fi");
+        movie1.addGenre("Horror");
+        Movie movie2 = new Movie("Toy Story", "1990s", "Who cares?");
+        movie2.addActor("Marlon Brando");
+        movie2.addActor("Some Guy");
+        movie2.addGenre("Sci-Fi");
+        movie2.addGenre("Horror");
 
-        ArrayList<String> movieArrayList = new ArrayList<>();
-        movieArrayList.add("android");
-        movieArrayList.add("is");
-        movieArrayList.add("great");
-        movieArrayList.add("sometimes");
+        ArrayList<Movie> movieList = new ArrayList<Movie>();
+        movieList.add(movie1);
+        movieList.add(movie2);
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, movieArrayList);
+        MovieListAdapter adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
         listview.setAdapter(adapter);
 
 
         Bundle originBundle = getIntent().getExtras();
         String q = originBundle.getString("q");
 
-        url = Utility.url + "/api/movielist?q=" + q  + "&title=&year=0&director=&star=&genre=0&limit=10&page=1&sortBy=rating_desc_title_asc";
+        url = Utility.url + "/api/movielist?q=" + q  + "&title=&year=0&director=&star=&genre=0&limit=20&page=1&sortBy=rating_desc_title_asc";
 
         retrieveMovieList();
     }
