@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public class MovielistActivity extends AppCompatActivity {
     private ListView listview;
     private ArrayList<Movie> movieList;
+    private MovieListAdapter adapter;
 
     private String url;
 
@@ -36,7 +37,9 @@ public class MovielistActivity extends AppCompatActivity {
         listview = (ListView) findViewById(R.id.listview);
         movieList = new ArrayList<Movie>();
 
-        MovieListAdapter adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
+        movieList.add(new Movie("Test", "2020", "Ian Cooperman"));
+
+        adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
         listview.setAdapter(adapter);
 
 
@@ -63,6 +66,7 @@ public class MovielistActivity extends AppCompatActivity {
                 // TODO should parse the json response to redirect to appropriate functions.
                 JSONObject jsonObject = null;
                 try {
+                    Log.d("MovielistActivity", response);
                     jsonObject = new JSONObject(response);
 
                     JSONArray movies = jsonObject.getJSONArray("movies");
@@ -84,6 +88,8 @@ public class MovielistActivity extends AppCompatActivity {
                         }
 
                         movieList.add(movie);
+                        
+                        adapter.notifyDataSetChanged();
                     }
 
                 } catch (JSONException e) {
