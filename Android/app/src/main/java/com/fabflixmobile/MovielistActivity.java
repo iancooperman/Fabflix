@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MovielistActivity extends AppCompatActivity {
@@ -39,9 +41,15 @@ public class MovielistActivity extends AppCompatActivity {
 
 
         Bundle originBundle = getIntent().getExtras();
-        String q = originBundle.getString("q");
+        String q = null;
+        try {
+            q = URLEncoder.encode(originBundle.getString("q"), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         url = Utility.url + "/api/movielist?q=" + q  + "&title=&year=0&director=&star=&genre=0&limit=20&page=1&sortBy=rating_desc_title_asc";
+        Log.d("MovielistActivity", url);
 
         retrieveMovieList();
     }
