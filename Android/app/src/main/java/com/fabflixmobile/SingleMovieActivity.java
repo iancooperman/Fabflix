@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONArray;
@@ -18,10 +19,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class SingleMovieActivity extends AppCompatActivity {
-    private TextView titleYear;
-    private TextView genres;
-    private TextView director;
-    private TextView actors;
+    private TextView titleYearView;
+    private TextView genresView;
+    private TextView directorView;
+    private TextView actorsView;
 
     private String url;
 
@@ -64,8 +65,22 @@ public class SingleMovieActivity extends AppCompatActivity {
                     ArrayList<String> actorStrings = new ArrayList<>();
 
                     for (int i = 0; i < genres.length(); i++) {
-                        genreStrings.add(genres.getString())
+                        genreStrings.add(genres.getJSONObject(i).getString("genre_name"));
                     }
+
+                    String genreText = String.join(", ", genreStrings);
+
+                    for (int i = 0; i < actors.length(); i++) {
+                        actorStrings.add(genres.getJSONObject(i).getString("actor_name"));
+                    }
+
+                    String actorText = String.join(", ", actorStrings);
+
+                    titleYearView.setText(title + " (" + year + ")");
+                    directorView.setText("Director: " + director);
+                    genresView.setText(genreText);
+                    actorsView.setText(actorText);
+
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
@@ -73,6 +88,13 @@ public class SingleMovieActivity extends AppCompatActivity {
 
 
             }
-        })
+        }, new Response.ErrorListener() {
+           @Override
+           public void onErrorResponse(VolleyError error) {
+               Log.d("SingleMovie.error", error.toString());
+           }
+        });
+
+        queue.add(request);
     }
 }
