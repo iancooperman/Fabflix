@@ -2,8 +2,10 @@ package com.fabflixmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewManager;
 import android.widget.Button;
 import android.widget.ListView;
@@ -33,6 +35,7 @@ public class MovielistActivity extends AppCompatActivity {
 
 
     private String url;
+    private String q;
     private String page;
 
     @Override
@@ -47,26 +50,54 @@ public class MovielistActivity extends AppCompatActivity {
 
         movieList = new ArrayList<Movie>();
 
-        movieList.add(new Movie("Test", "2020", "Ian Cooperman"));
-
         adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
         listview.setAdapter(adapter);
 
 
         Bundle originBundle = getIntent().getExtras();
-        String q = null;
-        try {
-            q = URLEncoder.encode(originBundle.getString("q"), "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
+        q = originBundle.getString("q");
         page = originBundle.getString("page");
+
+        Log.d("MovielistActivity", q);
+        Log.d("MovielistActivity", page);
+
+
+        // set up links to other pages
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MovielistActivity.class);
+                intent.putExtra("q", q);
+                intent.putExtra("page", Integer.toString(Integer.parseInt(page) - 1));
+
+                startActivity(intent);
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MovielistActivity.class);
+                intent.putExtra("q", q);
+                intent.putExtra("page", Integer.toString(Integer.parseInt(page) + 1));
+
+                startActivity(intent);
+            }
+        });
+
+
+        // remove the prevButton if this is the first page
         if (Integer.parseInt(page) == 1) {
             ((ViewManager)prevButton.getParent()).removeView(prevButton);
         }
 
-        url = Utility.url + "/api/movielist?q=" + q  + "&page=" + page + "&title=&year=0&director=&star=&genre=0&limit=20&sortBy=rating_desc_title_asc";
+        String qEncoded = null;
+        try {
+            qEncoded = URLEncoder.encode(q, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        url = Utility.url + "/api/movielist?q=" + qEncoded  + "&page=" + page + "&title=&year=0&director=&star=&genre=0&limit=20&sortBy=rating_desc_title_asc";
         Log.d("MovielistActivity", url);
 
         retrieveMovieList();
