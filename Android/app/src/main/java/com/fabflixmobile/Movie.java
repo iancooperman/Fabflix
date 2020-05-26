@@ -3,13 +3,15 @@ package com.fabflixmobile;
 import java.util.ArrayList;
 
 public class Movie {
+    private String id;
     private String title;
     private String year;
     private String director;
     private ArrayList<String> actors;
     private ArrayList<String> genres;
 
-    public Movie(String title, String year, String director) {
+    public Movie(String id, String title, String year, String director) {
+        this.id = id;
         this.title = title;
         this.year = year;
         this.director = director;
@@ -23,6 +25,10 @@ public class Movie {
 
     public void addGenre(String genre) {
         genres.add(genre);
+    }
+
+    public String getID() {
+        return new String(id);
     }
 
     public String getTitle() {

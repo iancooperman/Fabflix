@@ -35,10 +35,10 @@ public class MovieListAdapter extends ArrayAdapter<Movie> {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource, parent, false);
 
-        TextView textViewTitleYear = (TextView) convertView.findViewById(R.id.textViewTitleYear);
-        TextView textViewGenres = (TextView) convertView.findViewById(R.id.textViewGenres);
-        TextView textViewDirector = (TextView) convertView.findViewById(R.id.textViewDirector);
-        TextView textViewActors = (TextView) convertView.findViewById(R.id.textViewActors);
+        TextView textViewTitleYear = (TextView) convertView.findViewById(R.id.textViewTitleYearMovieLayout);
+        TextView textViewGenres = (TextView) convertView.findViewById(R.id.textViewGenresMovieLayout);
+        TextView textViewDirector = (TextView) convertView.findViewById(R.id.textViewDirectorMovieLayout);
+        TextView textViewActors = (TextView) convertView.findViewById(R.id.textViewActorsMovieLayout);
 
         textViewTitleYear.setText(title + " (" + year + ")");
 
