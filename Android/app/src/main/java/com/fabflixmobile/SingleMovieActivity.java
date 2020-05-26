@@ -80,7 +80,7 @@ public class SingleMovieActivity extends AppCompatActivity {
                     titleYearView.setText(title + " (" + year + ")");
                     directorView.setText("Director: " + director);
                     genresView.setText(genreText);
-                    actorsView.setText(actorText);
+                    actorsView.setText("Starring: " +  actorText);
 
                 }
                 catch (JSONException e) {
