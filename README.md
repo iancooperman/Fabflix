@@ -8,10 +8,12 @@ Project 2 demo can be found [here](https://www.youtube.com/watch?v=IIdI8JKQr2c&f
 
 Project 3 demo can be found [here](https://youtu.be/EX0emZpuaIQ).
 
+Project 4 demo can be found [here](https://www.youtube.com/watch?v=B6YfYBYagEw).
+
 As of recording each demo, the latest commit is one commit behind updating README.md.
 
 ### Deployment Instructions
-This project is using Maven. Deployment can be done the same way as instructed.
+This Webapp and XML Parser portions of this project are using Maven. Deployment can be done the same way as instructed.
 
 1. Clone the repo.
     ```bash
@@ -38,6 +40,9 @@ This project is using Maven. Deployment can be done the same way as instructed.
     ```bash
     mvn exec:java -Dexec.mainClass="parser.MainParser"
     ```
+
+#### Android
+2. Open the Android project (located under /Android) in Android Studio and compile it.
 
 ### Substring Matching Design
 Alpha-numeric character options in the "Browse" section correspond to `LIKE` patterns of the form `{character}%`. For example, "A" corresponds to `a%`. "*" uses a specific line of SQL,
