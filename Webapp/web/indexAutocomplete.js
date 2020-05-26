@@ -59,7 +59,7 @@ function handleLookup(query, done) {
 
     // sending the HTTP GET request to the Java Servlet endpoint hero-suggestion
     // with the query data
-    console.log("Sending AJAX request to backend Java Servlet.")
+    console.log("Sending AJAX request to backend Java Servlet.");
     $.ajax({
         "method": "GET",
         // generate the request url from the query.
