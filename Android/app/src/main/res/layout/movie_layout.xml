@@ -6,7 +6,7 @@
     android:weightSum="100">
 
     <TextView
-        android:id="@+id/textViewTitleYear"
+        android:id="@+id/textViewTitleYearMovieLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -16,21 +16,21 @@
         android:textSize="36sp" />
 
     <TextView
-        android:id="@+id/textViewGenres"
+        android:id="@+id/textViewGenresMovieLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Genre, Genre, Genre" />
 
     <TextView
-        android:id="@+id/textViewDirector"
+        android:id="@+id/textViewDirectorMovieLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Director" />
 
     <TextView
-        android:id="@+id/textViewActors"
+        android:id="@+id/textViewActorsMovieLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

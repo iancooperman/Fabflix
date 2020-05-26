@@ -15,11 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Fabflix">
+        <activity android:name=".SingleMovieActivity"></activity>
         <activity
             android:name=".MovielistActivity"
-            android:label="@string/title_activity_movielist">
-        </activity>
-
+            android:label="@string/title_activity_movielist" />
         <activity android:name=".SearchActivity" />
         <activity
             android:name=".LoginActivity"

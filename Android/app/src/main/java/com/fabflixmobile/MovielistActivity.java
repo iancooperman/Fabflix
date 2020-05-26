@@ -2,8 +2,13 @@ package com.fabflixmobile;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewManager;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -17,13 +22,22 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MovielistActivity extends AppCompatActivity {
     private ListView listview;
+    private Button prevButton;
+    private Button nextButton;
+
     private ArrayList<Movie> movieList;
+    private MovieListAdapter adapter;
+
 
     private String url;
+    private String q;
+    private String page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +46,74 @@ public class MovielistActivity extends AppCompatActivity {
 
         // set up widgets
         listview = (ListView) findViewById(R.id.listview);
+        prevButton = (Button) findViewById(R.id.buttonPrev);
+        nextButton = (Button) findViewById(R.id.buttonNext);
+
         movieList = new ArrayList<Movie>();
 
-        MovieListAdapter adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
+        adapter = new MovieListAdapter(getApplicationContext(), R.layout.movie_layout, movieList);
         listview.setAdapter(adapter);
 
 
         Bundle originBundle = getIntent().getExtras();
-        String q = originBundle.getString("q");
+        q = originBundle.getString("q");
+        page = originBundle.getString("page");
 
-        url = Utility.url + "/api/movielist?q=" + q  + "&title=&year=0&director=&star=&genre=0&limit=20&page=1&sortBy=rating_desc_title_asc";
+        Log.d("MovielistActivity", q);
+        Log.d("MovielistActivity", page);
+
+
+        // set up links to other pages
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MovielistActivity.class);
+                intent.putExtra("q", q);
+                intent.putExtra("page", Integer.toString(Integer.parseInt(page) - 1));
+
+                startActivity(intent);
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), MovielistActivity.class);
+                intent.putExtra("q", q);
+                intent.putExtra("page", Integer.toString(Integer.parseInt(page) + 1));
+
+                startActivity(intent);
+            }
+        });
+
+
+        // remove the prevButton if this is the first page
+        if (Integer.parseInt(page) == 1) {
+            ((ViewManager)prevButton.getParent()).removeView(prevButton);
+        }
+
+        String qEncoded = null;
+        try {
+            qEncoded = URLEncoder.encode(q, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        url = Utility.url + "/api/movielist?q=" + qEncoded  + "&page=" + page + "&title=&year=0&director=&star=&genre=0&limit=20&sortBy=rating_desc_title_asc";
+        Log.d("MovielistActivity", url);
 
         retrieveMovieList();
+
+        // set click listeners for list items
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), SingleMovieActivity.class);
+                String sendId = movieList.get(position).getID();
+                intent.putExtra("id", sendId);
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void retrieveMovieList() {
@@ -55,19 +125,21 @@ public class MovielistActivity extends AppCompatActivity {
                 // TODO should parse the json response to redirect to appropriate functions.
                 JSONObject jsonObject = null;
                 try {
+                    Log.d("MovielistActivity", response);
                     jsonObject = new JSONObject(response);
 
                     JSONArray movies = jsonObject.getJSONArray("movies");
                     for (int i = 0; i < movies.length(); i++) {
                         // retrieve information for creating Movie object
                         JSONObject movieJSONObject = movies.getJSONObject(i);
+                        String movieId = movieJSONObject.getString("movie_id");
                         String movieTitle = movieJSONObject.getString("movie_title");
                         String movieYear = movieJSONObject.getString("movie_year");
                         String movieDirector = movieJSONObject.getString("movie_director");
                         JSONArray movieActors = movieJSONObject.getJSONArray("movie_stars");
                         JSONArray movieGenres = movieJSONObject.getJSONArray("movie_genres");
 
-                        Movie movie = new Movie(movieTitle, movieYear, movieDirector);
+                        Movie movie = new Movie(movieId, movieTitle, movieYear, movieDirector);
                         for (int j = 0; j < movieActors.length() ; j++) {
                             movie.addActor(movieActors.getJSONObject(j).getString("star_name"));
                         }
@@ -76,6 +148,8 @@ public class MovielistActivity extends AppCompatActivity {
                         }
 
                         movieList.add(movie);
+
+                        adapter.notifyDataSetChanged();
                     }
 
                 } catch (JSONException e) {

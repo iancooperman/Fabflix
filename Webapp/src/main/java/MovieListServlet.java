@@ -343,7 +343,7 @@ public class MovieListServlet extends HttpServlet {
 
     // limit input validation
     private String limitValidation(String limitOption) {
-        if (!limitOption.equals("10") && !limitOption.equals("25") && !limitOption.equals("50") && !limitOption.equals("100")) {
+        if (!limitOption.equals("10") && !limitOption.equals("20") && !limitOption.equals("25") && !limitOption.equals("50") && !limitOption.equals("100")) {
             return "10";
         }
         else {
