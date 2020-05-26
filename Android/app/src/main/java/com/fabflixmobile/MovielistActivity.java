@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -101,6 +102,18 @@ public class MovielistActivity extends AppCompatActivity {
         Log.d("MovielistActivity", url);
 
         retrieveMovieList();
+
+        // set click listeners for list items
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), SingleMovieActivity.class);
+                String sendId = movieList.get(position).getID();
+                intent.putExtra("id", sendId);
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void retrieveMovieList() {
@@ -119,13 +132,14 @@ public class MovielistActivity extends AppCompatActivity {
                     for (int i = 0; i < movies.length(); i++) {
                         // retrieve information for creating Movie object
                         JSONObject movieJSONObject = movies.getJSONObject(i);
+                        String movieId = movieJSONObject.getString("movie_id");
                         String movieTitle = movieJSONObject.getString("movie_title");
                         String movieYear = movieJSONObject.getString("movie_year");
                         String movieDirector = movieJSONObject.getString("movie_director");
                         JSONArray movieActors = movieJSONObject.getJSONArray("movie_stars");
                         JSONArray movieGenres = movieJSONObject.getJSONArray("movie_genres");
 
-                        Movie movie = new Movie(movieTitle, movieYear, movieDirector);
+                        Movie movie = new Movie(movieId, movieTitle, movieYear, movieDirector);
                         for (int j = 0; j < movieActors.length() ; j++) {
                             movie.addActor(movieActors.getJSONObject(j).getString("star_name"));
                         }

@@ -31,15 +31,15 @@ public class SingleMovieActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_movie);
 
-        titleYear = (TextView) findViewById(R.id.textViewTitleYearSingleMovie);
-        genres = (TextView) findViewById(R.id.textViewGenresSingleMovie);
-        director = (TextView) findViewById(R.id.textViewDirectorSingleMovie);
-        actors = (TextView) findViewById(R.id.textViewActorsSingleMovie);
+        titleYearView = (TextView) findViewById(R.id.textViewTitleYearSingleMovie);
+        genresView = (TextView) findViewById(R.id.textViewGenresSingleMovie);
+        directorView = (TextView) findViewById(R.id.textViewDirectorSingleMovie);
+        actorsView = (TextView) findViewById(R.id.textViewActorsSingleMovie);
 
         Bundle originBundle = getIntent().getExtras();
         String id = originBundle.getString("id");
 
-        url = Utility.url + "/api/movie?=id" + id;
+        url = Utility.url + "/api/movie?id=" + id;
 
         retrieveMovieInfo();
 
@@ -54,12 +54,13 @@ public class SingleMovieActivity extends AppCompatActivity {
 
                 // parse the incoming JSONObject
                 try {
+                    Log.d("SingleMovieActivity", response);
                     JSONObject jsonObject = new JSONObject(response);
                     String title = jsonObject.getString("movie_title");
                     String year = jsonObject.getString("movie_year");
                     String director = jsonObject.getString("movie_director");
-                    JSONArray genres = jsonObject.getJSONArray("movie_genres");
-                    JSONArray actors = jsonObject.getJSONArray("movie_stars");
+                    JSONArray genres = jsonObject.getJSONArray("genres");
+                    JSONArray actors = jsonObject.getJSONArray("stars");
 
                     ArrayList<String> genreStrings = new ArrayList<>();
                     ArrayList<String> actorStrings = new ArrayList<>();
@@ -71,7 +72,7 @@ public class SingleMovieActivity extends AppCompatActivity {
                     String genreText = String.join(", ", genreStrings);
 
                     for (int i = 0; i < actors.length(); i++) {
-                        actorStrings.add(genres.getJSONObject(i).getString("actor_name"));
+                        actorStrings.add(actors.getJSONObject(i).getString("star_name"));
                     }
 
                     String actorText = String.join(", ", actorStrings);
