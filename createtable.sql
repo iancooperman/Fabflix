@@ -7,7 +7,8 @@ CREATE TABLE movies (
     id VARCHAR(10) NOT NULL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     year INTEGER NOT NULL,
-    director VARCHAR(100) NOT NULL
+    director VARCHAR(100) NOT NULL,
+    FULLTEXT (title)
 );
 
 CREATE TABLE stars (
