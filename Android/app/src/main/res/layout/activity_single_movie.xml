@@ -6,4 +6,45 @@
     android:layout_height="match_parent"
     tools:context=".SingleMovieActivity">
 
+    <TextView
+        android:id="@+id/textViewTitleYearSingleMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Title (Year)"
+        android:textSize="60sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewGenresSingleMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:text="Genre, Genre, Genre"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="@+id/textViewTitleYearSingleMovie"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitleYearSingleMovie" />
+
+    <TextView
+        android:id="@+id/textViewDirectorSingleMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="59dp"
+        android:layout_marginTop="40dp"
+        android:text="Director"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewGenresSingleMovie" />
+
+    <TextView
+        android:id="@+id/textViewActorsSingleMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Actor, Actor, Actor"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="@+id/textViewDirectorSingleMovie"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDirectorSingleMovie" />
 </androidx.constraintlayout.widget.ConstraintLayout>
