@@ -30,6 +30,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(SearchActivity.this, MovielistActivity.class);
                 intent.putExtra("q", searchQuery);
+                intent.putExtra("page", "1");
 
                 startActivity(intent);
             }

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ViewManager;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,10 +25,15 @@ import java.util.ArrayList;
 
 public class MovielistActivity extends AppCompatActivity {
     private ListView listview;
+    private Button prevButton;
+    private Button nextButton;
+
     private ArrayList<Movie> movieList;
     private MovieListAdapter adapter;
 
+
     private String url;
+    private String page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,9 @@ public class MovielistActivity extends AppCompatActivity {
 
         // set up widgets
         listview = (ListView) findViewById(R.id.listview);
+        prevButton = (Button) findViewById(R.id.buttonPrev);
+        nextButton = (Button) findViewById(R.id.buttonNext);
+
         movieList = new ArrayList<Movie>();
 
         movieList.add(new Movie("Test", "2020", "Ian Cooperman"));
@@ -51,7 +61,12 @@ public class MovielistActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        url = Utility.url + "/api/movielist?q=" + q  + "&title=&year=0&director=&star=&genre=0&limit=20&page=1&sortBy=rating_desc_title_asc";
+        page = originBundle.getString("page");
+        if (Integer.parseInt(page) == 1) {
+            ((ViewManager)prevButton.getParent()).removeView(prevButton);
+        }
+
+        url = Utility.url + "/api/movielist?q=" + q  + "&page=" + page + "&title=&year=0&director=&star=&genre=0&limit=20&sortBy=rating_desc_title_asc";
         Log.d("MovielistActivity", url);
 
         retrieveMovieList();
@@ -88,7 +103,7 @@ public class MovielistActivity extends AppCompatActivity {
                         }
 
                         movieList.add(movie);
-                        
+
                         adapter.notifyDataSetChanged();
                     }
 
