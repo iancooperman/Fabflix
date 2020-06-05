@@ -14,7 +14,7 @@ import java.sql.*;
 
 @WebServlet(name = "AddStarServlet", urlPatterns = "/api/addStar")
 public class AddStarServlet extends HttpServlet {
-    @Resource(name = "jdbc/moviedb")
+    @Resource(name = "jdbc/moviedbmaster")
     private DataSource dataSource;
     private Connection dbcon;
 

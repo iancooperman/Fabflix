@@ -16,7 +16,7 @@ import java.sql.Types;
 
 @WebServlet(name = "AddMovieServlet", urlPatterns = "/api/addMovie")
 public class AddMovieServlet extends HttpServlet {
-    @Resource(name = "jdbc/moviedb")
+    @Resource(name = "jdbc/moviedbmaster")
     private DataSource dataSource;
     private Connection dbcon;
 
