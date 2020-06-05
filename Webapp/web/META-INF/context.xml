@@ -13,4 +13,15 @@
               username="mytestuser"
               password="mypassword"
               url="jdbc:mysql://localhost:3306/moviedb?autoReconnect=true&amp;useSSL=false"/>
+
+    <Resource name="jdbc/moviedbmaster"
+              auth="Container"
+              driverClassName="com.mysql.jdbc.Driver"
+              type="javax.sql.DataSource"
+              maxTotal="100"
+              maxIdle="30"
+              maxWaitMillis="10000"
+              username="mytestuser"
+              password="mypassword"
+              url="jdbc:mysql://172.31.24.79:3306/moviedb?autoReconnect=true&amp;useSSL=false"/>
 </Context>
