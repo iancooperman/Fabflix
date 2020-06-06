@@ -340,9 +340,12 @@ public class MovieListServlet extends HttpServlet {
         String xmlFilePath = contextPath + "\\timelog.csv";
         System.out.println("Writing to: " + xmlFilePath);
 
+        double TSns = Utility.nsToMs((double) TS);
+        double TJns = Utility.nsToMs((double) TJ);
+
         FileWriter fw = new FileWriter(xmlFilePath, true);
         synchronized (fw) {
-            fw.append(Long.toString(TS) + "," + Long.toString(TJ) + "\n");
+            fw.append(Double.toString(TSns) + "," + Double.toString(TJns) + "\n");
         }
         fw.close();
     }

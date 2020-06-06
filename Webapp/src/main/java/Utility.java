@@ -28,4 +28,8 @@ public class Utility {
             hashMap.replace(key, ++oldValue);
         }
     }
+
+    public static double nsToMs(double ns) {
+        return ns / (double) 1000000;
+    }
 }
