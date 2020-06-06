@@ -24,6 +24,8 @@ public class MovieListServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         long TJ = 0;
+        long TJstartTime;
+        long TJendTime;
         long TSstartTime = System.nanoTime();
 
         response.setCharacterEncoding("UTF8");
@@ -91,6 +93,7 @@ public class MovieListServlet extends HttpServlet {
             genre = genreSQL(genre);
 
             // DB setup
+            TJstartTime = System.nanoTime();
             Connection dbcon;
             if (useConnectionPooling) {
                 System.out.println("Using connection pooling.");
@@ -102,6 +105,8 @@ public class MovieListServlet extends HttpServlet {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
                 dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", "mytestuser", "mypassword");
             }
+            TJendTime = System.nanoTime();
+            TJ += TJendTime - TJstartTime;
 
 
 
@@ -203,10 +208,10 @@ public class MovieListServlet extends HttpServlet {
             rowCountStatement.setInt(i + 1, Integer.parseInt(offset));
 
 
-            long TJstartTime = System.nanoTime();
+            TJstartTime = System.nanoTime();
             ResultSet mainResultSet = mainStatement.executeQuery();
             ResultSet rowCountResultSet = rowCountStatement.executeQuery();
-            long TJendTime = System.nanoTime();
+            TJendTime = System.nanoTime();
             TJ += TJendTime - TJstartTime;
 
             JsonObject mainJsonObject = new JsonObject();
@@ -318,7 +323,11 @@ public class MovieListServlet extends HttpServlet {
             starStatement.close();
 
             mainStatement.close();
+
+            TJstartTime = System.nanoTime();
             dbcon.close();
+            TJendTime = System.nanoTime();
+            TJ += TJendTime - TJstartTime;
         }
         catch (Exception e) {
             e.printStackTrace();
