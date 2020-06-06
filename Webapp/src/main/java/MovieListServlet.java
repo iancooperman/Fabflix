@@ -44,13 +44,13 @@ public class MovieListServlet extends HttpServlet {
             String page = request.getParameter("page"); // An integer > 0; default: 1
             String sortBy = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
 
+            // Toggle connection pooling through url parameters
             String cp = request.getParameter("cp");
+            System.out.println("cp=" + cp);
             if (cp == null) {
                 useConnectionPooling = true;
             }
-            else {
-                useConnectionPooling = false;
-            }
+            else useConnectionPooling = !cp.equals("false");
 
             // pass parameters to session
             HttpSession session = request.getSession();
@@ -66,15 +66,15 @@ public class MovieListServlet extends HttpServlet {
             parameterMap.put("sortBy", sortBy);
             session.setAttribute("movielistParameters", parameterMap);
 
-            System.out.println("REQUEST:");
-            System.out.println("title: " + title);
-            System.out.println("year: " + year);
-            System.out.println("director: " + director);
-            System.out.println("star: " + star);
-            System.out.println("genre: " + genre);
-            System.out.println("limit: " + limit);
-            System.out.println("page: " + page);
-            System.out.println("sortBy: " + sortBy);
+//            System.out.println("REQUEST:");
+//            System.out.println("title: " + title);
+//            System.out.println("year: " + year);
+//            System.out.println("director: " + director);
+//            System.out.println("star: " + star);
+//            System.out.println("genre: " + genre);
+//            System.out.println("limit: " + limit);
+//            System.out.println("page: " + page);
+//            System.out.println("sortBy: " + sortBy);
 
 
             // input validation
@@ -93,9 +93,11 @@ public class MovieListServlet extends HttpServlet {
             // DB setup
             Connection dbcon;
             if (useConnectionPooling) {
+                System.out.println("Using connection pooling.");
                 dbcon = dataSource.getConnection();
             }
             else {
+                System.out.println("Not using connection pooling.");
                 Class.forName("org.gjt.mm.mysql.Driver");
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
                 dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", "mytestuser", "mypassword");
