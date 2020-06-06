@@ -59,5 +59,43 @@ My parser utilizes a few in-memory hash tables, specifically for storing mapping
 
 It is unknown how much this improved performance, as I used this from the get-go. However, as seen in the Project 3 demo video, it ran in less than two minutes and gave the expected results.
 
+### Connection Pooling
+    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+
+    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+
+    - #### Explain how Connection Pooling works with two backend SQL.
+
+
+### Master/Slave
+    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+
+#### How read/write requests were routed to Master/Slave SQL?
+The IP address of the master server was hardcoded into the Webapp. All servlets involving writing to the master MySQL server have been recoded to use this specific IP address.
+
+
+### JMeter TS/TJ Time Logs
+#### Instructions of how to use the `log_processing.py` script to process the JMeter logs.
+`log_processing.py` is a Python file. It's usage requires Python 3.6+, as it uses f-strings for output. As seen in the Project 5 demo video, **the most convenient way to run it is to drag and drop the log files onto `log_processing.py`**. Alternatively, you can run `log_processing.py` from a command line using:
+```bash
+python log_processing.py timelog1.csv timelog2.csv ...
+```
+
+
+### JMeter TS/TJ Time Measurement Report
+
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTPS/10 threads                       | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
 ### Member Contribution
 I am the only person in this group/team. I did all the work.
