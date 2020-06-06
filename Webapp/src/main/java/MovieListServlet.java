@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,6 +20,7 @@ import java.util.HashMap;
 public class MovieListServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
+    private boolean useConnectionPooling;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         long TJ = 0;
@@ -45,6 +43,14 @@ public class MovieListServlet extends HttpServlet {
             String limit = request.getParameter("limit"); // 10, 25, 50, or 100; default: 10
             String page = request.getParameter("page"); // An integer > 0; default: 1
             String sortBy = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
+
+            String cp = request.getParameter("cp");
+            if (cp == null) {
+                useConnectionPooling = true;
+            }
+            else {
+                useConnectionPooling = false;
+            }
 
             // pass parameters to session
             HttpSession session = request.getSession();
@@ -85,7 +91,16 @@ public class MovieListServlet extends HttpServlet {
             genre = genreSQL(genre);
 
             // DB setup
-            Connection dbcon = dataSource.getConnection();
+            Connection dbcon;
+            if (useConnectionPooling) {
+                dbcon = dataSource.getConnection();
+            }
+            else {
+                Class.forName("org.gjt.mm.mysql.Driver");
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", "mytestuser", "mypassword");
+            }
+
 
 
             // Main query construction
