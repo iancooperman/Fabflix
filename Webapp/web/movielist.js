@@ -93,6 +93,7 @@ function determineQueryParameters() {
     let limit = getUrlParam("limit", 10);
     let page = getUrlParam("page", 1);
     let sortBy = getUrlParam("sortBy", "rating_desc_title_asc");
+    let cp = getUrlParam("cp", "true");
 
     // send query to backend
     $.ajax({
@@ -108,7 +109,8 @@ function determineQueryParameters() {
             "genre": genre,
             "limit": limit,
             "page": page,
-            "sortBy": sortBy
+            "sortBy": sortBy,
+            "cp": cp
         },
         success: (resultData) => handleMovielistResult(resultData)
     });
