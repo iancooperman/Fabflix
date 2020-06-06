@@ -26,6 +26,8 @@ public class MovieListServlet extends HttpServlet {
     private DataSource dataSource;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        long TSstartTime = System.nanoTime();
+
         response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
 
@@ -184,8 +186,11 @@ public class MovieListServlet extends HttpServlet {
             rowCountStatement.setInt(i + 1, Integer.parseInt(offset));
 
 
+            long TJstartTime = System.nanoTime();
             ResultSet mainResultSet = mainStatement.executeQuery();
             ResultSet rowCountResultSet = rowCountStatement.executeQuery();
+            long TJendTime = System.nanoTime();
+            long TJ = TJendTime - TJstartTime;
 
             JsonObject mainJsonObject = new JsonObject();
             // get row count
@@ -236,8 +241,11 @@ public class MovieListServlet extends HttpServlet {
                 starStatement.setString(1, movie_id);
 
                 // execute genre and star queries
+                TJstartTime = System.nanoTime();
                 ResultSet genreResultSet = genreStatement.executeQuery();
                 ResultSet starResultSet = starStatement.executeQuery();
+                TJendTime = System.nanoTime();
+                TJ += TJendTime - TJstartTime;
 
                 // genre retrieval
                 JsonArray genreArray = new JsonArray();
@@ -305,6 +313,9 @@ public class MovieListServlet extends HttpServlet {
         }
 
         out.close();
+
+        long TSendTime = System.nanoTime();
+        long TS = TSendTime - TSstartTime;
     }
 
     private boolean qIsValid(String q) {
