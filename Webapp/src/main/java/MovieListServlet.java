@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,6 +25,7 @@ public class MovieListServlet extends HttpServlet {
     private DataSource dataSource;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        long TJ = 0;
         long TSstartTime = System.nanoTime();
 
         response.setCharacterEncoding("UTF8");
@@ -190,7 +190,7 @@ public class MovieListServlet extends HttpServlet {
             ResultSet mainResultSet = mainStatement.executeQuery();
             ResultSet rowCountResultSet = rowCountStatement.executeQuery();
             long TJendTime = System.nanoTime();
-            long TJ = TJendTime - TJstartTime;
+            TJ += TJendTime - TJstartTime;
 
             JsonObject mainJsonObject = new JsonObject();
             // get row count
@@ -316,6 +316,18 @@ public class MovieListServlet extends HttpServlet {
 
         long TSendTime = System.nanoTime();
         long TS = TSendTime - TSstartTime;
+
+
+        // Write TS and TJ to file
+        String contextPath = getServletContext().getRealPath("/");
+        String xmlFilePath = contextPath + "\\timelog.csv";
+        System.out.println("Writing to: " + xmlFilePath);
+
+        FileWriter fw = new FileWriter(xmlFilePath, true);
+        synchronized (fw) {
+            fw.append(Long.toString(TS) + "," + Long.toString(TJ) + "\n");
+        }
+        fw.close();
     }
 
     private boolean qIsValid(String q) {
