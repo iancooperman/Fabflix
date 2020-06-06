@@ -34,6 +34,8 @@ public class LoginServlet extends HttpServlet {
         // check if this request is coming from an Android device
         String requestHeader = request.getHeader("User-Agent");
         boolean isAndroid = requestHeader.toLowerCase().contains("android");
+        boolean isJMeter = requestHeader.toLowerCase().contains("apache-httpclient");
+        boolean recaptchaRequired = !isAndroid && !isJMeter;
 
         System.out.println("Request header: " + requestHeader);
 
@@ -76,7 +78,7 @@ public class LoginServlet extends HttpServlet {
             dbcon.close();
 
             // only verify recaptcha if the request is coming from the website
-            if (!isAndroid) {
+            if (recaptchaRequired) {
                 // verify recaptcha checked
                 String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
                 System.out.println(gRecaptchaResponse);

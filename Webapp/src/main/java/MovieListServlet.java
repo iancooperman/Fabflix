@@ -10,12 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.*;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,8 +20,14 @@ import java.util.HashMap;
 public class MovieListServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
     private DataSource dataSource;
+    private boolean useConnectionPooling;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        long TJ = 0;
+        long TJstartTime;
+        long TJendTime;
+        long TSstartTime = System.nanoTime();
+
         response.setCharacterEncoding("UTF8");
         response.setContentType("application/json");
 
@@ -44,6 +46,14 @@ public class MovieListServlet extends HttpServlet {
             String page = request.getParameter("page"); // An integer > 0; default: 1
             String sortBy = request.getParameter("sortBy"); // title_asc, title_desc, rating_asc, or rating_desc; default: rating_desc
 
+            // Toggle connection pooling through url parameters
+            String cp = request.getParameter("cp");
+            System.out.println("cp=" + cp);
+            if (cp == null) {
+                useConnectionPooling = true;
+            }
+            else useConnectionPooling = !cp.equals("false");
+
             // pass parameters to session
             HttpSession session = request.getSession();
             HashMap<String, String> parameterMap = new HashMap<String, String>();
@@ -58,15 +68,15 @@ public class MovieListServlet extends HttpServlet {
             parameterMap.put("sortBy", sortBy);
             session.setAttribute("movielistParameters", parameterMap);
 
-            System.out.println("REQUEST:");
-            System.out.println("title: " + title);
-            System.out.println("year: " + year);
-            System.out.println("director: " + director);
-            System.out.println("star: " + star);
-            System.out.println("genre: " + genre);
-            System.out.println("limit: " + limit);
-            System.out.println("page: " + page);
-            System.out.println("sortBy: " + sortBy);
+//            System.out.println("REQUEST:");
+//            System.out.println("title: " + title);
+//            System.out.println("year: " + year);
+//            System.out.println("director: " + director);
+//            System.out.println("star: " + star);
+//            System.out.println("genre: " + genre);
+//            System.out.println("limit: " + limit);
+//            System.out.println("page: " + page);
+//            System.out.println("sortBy: " + sortBy);
 
 
             // input validation
@@ -83,7 +93,21 @@ public class MovieListServlet extends HttpServlet {
             genre = genreSQL(genre);
 
             // DB setup
-            Connection dbcon = dataSource.getConnection();
+            TJstartTime = System.nanoTime();
+            Connection dbcon;
+            if (useConnectionPooling) {
+                System.out.println("Using connection pooling.");
+                dbcon = dataSource.getConnection();
+            }
+            else {
+                System.out.println("Not using connection pooling.");
+                Class.forName("org.gjt.mm.mysql.Driver");
+                Class.forName("com.mysql.jdbc.Driver").newInstance();
+                dbcon = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", "mytestuser", "mypassword");
+            }
+            TJendTime = System.nanoTime();
+            TJ += TJendTime - TJstartTime;
+
 
 
             // Main query construction
@@ -184,8 +208,11 @@ public class MovieListServlet extends HttpServlet {
             rowCountStatement.setInt(i + 1, Integer.parseInt(offset));
 
 
+            TJstartTime = System.nanoTime();
             ResultSet mainResultSet = mainStatement.executeQuery();
             ResultSet rowCountResultSet = rowCountStatement.executeQuery();
+            TJendTime = System.nanoTime();
+            TJ += TJendTime - TJstartTime;
 
             JsonObject mainJsonObject = new JsonObject();
             // get row count
@@ -236,8 +263,11 @@ public class MovieListServlet extends HttpServlet {
                 starStatement.setString(1, movie_id);
 
                 // execute genre and star queries
+                TJstartTime = System.nanoTime();
                 ResultSet genreResultSet = genreStatement.executeQuery();
                 ResultSet starResultSet = starStatement.executeQuery();
+                TJendTime = System.nanoTime();
+                TJ += TJendTime - TJstartTime;
 
                 // genre retrieval
                 JsonArray genreArray = new JsonArray();
@@ -293,7 +323,11 @@ public class MovieListServlet extends HttpServlet {
             starStatement.close();
 
             mainStatement.close();
+
+            TJstartTime = System.nanoTime();
             dbcon.close();
+            TJendTime = System.nanoTime();
+            TJ += TJendTime - TJstartTime;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -305,6 +339,24 @@ public class MovieListServlet extends HttpServlet {
         }
 
         out.close();
+
+        long TSendTime = System.nanoTime();
+        long TS = TSendTime - TSstartTime;
+
+
+        // Write TS and TJ to file
+        String contextPath = getServletContext().getRealPath("/");
+        String xmlFilePath = contextPath + "\\timelog.csv";
+        System.out.println("Writing to: " + xmlFilePath);
+
+        double TSns = Utility.nsToMs((double) TS);
+        double TJns = Utility.nsToMs((double) TJ);
+
+        FileWriter fw = new FileWriter(xmlFilePath, true);
+        synchronized (fw) {
+            fw.append(Double.toString(TSns) + "," + Double.toString(TJns) + "\n");
+        }
+        fw.close();
     }
 
     private boolean qIsValid(String q) {
