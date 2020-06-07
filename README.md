@@ -71,7 +71,7 @@ It is unknown how much this improved performance, as I used this from the get-go
     - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
 
 #### How read/write requests were routed to Master/Slave SQL?
-The IP address of the master server was hardcoded into the Webapp. All servlets involving writing to the master MySQL server have been recoded to use this specific IP address.
+The IP address of the master server was hardcoded into the Webapp. All servlets involving writing to the master MySQL server have been recoded to use this specific IP address. MySQL reads use the local server via localhost.
 
 
 ### JMeter TS/TJ Time Logs
@@ -95,7 +95,7 @@ python log_processing.py timelog1.csv timelog2.csv ...
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
 | Case 1: HTTP/1 thread                          | ![](./JMeter/Graph Images/ScaledInstanceHTTP1Thread.png)   | 93                         | 9.823091247161253                                  | 9.111653647993931                        | ??           |
 | Case 2: HTTP/10 threads                        | ![](./JMeter/Graph Images/ScaledInstanceHTTP10Threads.png)   | 99                         | 16.07140874019679                               | 15.541118922255926                        | ??           |
-| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](./JMeter/Graph Images/ScaledInstanceHTTPnoCP10Threads.png)   | 120                         | 33.17946760003799                                  | 32.3769268504161                        | ??           |
 
 ### Member Contribution
 I am the only person in this group/team. I did all the work.
