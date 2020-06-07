@@ -10,6 +10,8 @@ Project 3 demo can be found [here](https://youtu.be/EX0emZpuaIQ).
 
 Project 4 demo can be found [here](https://www.youtube.com/watch?v=B6YfYBYagEw).
 
+Project 5 demo can be found [here]();
+
 As of recording each demo, the latest commit is one commit behind updating README.md.
 
 ### Deployment Instructions
@@ -60,15 +62,20 @@ My parser utilizes a few in-memory hash tables, specifically for storing mapping
 It is unknown how much this improved performance, as I used this from the get-go. However, as seen in the Project 3 demo video, it ran in less than two minutes and gave the expected results.
 
 ### Connection Pooling
-    - #### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+#### Include the filename/path of all code/configuration files in GitHub of using JDBC Connection Pooling.
+Servlets involving JDBC connections can be found in `Webapp/src/main/java`. The `context.xml` file, modified for connection pooling can be found in `Webapp/web/META-INF`.
 
-    - #### Explain how Connection Pooling is utilized in the Fabflix code.
+#### Explain how Connection Pooling is utilized in the Fabflix code.
+All database connections have had connection pooling enabled. As seen in the JMeter test data, it has yielded a significant performance improvement by keeping connections open and reusing them.
 
-    - #### Explain how Connection Pooling works with two backend SQL.
+#### Explain how Connection Pooling works with two backend SQL.
+Connection Pooling improves Master/Slave database read/write performance by saving open connections to be used later. It's enabled within the Webapp, so it's enabled on the Master and Slave server instances.
 
 
 ### Master/Slave
-    - #### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+#### Include the filename/path of all code/configuration files in GitHub of routing queries to Master/Slave SQL.
+Servlets involving JDBC connections can be found in `Webapp/src/main/java`.
+
 
 #### How read/write requests were routed to Master/Slave SQL?
 The IP address of the master server was hardcoded into the Webapp. All servlets involving writing to the master MySQL server have been recoded to use this specific IP address. MySQL reads use the local server via localhost.
@@ -80,6 +87,8 @@ The IP address of the master server was hardcoded into the Webapp. All servlets 
 ```bash
 python log_processing.py timelog1.csv timelog2.csv ...
 ```
+The logs themselves can be found in the `JMeter` folder, as can the graph images and JMeter tests.
+`log_processing.py` can be found under `Webapp`.
 
 
 ### JMeter TS/TJ Time Measurement Report
