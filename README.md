@@ -10,7 +10,7 @@ Project 3 demo can be found [here](https://youtu.be/EX0emZpuaIQ).
 
 Project 4 demo can be found [here](https://www.youtube.com/watch?v=B6YfYBYagEw).
 
-Project 5 demo can be found [here]();
+Project 5 demo can be found [here](https://youtu.be/5hNBQWWszoU);
 
 As of recording each demo, the latest commit is one commit behind updating README.md.
 
@@ -92,6 +92,8 @@ The logs themselves can be found in the `JMeter` folder, as can the graph images
 
 
 ### JMeter TS/TJ Time Measurement Report
+
+**The graph images may not show up in the tables, but they DO exist. Please check the appropriate file paths within the repo for the images. Thank you for your understanding.**
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
