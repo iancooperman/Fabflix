@@ -1,25 +1,19 @@
 # Fabflix
-#### By Ian Coooperman, #36747912
+#### By Ian Coooperman
 
 ### Demos
-Project 1 demo can be found [here](https://www.youtube.com/watch?v=gSUd3sx91NA&feature=youtu.be).
-
-Project 2 demo can be found [here](https://www.youtube.com/watch?v=IIdI8JKQr2c&feature=youtu.be).
-
-Project 3 demo can be found [here](https://youtu.be/EX0emZpuaIQ).
-
-Project 4 demo can be found [here](https://www.youtube.com/watch?v=B6YfYBYagEw).
-
-Project 5 demo can be found [here](https://youtu.be/5hNBQWWszoU);
-
-As of recording each demo, the latest commit is one commit behind updating README.md.
+- [Database and Basic Linking](https://www.youtube.com/watch?v=gSUd3sx91NA&feature=youtu.be)
+- [Login Page and Basic Functionality](https://www.youtube.com/watch?v=IIdI8JKQr2c&feature=youtu.be)
+- [Stanford Movies Dataset Ingestor & Employee Dashboard](https://youtu.be/EX0emZpuaIQ)
+- [Search & Android Login and Search](https://www.youtube.com/watch?v=B6YfYBYagEw)
+- [JMeter Testing](https://youtu.be/5hNBQWWszoU)
 
 ### Deployment Instructions
 This Webapp and XML Parser portions of this project are using Maven. Deployment can be done the same way as instructed.
 
 1. Clone the repo.
     ```bash
-    git clone https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-132.git
+    git clone https://github.com/iancooperman/Fabflix.git
     ```
 
 #### Webapp
@@ -107,6 +101,3 @@ The logs themselves can be found in the `JMeter` folder, as can the graph images
 | Case 1: HTTP/1 thread                          | ![JMeter/GraphImages/ScaledInstanceHTTP1Thread.png](JMeter/GraphImages/ScaledInstanceHTTP1Thread.png?raw=true)   | 93                         | 9.82                                  | 9.11                        | Slightly higher then the equivalent test on the single instance. This could be because some extra time is taken by the load balancer to serve content from either the Master server or the Slave server.          |
 | Case 2: HTTP/10 threads                        | ![JMeter/GraphImages/ScaledInstanceHTTP10Threads.png](JMeter/GraphImages/ScaledInstanceHTTP10Threads.png?raw=true)   | 99                         | 16.1                               | 15.5                        | Load balancing comes in handy as half of the "users" are routed to the Master server and half to the Slave. This is significantly faster than the equivalent case on the single instance.           |
 | Case 3: HTTP/10 threads/No connection pooling  | ![JMeter/GraphImages/ScaledInstanceHTTPnoCP10Threads.png](JMeter/GraphImages/ScaledInstanceHTTPnoCP10Threads.png?raw=true)   | 120                         | 33.2                                  | 32.4                        | Creating and closing a database connection for every request once again takes its toll.          |
-
-### Member Contribution
-I am the only person in this group/team. I did all the work.
